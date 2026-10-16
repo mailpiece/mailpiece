@@ -43,7 +43,7 @@ class Post::Readable::Email
   end
 
   def html
-    ActionText::Fragment.from_html(sanitized_html).update do |source|
+    ActionText::Content.new(sanitized_html, canonicalize: false).render_attachments(&@view).fragment.update do |source|
       Post::Video.replace_each_in(source, &@view)
       redirect_links(source)
       style(source)
@@ -58,7 +58,8 @@ class Post::Readable::Email
 
   private
     def sanitized_html
-      ActionView::Base.safe_list_sanitizer.sanitize @content.render_attachments(&@view).to_html, tags: TAGS, attributes: ATTRIBUTES
+      ActionView::Base.safe_list_sanitizer.sanitize @content.to_html,
+        tags: TAGS + [ ActionText::Attachment.tag_name ], attributes: ATTRIBUTES + ActionText::Attachment::ATTRIBUTES
     end
 
     # A link of a mailed issue goes out through its redirect, after a video was recognised by its own address.

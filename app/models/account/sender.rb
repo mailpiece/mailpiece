@@ -28,4 +28,8 @@ class Account::Sender < ApplicationRecord
   def reply_to
     ActionMailer::Base.email_address_with_name(reply_to_address, from_name) if reply_to_address.present?
   end
+
+  def reply_address
+    reply_to_address.presence || from_address
+  end
 end

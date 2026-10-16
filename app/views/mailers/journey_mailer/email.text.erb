@@ -5,7 +5,11 @@
 <%= t("mailers_journey_unsubscribed", name: @account.name) %>
 <% elsif @subscriber %>
 <%= t("mailers_issue_receiving", name: @account.name) %>
+<% if offline? %>
+<%= t("mailers_issue_unsubscribe_by_reply") %>
+<% else %>
 <%= t("mailers_issue_unsubscribe_text", url: @unsubscribe_url) %>
+<% end %>
 <% else %>
 <%= t("mailers_journey_test_copy") %>
 <% end %>

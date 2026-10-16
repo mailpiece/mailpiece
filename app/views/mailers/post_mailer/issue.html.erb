@@ -6,7 +6,7 @@
         <div style="display: none; max-height: 0; mso-hide: all; overflow: hidden;"><%= @post.summary %></div>
       <% end %>
 
-      <%= render "mailers/post_mailer/masthead", name: @account.name, web_url: (public_post_url(@post.public_param) if @post.on_the_web?) %>
+      <%= render "mailers/post_mailer/masthead", name: @account.name, web_url: (public_post_url(@post.public_param) if @post.on_the_web? && !offline?) %>
 
       <p style="color: #737374; font-size: 12px; font-weight: 500; letter-spacing: 0.14em; line-height: 1.4; margin: 0 0 12px; text-transform: uppercase;"><%= public_post_date(@post.published_at || Time.current) %> · <%= @post.creator.name %></p>
       <h1 style="font-family: Georgia, 'Times New Roman', serif; font-size: 30px; font-weight: 700; line-height: 1.2; margin: 0 0 <%= @post.summary ? 12 : 24 %>px;"><%= @post.title %></h1>
@@ -26,7 +26,11 @@
             <br>
           <% end %>
           <%= t("mailers_issue_receiving", name: @account.name) %>
-          <%= link_to t("mailers_issue_unsubscribe"), @unsubscribe_url, style: "color: #737374; text-decoration: underline;" %>
+          <% if offline? %>
+            <%= t("mailers_issue_unsubscribe_by_reply") %>
+          <% else %>
+            <%= link_to t("mailers_issue_unsubscribe"), @unsubscribe_url, style: "color: #737374; text-decoration: underline;" %>
+          <% end %>
         <% else %>
           <%= t("mailers_issue_test_copy") %>
         <% end %>

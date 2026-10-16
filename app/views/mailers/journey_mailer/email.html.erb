@@ -15,7 +15,11 @@
           <%= t("mailers_journey_unsubscribed", name: @account.name) %>
         <% elsif @subscriber %>
           <%= t("mailers_issue_receiving", name: @account.name) %>
-          <%= link_to t("mailers_issue_unsubscribe"), @unsubscribe_url, style: "color: #737374; text-decoration: underline;" %>
+          <% if offline? %>
+            <%= t("mailers_issue_unsubscribe_by_reply") %>
+          <% else %>
+            <%= link_to t("mailers_issue_unsubscribe"), @unsubscribe_url, style: "color: #737374; text-decoration: underline;" %>
+          <% end %>
         <% else %>
           <%= t("mailers_journey_test_copy") %>
         <% end %>

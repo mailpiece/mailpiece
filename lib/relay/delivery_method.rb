@@ -119,7 +119,8 @@ class Relay::DeliveryMethod
         text: text_of(mail),
         list_unsubscribe: mail["List-Unsubscribe"]&.value,
         tags: mail[MailDelivery::TAGS_HEADER]&.value.to_s.split(",").map(&:strip).compact_blank,
-        headers: custom_headers_of(mail)
+        headers: custom_headers_of(mail),
+        attachments: mail.attachments.map { attachment_of it }
       }.compact_blank
     end
 
@@ -137,6 +138,16 @@ class Relay::DeliveryMethod
       elsif mail.mime_type != "text/html"
         mail.decoded
       end
+    end
+
+    # An inline part's cid is bracketed, and its unbracketed form is what Mail wrote as cid: in the HTML.
+    def attachment_of(part)
+      {
+        name: part.filename,
+        content_type: part.mime_type,
+        content: Base64.strict_encode64(part.body.decoded),
+        cid: ("<#{part.cid}>" if part.inline?)
+      }.compact
     end
 
     # A relay may turn the whole message down over a header it composes itself, so only the sender's own X-

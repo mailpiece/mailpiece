@@ -137,6 +137,7 @@ es:
   mailers_issue_test_copy: "Esta es una copia de prueba. Los suscriptores todavía no la recibieron."
   mailers_issue_test_subject: "[Prueba] %{title}"
   mailers_issue_unsubscribe: "Darme de baja"
+  mailers_issue_unsubscribe_by_reply: "Para darte de baja, respondé a este email con la palabra \"unsubscribe\"."
   mailers_issue_unsubscribe_text: "Darme de baja: %{url}"
   mailers_issue_view_on_web: "Ver en la web"
   mailers_issue_view_on_web_text: "Ver en la web: %{url}"

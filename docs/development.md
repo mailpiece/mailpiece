@@ -88,7 +88,9 @@ settings above.
 The relay is posted each message as JSON, with only the keys that have a
 value: `from`, `from_name`, `to`, `cc`, `bcc`, `reply_to`, `reply_to_name`,
 `subject`, `html`, `text`, `list_unsubscribe`, `tags` (`issue` on an issue)
-and `headers` (the sender's own `X-` headers). An issue's or journey email's
+`headers` (the sender's own `X-` headers) and `attachments` (each
+`{ name, content_type, content, cid }`, the content base64 and the `cid`, in
+angle brackets, only on a picture the HTML shows as `cid:`). An issue's or journey email's
 message carries an `Idempotency-Key` header, the delivery's id, and a message
 whose fate is unknown is posted again with the same key. **A relay must honour
 the key**: it remembers each key it has accepted and answers a repeat as
@@ -111,6 +113,16 @@ In production a transport left unset, or set to a name nobody knows, raises
 In development it sends nowhere: the mail is opened in the browser after
 `touch tmp/email-dev.txt`. Set `NEWSLETTER_MAIL_*` to send it for real. Tests
 ignore all of these.
+
+`OFFLINE=true` is for an install no reader can reach, such as one on a laptop
+that reaches only its SMTP server or relay. Issues and journey emails then point
+nowhere in the app: uploaded pictures, a video's preview and a YouTube video's
+copied thumbnail go inside the message, 600 pixels wide, other files go as
+attachments, links lead where they were written, and there is no rating and no
+"View on the web". `List-Unsubscribe` is a `mailto:` to the reply-to address,
+or else the from address, and the footer asks for a reply. The relay is posted
+the pictures and files as `attachments`, so a relay that refuses a file's name
+or type refuses the message. Subscription confirmations still link to the app.
 
 `MAIL_DELIVERIES_PER_MINUTE` is the sending rate (default 20;
 `config/deploy.yml` sets 30). Deliveries are spaced out to stay under that rate, and a sweep every 15

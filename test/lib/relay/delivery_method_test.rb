@@ -67,6 +67,21 @@ class Relay::DeliveryMethodTest < ActiveSupport::TestCase
     assert_equal %w[ from from_name html subject text to ], @payload.keys.sort
   end
 
+  test "an inline picture travels with the cid its HTML shows, and a file with none" do
+    @mail.attachments.inline["logo.png"] = { mime_type: "image/png", content: "PNG" }
+    @mail.attachments["notes.pdf"] = { mime_type: "application/pdf", content: "PDF" }
+    @mail.html_part.body = %(<img src="#{@mail.attachments["logo.png"].url}">)
+    stub_request(:post, ENDPOINT).with { |request| @payload = JSON.parse(request.body) }.to_return(status: 201, body: "{}")
+
+    deliver @mail
+
+    picture, file = @payload["attachments"]
+    assert_equal({ "name" => "logo.png", "content_type" => "image/png", "content" => Base64.strict_encode64("PNG") }, picture.except("cid"))
+    assert_equal "<#{@payload["html"][/cid:([^"]+)/, 1]}>", picture["cid"]
+    assert_equal({ "name" => "notes.pdf", "content_type" => "application/pdf", "content" => Base64.strict_encode64("PDF") }, file)
+    assert_equal "Text", @payload["text"]
+  end
+
   test "forwards the idempotency key, the same each time the message is posted" do
     @mail["Idempotency-Key"] = "delivery-1"
     stub = stub_request(:post, ENDPOINT).with(headers: { "Idempotency-Key" => "delivery-1" }).to_return(status: 201, body: "{}")

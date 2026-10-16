@@ -7,7 +7,7 @@
 <%= post_email_text(@post) %>
 
 --
-<% if @post.on_the_web? %>
+<% if @post.on_the_web? && !offline? %>
 <%= t("mailers_issue_view_on_web_text", url: public_post_url(@post.public_param)) %>
 <% end %>
 <% if @subscriber %>
@@ -20,7 +20,11 @@
 
 <% end %>
 <%= t("mailers_issue_receiving", name: @account.name) %>
+<% if offline? %>
+<%= t("mailers_issue_unsubscribe_by_reply") %>
+<% else %>
 <%= t("mailers_issue_unsubscribe_text", url: @unsubscribe_url) %>
+<% end %>
 <% else %>
 <%= t("mailers_issue_test_copy") %>
 <% end %>

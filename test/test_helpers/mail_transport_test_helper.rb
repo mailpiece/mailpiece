@@ -25,4 +25,11 @@ module MailTransportTestHelper
     ActionMailer::Base.smtp_settings = smtp_settings
     Rails.configuration.x.newsletter_mail.fallback_delivery_method = nil
   end
+
+  def while_offline
+    Rails.configuration.x.offline = true
+    yield
+  ensure
+    Rails.configuration.x.offline = false
+  end
 end

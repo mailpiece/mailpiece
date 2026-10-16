@@ -86,6 +86,28 @@ class JourneyMailerTest < ActionMailer::TestCase
     end
   end
 
+  test "offline, email and test_email carry an uploaded picture inline, with no account set, and email offers unsubscribing by a reply to the from address" do
+    image = ActiveStorage::Blob.create_and_upload! io: file_fixture("moon.jpg").open, filename: "moon.jpg", content_type: "image/jpeg"
+    @email.update!(body: "<p>#{ActionText::Attachment.from_attachable(image).to_html}</p>")
+
+    while_offline do
+      Current.without_account do
+        [ JourneyMailer.email(@email, @subscriber), JourneyMailer.test_email(@email, "editor@example.com") ].each do |email|
+          assert_equal email.attachments.sole.url, Nokogiri::HTML5.fragment(email.html_part.body.to_s).at_css("figure > img")["src"]
+          assert_not_includes email.html_part.body.to_s, "http://example.com"
+          assert_not_includes email.text_part.body.to_s, "http://example.com"
+        end
+
+        email = JourneyMailer.email(@email, @subscriber)
+
+        assert_equal "<mailto:leo@newsletter.example?subject=unsubscribe>", email["List-Unsubscribe"].value
+        assert_nil email["List-Unsubscribe-Post"]
+        assert_includes CGI.unescapeHTML(email.html_part.body.to_s), %(To unsubscribe, reply to this email with "unsubscribe".)
+        assert_includes email.text_part.body.to_s, %(To unsubscribe, reply to this email with "unsubscribe".)
+      end
+    end
+  end
+
   test "email takes replies at the sender's reply to address" do
     account_senders(:davids).update!(reply_to_address: "editor@newsletter.example")
 

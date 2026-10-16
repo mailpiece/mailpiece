@@ -326,6 +326,83 @@ class PostMailerTest < ActionMailer::TestCase
     assert_includes email.text_part.body.to_s, address
   end
 
+  test "offline, issue carries each uploaded picture inline once, 600 pixels wide, and its other files attached" do
+    image = ActiveStorage::Blob.create_and_upload! io: file_fixture("moon.jpg").open, filename: "moon.jpg", content_type: "image/jpeg"
+    file = ActiveStorage::Blob.create_and_upload! io: StringIO.new("rules"), filename: "rules.txt", content_type: "text/plain", identify: false
+    @post.update!(body: "<p>#{attachment_html(image)}</p><p>#{attachment_html(image)}</p>#{attachment_html(file)}")
+
+    while_offline do
+      Current.without_account do
+        email = PostMailer.issue(@post, @subscriber)
+        html = Nokogiri::HTML5.fragment(email.html_part.body.to_s)
+        picture, attached = email.attachments.partition(&:inline?)
+
+        assert_equal 1, picture.size
+        assert_equal "image/jpeg", picture.first.mime_type
+        assert_equal 600, Vips::Image.new_from_buffer(picture.first.decoded, "").width
+        assert_equal [ picture.first.url ] * 2, html.css("figure > img").map { it["src"] }
+        assert_equal [ "rules.txt" ], attached.map(&:filename)
+        assert_includes html.text, "rules.txt"
+        assert_empty html.css("a")
+        assert_not_includes email.html_part.body.to_s, "http://example.com"
+        assert_not_includes email.text_part.body.to_s, "http://example.com"
+      end
+    end
+  end
+
+  test "offline, issue shows an uploaded video with no preview by its name, leading nowhere" do
+    ActiveStorage::Blob.any_instance.stubs(:previewable?).returns(false)
+    @post.update!(body: video_attachment_html)
+
+    while_offline do
+      email = PostMailer.issue(@post, @subscriber)
+      html = Nokogiri::HTML5.fragment(email.html_part.body.to_s)
+
+      assert_includes html.css("p").map(&:text), "clip.mp4"
+      assert_empty html.css("a")
+      assert_empty email.attachments
+      assert_includes email.text_part.body.to_s, "clip.mp4"
+      assert_not_includes email.text_part.body.to_s, "http://example.com"
+    end
+  end
+
+  test "offline, issue carries the post's copy of a YouTube thumbnail inline and still links to YouTube" do
+    @post.update!(body: %(<p><a href="https://youtu.be/dQw4w9WgXcQ">My video</a></p>))
+    @post.video_thumbnails.attach io: file_fixture("moon.jpg").open, filename: "dQw4w9WgXcQ.jpg", content_type: "image/jpeg"
+
+    while_offline do
+      email = PostMailer.issue(@post, @subscriber)
+      image = Nokogiri::HTML5.fragment(email.html_part.body.to_s).at_css("figure > a > img")
+
+      assert_equal email.attachments.sole.url, image["src"]
+      assert email.attachments.sole.inline?
+      assert_equal "https://youtu.be/dQw4w9WgXcQ", image.parent["href"]
+    end
+  end
+
+  test "offline, issue leads straight where its links were written, asks for no rating and offers unsubscribing by reply" do
+    account_senders(:davids).update!(reply_to_address: "editor@newsletter.example")
+    @post.update! body: %(<p><a href="https://forms.example.com/training">Sign up here</a></p>)
+    delivery = @post.deliveries.find_by!(subscriber: @subscriber)
+
+    while_offline do
+      email = PostMailer.issue(@post, @subscriber, delivery: delivery)
+      html, text = email.html_part.body.to_s, email.text_part.body.to_s
+
+      assert_equal "<mailto:editor@newsletter.example?subject=unsubscribe>", email["List-Unsubscribe"].value
+      assert_nil email["List-Unsubscribe-Post"]
+      assert_equal [ "https://forms.example.com/training" ], Nokogiri::HTML5.fragment(html).css("a").map { it["href"] }
+      assert_includes text, "[Sign up here](https://forms.example.com/training)"
+
+      [ CGI.unescapeHTML(html), text ].each do |part|
+        assert_includes part, %(To unsubscribe, reply to this email with "unsubscribe".)
+        assert_not_includes part, "View on the web"
+        assert_not_includes part, "liked this issue"
+        assert_not_includes part, "http://example.com"
+      end
+    end
+  end
+
   private
     def public_link_address(code)
       "http://#{ActionMailer::Base.default_url_options[:host]}#{@post.account.slug}/link/#{code}"
@@ -333,6 +410,10 @@ class PostMailerTest < ActionMailer::TestCase
 
     def video_attachment_html
       blob = ActiveStorage::Blob.create_and_upload! io: StringIO.new("video"), filename: "clip.mp4", content_type: "video/mp4", identify: false
+      attachment_html(blob)
+    end
+
+    def attachment_html(blob)
       ActionText::Attachment.from_attachable(blob).to_html
     end
 end

@@ -137,6 +137,7 @@ en:
   mailers_issue_test_copy: "This is a test copy. Subscribers have not received it yet."
   mailers_issue_test_subject: "[Test] %{title}"
   mailers_issue_unsubscribe: "Unsubscribe"
+  mailers_issue_unsubscribe_by_reply: "To unsubscribe, reply to this email with \"unsubscribe\"."
   mailers_issue_unsubscribe_text: "Unsubscribe: %{url}"
   mailers_issue_view_on_web: "View on the web"
   mailers_issue_view_on_web_text: "View on the web: %{url}"
