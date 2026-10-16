@@ -154,7 +154,7 @@ end
 
 ## Controller and model interactions
 
-In general, we favor a vanilla Rails approach with thin controllers directly invoking a rich domain model. We don't use services or other artifacts to connect the two.
+In general, we favor a [vanilla Rails](https://dev.37signals.com/vanilla-rails-is-plenty/) approach with thin controllers directly invoking a rich domain model. We don't use services or other artifacts to connect the two.
 
 Invoking plain Active Record operations is totally fine:
 
