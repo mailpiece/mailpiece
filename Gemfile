@@ -25,7 +25,7 @@ gem "geared_pagination", "~> 1.2"
 gem "rails-active_search", "~> 0.1.0"
 gem "rqrcode"
 gem "jbuilder"
-gem "lexxy", "0.9.33"
+gem "lexxy", "1.0.0"
 gem "image_processing", "~> 2.1"
 gem "ruby-vips", "~> 2.3", require: false
 gem "platform_agent"
