@@ -1,0 +1,7 @@
+sent_to_active:
+  account: davids_account
+  email: davids
+  subscriber: active
+  deliver_at: <%= 1.week.ago %>
+  sent_at: <%= 1.week.ago %>
+  message_id: welcome@newsletter.example

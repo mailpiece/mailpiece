@@ -1,0 +1,68 @@
+@layer components {
+  .btn {
+    --btn-border-radius: var(--radius-lg);
+  }
+
+  .btn--plain {
+    --btn-border-radius: 0;
+  }
+
+  .btn--circle,
+  .btn[aria-label]:where(:has(.icon)),
+  .btn:where(:has(.for-screen-reader):has(.icon)) {
+    --btn-border-radius: 50%;
+  }
+
+  @media (max-width: 639px) {
+    .btn--circle-mobile {
+      --btn-border-radius: 50%;
+    }
+  }
+
+  .btn__group {
+    .btn {
+      --btn-border-radius: 0;
+    }
+  }
+
+  .input--upload {
+    --btn-border-radius: 1ch;
+  }
+
+  .popup__btn {
+    --btn-border-radius: 0.3em;
+  }
+
+  .input--select {
+    --input-border-radius: var(--radius-lg);
+  }
+
+  .flash__inner {
+    border-radius: var(--radius-lg);
+  }
+
+  .post-summary__more {
+    --btn-border-radius: 3rem;
+  }
+
+  .post-pop__item {
+    &.btn {
+      --btn-border-radius: var(--radius-md);
+    }
+  }
+
+  .post-form__title,
+  .post-form__summary {
+    --input-border-radius: 0;
+  }
+
+  lexxy-link-dropdown {
+    .lexxy-editor__toolbar-dropdown-actions .lexxy-editor__toolbar-button {
+      border-radius: var(--radius-lg);
+    }
+  }
+
+  .lexxy-code-language-picker {
+    border-radius: var(--radius-lg);
+  }
+}

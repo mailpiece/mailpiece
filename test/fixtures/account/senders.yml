@@ -1,0 +1,9 @@
+davids:
+  account: davids_account
+  from_name: Leo
+  from_address: leo@newsletter.example
+
+other:
+  account: other_account
+  from_name: Other
+  from_address: other@elsewhere.example

@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+destination="${1:-}"
+databases=(production production_queue production_cable production_cache)
+
+if [ -z "$destination" ]; then
+  echo "Usage: script/restore DESTINATION" >&2
+  exit 1
+fi
+
+say() {
+  printf "\n→ %s\n" "$1"
+}
+
+app_exec() {
+  bin/kamal app exec -d "$destination" "bash -c '$1'"
+}
+
+litestream() {
+  bin/kamal accessory exec litestream -d "$destination" "$1"
+}
+
+explain_rollback() {
+  cat <<TEXT
+
+The restore did not finish. The databases from before it are in /rails/storage/aside.
+To put them back:
+
+  bin/kamal app stop -d $destination
+  bin/kamal app exec -d $destination "bash -c 'rm -f /rails/storage/production*.sqlite3* && mv /rails/storage/aside/* /rails/storage/ && rmdir /rails/storage/aside'"
+  bin/kamal app start -d $destination
+  bin/kamal accessory start litestream -d $destination
+TEXT
+}
+
+say "Checking no earlier restore left /rails/storage/aside behind"
+if ! app_exec 'test ! -e /rails/storage/aside'; then
+  echo "/rails/storage/aside already exists. Check what is in it, then delete it or put it back." >&2
+  exit 1
+fi
+
+say "Stopping the app"
+bin/kamal app stop -d "$destination"
+
+# Litestream uploads every second: give it time to send the app's last writes.
+sleep 5
+
+say "Stopping Litestream"
+bin/kamal accessory stop litestream -d "$destination"
+
+say "Moving the current databases to /rails/storage/aside"
+app_exec 'mkdir /rails/storage/aside && find /rails/storage -maxdepth 1 -name "production*.sqlite3*" -exec mv {} /rails/storage/aside/ \;'
+
+trap explain_rollback ERR
+
+# Litestream's local tracking belongs to the databases that were moved aside.
+say "Clearing Litestream's tracking"
+app_exec 'rm -rf /rails/storage/.production*.sqlite3-litestream'
+
+# A reboot uploads Litestream's config and credentials whether or not it has run on
+# this server. It has to wait until the databases are out of the way, or it would
+# back up the empty ones a new server starts with.
+say "Handing Litestream its config"
+bin/kamal accessory reboot litestream -d "$destination"
+bin/kamal accessory stop litestream -d "$destination"
+
+say "Backups that would be restored"
+for db in "${databases[@]}"; do
+  litestream "restore -dry-run /rails/storage/$db.sqlite3"
+done
+
+printf "\nRestore these into %s? [y/N] " "$destination"
+read -r answer
+if [ "$answer" != "y" ]; then
+  trap - ERR
+  explain_rollback
+  exit 1
+fi
+
+say "Restoring"
+for db in "${databases[@]}"; do
+  litestream "restore -integrity-check quick /rails/storage/$db.sqlite3"
+done
+
+say "Starting the app"
+bin/kamal app start -d "$destination"
+
+trap - ERR
+
+cat <<TEXT
+
+Restored. Litestream is still stopped.
+
+Log in and check the data. When it is right, start the backups again and
+delete the old databases:
+
+  bin/kamal accessory start litestream -d $destination
+  bin/kamal app exec -d $destination "bash -c 'rm -rf /rails/storage/aside'"
+
+If the data is wrong, put the old databases back:
+
+  bin/kamal app stop -d $destination
+  bin/kamal app exec -d $destination "bash -c 'rm -f /rails/storage/production*.sqlite3* && mv /rails/storage/aside/* /rails/storage/ && rmdir /rails/storage/aside'"
+  bin/kamal app start -d $destination
+  bin/kamal accessory start litestream -d $destination
+TEXT

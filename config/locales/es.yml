@@ -1,0 +1,780 @@
+es:
+  account_avatar_unusable: "no es una imagen que podamos usar"
+  account_domain_format: "tiene que ser solo un nombre de dominio, como news.example.com"
+  account_domain_label: "Dominio"
+  account_domain_title: "Dominio"
+  account_handle_confirm: "¿Cambiar esta dirección? Los enlaces ya enviados con la anterior dejan de funcionar."
+  account_handle_format: "empieza con una letra y solo admite minúsculas, números y guiones"
+  account_handle_name_label: "Nombre en la dirección"
+  account_handle_numbered_address_html: "Esta dirección funciona siempre: %{link}"
+  account_handle_taken: "ya está en uso"
+  account_handle_title: "Handle"
+  account_join_code_add_users: "Agregar usuarios"
+  account_join_code_change_limit: "Cambiar el límite"
+  account_join_code_change_limit_title: "Cambiar el límite de usos"
+  account_join_code_copy_button: "Copiar enlace de invitación"
+  account_join_code_generate_button: "Generar un código nuevo"
+  account_join_code_generate_confirm: "¿Seguro que querés generar un enlace nuevo? El código anterior deja de funcionar."
+  account_join_code_invite_link_label: "Enlace de invitación"
+  account_join_code_max_uses_hint: "Cuántas veces se puede usar este enlace para unirse a la cuenta. Se usó %{used}/%{limit} veces."
+  account_join_code_max_uses_label: "Máximo de usos"
+  account_join_code_none_remaining: "ninguno"
+  account_join_code_qr_button: "Obtener código QR"
+  account_join_code_qr_prompt: "Escaneá este código para unirte a %{account}:"
+  account_join_code_share: "Compartí el enlace de abajo para invitar gente a esta cuenta."
+  account_join_code_too_large: "no puede ser mayor que la población del planeta"
+  account_join_code_usage: "Este código se usó %{used}/%{limit} veces (usos restantes: %{remaining})"
+  account_newsletter_description_label: "Descripción"
+  account_newsletter_logo_label: "Logo"
+  account_newsletter_logo_remove: "Quitar logo"
+  account_newsletter_logo_remove_confirm: "¿Seguro que querés quitar el logo? El encabezado vuelve a mostrar el nombre."
+  account_newsletter_name_label: "Nombre del newsletter"
+  account_newsletter_title: "Newsletter"
+  account_return_url_format: "tiene que ser una dirección completa que empiece con https://"
+  account_sender_from_address_hint: "En un dominio verificado con el servicio de envío."
+  account_sender_from_address_label: "Email del remitente"
+  account_sender_from_name_label: "Nombre del remitente"
+  account_sender_reply_to_label: "Responder a"
+  account_sender_title: "Envío"
+  account_settings_address_pick_hint: "Elegí una dirección"
+  account_settings_domain_none_hint: "Sin dominio"
+  account_settings_filter_what: "configuración"
+  account_settings_sender_not_set_up_hint: "Sin configurar"
+  account_subscribe_form_copy_button: "Copiar formulario"
+  account_subscribe_form_hint: "Un formulario para tu propio sitio"
+  account_subscribe_form_return_url_label: "Después de suscribirse, enviar a la gente a"
+  account_subscribe_form_title: "Formulario de suscripción"
+  account_welcome_activate_label: "Activar la bienvenida"
+  account_welcome_deactivate_label: "Desactivar la bienvenida"
+  account_welcome_message_hint: "Se muestra a quienes visitan por primera vez en lugar de la descripción. Dejar en blanco para usar la descripción."
+  account_welcome_message_label: "Mensaje de bienvenida"
+  account_welcome_off_description: "Activar la bienvenida para recibir a quienes visitan por primera vez solo con el nombre, la descripción y el formulario de suscripción del newsletter."
+  account_welcome_off_hint: "Desactivada"
+  account_welcome_on_description: "Quienes visitan por primera vez ven solo el nombre, la descripción y el formulario de suscripción del newsletter, y pueden leer primero si lo prefieren."
+  account_welcome_on_hint: "Activada"
+  account_welcome_title: "Bienvenida"
+  accounts: "Cuentas"
+  back_to_top: "Volver arriba"
+  calendar_agenda: "Agenda"
+  calendar_earlier: "Antes"
+  calendar_later: "Después"
+  calendar_nothing_between: "Nada publicado ni programado del %{from} al %{to}"
+  calendar_title: "Calendario"
+  calendar_today: "Hoy"
+  calendar_weeks: "Semanas"
+  cancel: "Cancelar"
+  cancel_and_go_back: "Cancelar y volver"
+  continue: "Continuar"
+  copied_to_clipboard: "Copiado al portapapeles"
+  done: "Listo"
+  download: "Descargar"
+  download_file: "Descargar %{filename}"
+  edit: "Editar"
+  email: "Email"
+  filter_clear: "Borrar el filtro"
+  filter_no_matches: "No hay coincidencias."
+  filter_placeholder: "Filtrar…"
+  filter_search_everything_html: "Buscar «%{term}» en todo"
+  filter_what: "Filtrar %{what}"
+  filter_what_placeholder: "Filtrar %{what}…"
+  home: "Inicio"
+  journeys_activate: "Empezar a enviar"
+  journeys_activated: "Este email ahora se envía"
+  journeys_activated_since: "Este email se empezó a enviar después de abrir este editor, así que no se hizo nada"
+  journeys_any_hour: "A cualquier hora"
+  journeys_body_label: "Mensaje"
+  journeys_deactivate: "Dejar de enviar"
+  journeys_deactivated: "Este email ya no se envía"
+  journeys_delay: "Días después de la suscripción"
+  journeys_delete: "Eliminar email"
+  journeys_delete_confirm: "¿Seguro que querés eliminar este email para siempre?"
+  journeys_deleted: "Se eliminó el email"
+  journeys_edited_html: "Última edición: %{time}"
+  journeys_menu_label: "Envío y prueba"
+  journeys_more: "Más opciones"
+  journeys_new: "Nuevo email"
+  journeys_runs_finished:
+    one: "%{number} terminó"
+    other: "%{number} terminaron"
+  journeys_runs_in_progress:
+    one: "%{number} en curso"
+    other: "%{number} en curso"
+  journeys_runs_stopped:
+    one: "%{number} se detuvo antes"
+    other: "%{number} se detuvieron antes"
+  journeys_subject_label: "Asunto"
+  journeys_subject_placeholder: "Asunto del email…"
+  journeys_test_not_written: "Escribí el asunto y el mensaje antes de enviar una prueba"
+  journeys_timing_at_once: "Se envía enseguida"
+  journeys_timing_days_later:
+    one: "%{count} día después"
+    other: "%{count} días después"
+  journeys_title: "Recorridos"
+  journeys_trigger_subscriber_confirmed: "Cuando alguien se suscribe"
+  journeys_trigger_subscriber_unsubscribed: "Cuando alguien se da de baja"
+  language: "Idioma"
+  language_en: "English"
+  language_es: "Español"
+  lightbox_close: "Cerrar el visor de imágenes (esc)"
+  lightbox_close_title: "Cerrar (esc)"
+  lightbox_label: "Visor de imágenes (apretá escape para cerrar)"
+  load_more: "Cargar más…"
+  load_page: "Cargar la página %{number}"
+  mailers_account_cancelled_no_access: "Ya nadie puede ingresar a la cuenta"
+  mailers_account_cancelled_say: "Se canceló tu cuenta de Mailpiece %{name}."
+  mailers_account_cancelled_subject: "Se canceló tu cuenta"
+  mailers_account_cancelled_what_next: "¿Qué pasa ahora?"
+  mailers_email_change_confirm_link: "Confirmá tu nuevo email"
+  mailers_email_change_ignore: "Si no pediste este cambio, ignorá este email: tu dirección no cambia a menos que hagas clic en el enlace."
+  mailers_email_change_please_confirm: "Confirmá que querés usar esta dirección como tu nuevo email."
+  mailers_email_change_subject: "Confirmá tu nuevo email"
+  mailers_issue_rating_html: "Contame si %{liked} o si %{disliked}."
+  mailers_issue_rating_disliked: "no era para vos"
+  mailers_issue_rating_disliked_text: "O si no era para vos:"
+  mailers_issue_rating_liked: "te gustó este boletín"
+  mailers_issue_rating_liked_text: "Contame si te gustó este boletín:"
+  mailers_issue_receiving: "Recibís este email porque te suscribiste a %{name}."
+  mailers_issue_test_copy: "Esta es una copia de prueba. Los suscriptores todavía no la recibieron."
+  mailers_issue_test_subject: "[Prueba] %{title}"
+  mailers_issue_unsubscribe: "Darme de baja"
+  mailers_issue_unsubscribe_text: "Darme de baja: %{url}"
+  mailers_issue_view_on_web: "Ver en la web"
+  mailers_issue_view_on_web_text: "Ver en la web: %{url}"
+  mailers_issue_watch_video: "Ver el video"
+  mailers_issue_youtube_alt: "Video en YouTube"
+  mailers_journey_test_copy: "Esta es una copia de prueba de un email de un recorrido."
+  mailers_journey_unsubscribed: "Ya no tenés una suscripción a %{name}."
+  mailers_new_subscriber_say: "%{email} se suscribió a %{name}."
+  mailers_new_subscriber_subject: "Nueva suscripción: %{email}"
+  mailers_new_subscriber_turn_off_html: "Podés desactivar estos emails en %{link}."
+  mailers_new_subscriber_turn_off_link: "tu configuración de notificaciones"
+  mailers_new_subscriber_turn_off_text: "Podés desactivar estos emails en tu configuración de notificaciones: %{url}"
+  mailers_new_subscriber_view_link: "Ver suscriptor"
+  mailers_sign_in_code_subject: "Tu código de Mailpiece es %{code}"
+  mailers_sign_in_enter_code_new: "Escribí este código de verificación de 6 caracteres para terminar de crear tu cuenta:"
+  mailers_sign_in_enter_code_sign_in: "Escribí este código de verificación de 6 caracteres en la página de ingreso de Mailpiece:"
+  mailers_sign_in_expires: "Este código sirve durante %{time}."
+  mailers_sign_in_passkey_html: "P.D.: Para ingresar más rápido y con más seguridad, agregá una %{link}."
+  mailers_sign_in_passkey_link: "llave de acceso"
+  mailers_sign_in_passkey_text: "P.D.: Para ingresar más rápido y con más seguridad, agregá una llave de acceso: %{url}"
+  mailers_sign_in_title_new: "¡Te damos la bienvenida a Mailpiece!"
+  mailers_sign_in_title_sign_in: "Código de verificación de Mailpiece"
+  mailers_subscription_confirm_footer: "Si no te suscribiste, ignorá este email y no vas a recibir nada más."
+  mailers_subscription_confirm_link: "Sí, suscribirme a %{name}"
+  mailers_subscription_confirm_step: "¡Gracias por suscribirte! Hacé clic abajo para confirmar, y las nuevas publicaciones van a empezar a llegar a esta dirección."
+  mailers_subscription_confirm_title: "Confirmá tu suscripción a %{name}"
+  my_access_token_copy: "Copiar token de acceso"
+  my_access_token_description: "Descripción"
+  my_access_token_description_label: "Descripción del token de acceso"
+  my_access_token_description_placeholder: "p. ej. GitHub"
+  my_access_token_field_label: "Token"
+  my_access_token_permission: "Permiso"
+  my_access_token_read: "Lectura"
+  my_access_token_read_write: "Lectura + Escritura"
+  my_access_token_revoke: "Revocar"
+  my_access_token_revoke_confirm: "¿Seguro que querés revocar este token de acceso para siempre? Todo lo que lo usa deja de funcionar."
+  my_access_tokens: "Tokens de acceso personal"
+  my_access_tokens_blurb: "Tokens que generaste para usar la API de Mailpiece. Un token funciona como una contraseña, y lo podés revocar cuando quieras."
+  my_access_tokens_generate: "Generar un token de acceso nuevo"
+  my_access_tokens_generate_button: "Generar token de acceso"
+  my_access_tokens_new_title: "Generar un token de acceso personal"
+  my_access_tokens_no_tokens: "Todavía no hay tokens de acceso."
+  my_access_tokens_save_now: "Guardá este token de acceso ahora, porque no lo vas a poder ver de nuevo."
+  my_access_tokens_show_title: "Token de acceso personal"
+  my_passkey_already_registered: "Esa llave de acceso ya está registrada."
+  my_passkey_blurb: "Con una llave de acceso ingresás con la huella, la cara o el PIN de tu dispositivo, sin contraseña ni código por email. El código por email sigue funcionando en cualquier dispositivo."
+  my_passkey_browser_prompt: "Tu navegador te va a pedir que crees una llave de acceso con la biometría de tu dispositivo, un PIN o una llave de seguridad."
+  my_passkey_cancellation: "Se canceló el registro de la llave de acceso. Probá de nuevo cuando quieras."
+  my_passkey_default_name: "Llave de acceso"
+  my_passkey_duplicate: "Ya tenés una llave de acceso registrada en este dispositivo. Quitá la anterior y probá de nuevo."
+  my_passkey_edit_title: "Editar llave de acceso"
+  my_passkey_error: "Algo salió mal al registrar tu llave de acceso."
+  my_passkey_index_title: "Llaves de acceso"
+  my_passkey_name_label: "Nombre de la llave de acceso"
+  my_passkey_name_placeholder: "p. ej. MacBook, iPhone"
+  my_passkey_no_passkeys: "Todavía no hay llaves de acceso."
+  my_passkey_register: "Registrar una llave de acceso"
+  my_passkey_register_error: "No pudimos registrar esa llave de acceso. Probá de nuevo."
+  my_passkey_registered: "Se registró tu llave de acceso. Ponele un nombre para reconocerla después."
+  my_passkey_remove: "Quitar esta llave de acceso"
+  my_passkey_remove_confirm: "¿Seguro que querés quitar esta llave de acceso? Ya no vas a poder ingresar con ella."
+  posts: "Publicaciones"
+  posts_add_one: "Agregá una"
+  posts_already_sent_notice: "Esta publicación ya se envió a los suscriptores"
+  posts_audience_email: "Solo en el email"
+  posts_audience_email_command: "soloemail"
+  posts_audience_web: "Solo en la web"
+  posts_audience_web_command: "soloweb"
+  posts_backdate_needs_past: "Elegí una fecha y hora que ya hayan pasado para publicarla con fecha pasada"
+  posts_backdate_not_mailed: "Una publicación con fecha pasada no se envía por email, así que elegí un destino solo en la web"
+  posts_body_label: "Publicación"
+  posts_body_placeholder: "Escribí acá…"
+  posts_by_link_only: "Solo por enlace"
+  posts_cancel_schedule: "Cancelar la programación"
+  posts_changes_to: "Cambios en %{title}"
+  posts_current: "Actual"
+  posts_delete: "Eliminar publicación"
+  posts_delete_confirm: "¿Seguro que querés eliminar esta publicación para siempre? Los enlaces dejan de funcionar, incluso los de los emails ya enviados."
+  posts_deleted: "Se eliminó la publicación"
+  posts_destination_email: "Solo por email"
+  posts_destination_link: "En la web, solo por enlace"
+  posts_destination_not_offered: "Esta publicación no puede ir a ese destino"
+  posts_destination_web: "Solo en la web"
+  posts_destination_web_and_email: "En la web y por email"
+  posts_destinations_label: "Adónde va"
+  posts_email_not_set_up_html: "El envío de emails no está configurado. %{link}"
+  posts_email_only: "Solo por email"
+  posts_email_only_needs_sending: "Una publicación solo por email se programa únicamente con envío"
+  posts_filter_what: "publicaciones"
+  posts_finish_settings: "Terminá la configuración"
+  posts_history: "Historial"
+  posts_invalid_test_address: "Escribí un email válido para la prueba"
+  posts_links_invalid_url: "tiene que ser una dirección completa que empiece con http:// o https://"
+  posts_links_none: "No se envió ningún enlace con esta publicación."
+  posts_listed: "Listada"
+  posts_listing_not_on_the_web: "Solo se lista o se deja de listar una publicación que está en la web"
+  posts_nearby_this_post: "Esta publicación"
+  posts_nearby_title: "Publicaciones cerca de esta fecha"
+  posts_new: "Nueva publicación"
+  posts_next_version: "Versión siguiente"
+  posts_no_subscribers_note: "Todavía no hay suscriptores confirmados, así que no se envía ningún email."
+  posts_none_here: "No hay publicaciones acá."
+  posts_none_yet: "Todavía no hay publicaciones."
+  posts_nothing_sent_any_more: "Ya no hay suscriptores confirmados, así que no se envió nada"
+  posts_nothing_sent_yet: "Todavía no hay suscriptores confirmados, así que no se envió nada"
+  posts_on_the_web: "En la web"
+  posts_past_schedule: "Elegí una fecha y hora futuras para programarla"
+  posts_previous_version: "Versión anterior"
+  posts_progress_edited_html: "Editada %{time}"
+  posts_progress_for_html: "Para el %{schedule}"
+  posts_progress_not_sent_html: "No enviada, publicada el %{date}"
+  posts_progress_sending:
+    one: "Se enviaron %{sent} de %{total}"
+    other: "Se enviaron %{sent} de %{total}"
+  posts_progress_sent_some_html:
+    one: "Enviada a %{sent} de %{number} suscriptor el %{date}"
+    other: "Enviada a %{sent} de %{number} suscriptores el %{date}"
+  posts_progress_sent_to_html:
+    one: "Enviada a %{number} suscriptor el %{date}"
+    other: "Enviada a %{number} suscriptores el %{date}"
+  posts_publication_date: "Fecha de publicación"
+  posts_publication_refused_unsent: "Esta publicación va solo por email y todavía no se envió, así que no se puede publicar en la web. Sale cuando se envía."
+  posts_publish_on_web: "Publicar en la web"
+  posts_published_at_blank: "Una publicación ya publicada conserva su fecha, así que no puede quedar vacía"
+  posts_published_at_future: "La fecha de publicación no puede ser futura"
+  posts_published_since: "Esta publicación se publicó después de abrir este editor, así que no se hizo nada"
+  posts_release_date_changed: "La fecha cambió, así que no se publicó nada. Probá de nuevo."
+  posts_release_group_label: "Publicar o enviar"
+  posts_release_mail_confirm:
+    one: "¿Seguro que querés enviar esto a %{number} suscriptor ahora? Un email que ya salió no se puede cambiar ni volver a enviar."
+    other: "¿Seguro que querés enviar esto a %{number} suscriptores ahora? Un email que ya salió no se puede cambiar ni volver a enviar."
+  posts_release_more: "Más formas de publicar o enviar"
+  posts_release_past_confirm:
+    one: "¿Publicar esto con una fecha pasada? No se va a enviar por email a tu %{number} suscriptor."
+    other: "¿Publicar esto con una fecha pasada? No se va a enviar por email a tus %{number} suscriptores."
+  posts_release_publish: "Publicar"
+  posts_release_publish_and_send:
+    one: "Publicar y enviar a %{number} suscriptor"
+    other: "Publicar y enviar a %{number} suscriptores"
+  posts_release_publish_by_link: "Publicar por enlace"
+  posts_release_schedule: "Programar"
+  posts_release_schedule_and_send:
+    one: "Programar y enviar a %{number} suscriptor"
+    other: "Programar y enviar a %{number} suscriptores"
+  posts_release_send_to:
+    one: "Enviar a %{number} suscriptor"
+    other: "Enviar a %{number} suscriptores"
+  posts_released_sending: "El envío a los suscriptores está en camino"
+  posts_released_web: "Publicada en la web"
+  posts_results_brought_subscribers:
+    one: "Trajo 1 suscriptor"
+    other: "Trajo %{count} suscriptores"
+  posts_results_ratings: "Les gustó: %{liked} · No era para ellos: %{disliked}"
+  posts_results_title: "Resultados"
+  posts_save_dirty: "Cambios sin guardar"
+  posts_save_draft: "Guardar borrador"
+  posts_save_failed: "No se guardó"
+  posts_save_saving: "Guardando…"
+  posts_schedule_cancelled: "Programación cancelada"
+  posts_schedule_change: "Cambiar la programación"
+  posts_schedule_day: "Día"
+  posts_schedule_hour: "Hora"
+  posts_schedule_mail_confirm:
+    one: "¿Seguro que querés programar el envío a %{number} suscriptor en la fecha elegida?"
+    other: "¿Seguro que querés programar el envío a %{number} suscriptores en la fecha elegida?"
+  posts_schedule_refused_not_draft: "Solo se programa un borrador, y esta publicación no es un borrador"
+  posts_schedule_time_html: "%{date} a las %{time}"
+  posts_schedule_with_sending_html: "%{time}, con envío a los suscriptores"
+  posts_schedule_without_sending_html: "%{time}, sin envío"
+  posts_send_test: "Enviar test"
+  posts_state_draft: "Borradores"
+  posts_state_published: "Publicadas"
+  posts_state_scheduled: "Programadas"
+  posts_state_sent: "Enviadas"
+  posts_summary_label: "Bajada"
+  posts_summary_placeholder: "Agregá una bajada…"
+  posts_test_address: "Email para la prueba"
+  posts_test_not_sent: "No se envió la prueba. %{reason}"
+  posts_test_sent: "Prueba enviada a %{email_address}"
+  posts_title_label: "Título"
+  posts_title_placeholder: "Título de la publicación…"
+  posts_unlisted: "No listada"
+  posts_unpublish: "Despublicar"
+  posts_unpublish_confirm: "¿Seguro que querés sacar esta publicación de la web? Los enlaces dejan de funcionar, incluso los de los emails ya enviados."
+  posts_unpublished: "Ya no está en la web"
+  posts_unsent_refused:
+    one: "%{number} rechazo"
+    other: "%{number} rechazos"
+  posts_unsent_sender: "El envío de emails no está configurado"
+  posts_unsent_unverified:
+    one: "%{number} sin verificar"
+    other: "%{number} sin verificar"
+  posts_video_thumbnail_alt: "Video en YouTube"
+  posts_view_on_web: "Ver en la web"
+  profile: "Perfil"
+  public_about: "Sobre %{name}"
+  public_confirmation_done_body: "Las publicaciones de %{name} te van a llegar a %{email}."
+  public_confirmation_done_note: "%{name} elige qué publicaciones salen por email, así que algunas pueden estar solo en la web."
+  public_confirmation_done_title: "¡Listo, ya estás!"
+  public_confirmation_invalid_body: "Un enlace de confirmación sirve una sola vez, y durante %{duration}. Para recibir las publicaciones de %{name} por email, volvé a suscribirte desde cualquier publicación o escribile al newsletter."
+  public_confirmation_invalid_title: "Este enlace ya no funciona"
+  public_confirmation_pending_body: "Un clic más y listo."
+  public_confirmation_pending_button: "Suscribirme"
+  public_confirmation_pending_title: "Ya casi está"
+  public_no_posts: "Todavía no hay publicaciones."
+  public_rating_body: "Contame qué te pareció “%{title}”."
+  public_rating_done_title: "Gracias, anotado."
+  public_rating_disliked: "No era para mí"
+  public_rating_liked: "Me gustó"
+  public_rating_other_disliked: "o: no era para mí"
+  public_rating_other_liked: "o: me gustó"
+  public_rating_title: "¿Qué te pareció?"
+  public_read_more: "Leer más"
+  public_rss_feed: "feed RSS"
+  public_see_all_posts: "Ver todas las publicaciones"
+  public_subscribe_button: "Suscribirme"
+  public_subscribe_email_placeholder: "Escribí tu email…"
+  public_subscribe_label_html: "Suscribite para recibir las próximas publicaciones por email (o usá el %{link})"
+  public_subscribe_rss_only_html: "Recibí las próximas publicaciones por el %{link}"
+  public_subscription_not_sending_body: "%{name} todavía no envía emails, así que no se suscribió a nadie y no va a llegar ningún email."
+  public_subscription_not_sending_follow_html: "Podés seguir las nuevas publicaciones por el %{link}."
+  public_subscription_not_sending_title: "Todavía no recibe suscripciones"
+  public_subscription_sent_body: "Te acabamos de enviar un email. Hacé clic en el enlace para empezar a recibir %{name}."
+  public_subscription_sent_note: "¿No lo ves? Se llama “%{subject}”. Dale un minuto, y fijate también en spam."
+  public_subscription_sent_title: "Revisá tu email"
+  public_unsubscribe_button: "Darme de baja"
+  public_unsubscribe_confirm_body: "%{email} va a dejar de recibir las publicaciones de %{name}."
+  public_unsubscribe_confirm_title: "Darme de baja"
+  public_unsubscribe_done_body: "%{email} ya no recibe las publicaciones de %{name}."
+  public_unsubscribe_done_title: "Baja confirmada"
+  public_welcome_skip: "Primero quiero leer"
+  qr_code_alt: "Código QR"
+  save: "Guardar"
+  saved: "Guardado"
+  search: "Buscar"
+  search_no_matches: "Sin coincidencias"
+  search_results_for: "Resultados de «%{query}»"
+  sessions_account_name_first: "Mailpiece de %{name}"
+  sessions_account_name_nth: "Mailpiece de %{name} %{number}"
+  sessions_choose_account_heading: "Elegí una cuenta"
+  sessions_completion_body: "Creamos tu cuenta con tu nombre y entrás directo."
+  sessions_completion_heading: "Completá tu registro"
+  sessions_email_address_label: "Email"
+  sessions_email_placeholder: "Escribí tu email…"
+  sessions_enter_email_to_sign_in: "Escribí tu email para ingresar."
+  sessions_filter_accounts_aria_label: "Filtrar cuentas"
+  sessions_filter_accounts_placeholder: "Filtrar cuentas…"
+  sessions_full_name_label: "Nombre completo"
+  sessions_full_name_placeholder: "Tu nombre…"
+  sessions_invitation_inactive_body: "Ya se usó todas las veces que permitía. Pedile un enlace nuevo a alguien de %{account}."
+  sessions_invitation_inactive_heading: "Este enlace de invitación ya no se puede usar"
+  sessions_join_account_heading: "Unite a %{account}"
+  sessions_magic_link_retry: "Algo salió mal. Probá de nuevo."
+  sessions_no_accounts_yet: "Todavía no tenés cuentas."
+  sessions_passkey_failed: "Esa llave de acceso no funcionó. Probá de nuevo."
+  sessions_passkey_sign_in_button: "Ingresar con una llave de acceso"
+  sessions_passkey_sign_in_cancelled: "Se canceló el ingreso con llave de acceso. Probá de nuevo cuando quieras."
+  sessions_passkey_sign_in_error: "Algo salió mal al ingresar con la llave de acceso."
+  sessions_rate_limit_exceeded_15min: "Probá de nuevo en 15 minutos."
+  sessions_rate_limit_exceeded_3min: "Probá de nuevo más tarde."
+  sessions_sign_in: "Ingresar"
+  sessions_sign_in_link_only_instruction: "Te enviamos un código por email para ingresar."
+  sessions_sign_up_error: "Algo salió mal"
+  sessions_signup_error: "Algo salió mal y no pudimos crear tu cuenta. Probá de nuevo."
+  sessions_signup_heading: "Creá tu cuenta"
+  sessions_verify_email_code_display: "Código: %{code}"
+  sessions_verify_email_code_error: "Probá con otro código."
+  sessions_verify_email_code_label: "Código"
+  sessions_verify_email_code_placeholder: "••••••"
+  sessions_verify_email_heading: "Verificá tu email"
+  sessions_verify_email_hint: "Escribí el código de verificación que enviamos a %{email}. Sirve durante %{duration}."
+  sessions_verify_email_use_different_email: "Usar otro email"
+  settings: "Configuración"
+  settings_saved: "Configuración guardada"
+  skip_to_main_content: "Saltar al contenido principal"
+  snippets_add_title: "Agregar un fragmento"
+  snippets_content_label: "Contenido"
+  snippets_delete_button: "Eliminar fragmento"
+  snippets_delete_confirm: "¿Eliminar %{name}? Las publicaciones donde se pegó conservan su copia."
+  snippets_deleted: "Se eliminó %{name}."
+  snippets_empty_html: "<strong>Todavía no hay fragmentos.</strong> %{link}."
+  snippets_empty_link: "Agregá uno"
+  snippets_filter_what: "fragmentos"
+  snippets_name_label: "Nombre"
+  snippets_saved: "Fragmento guardado"
+  snippets_title: "Fragmentos"
+  status_active: "Confirmó"
+  status_bounced: "Rebotó"
+  status_deactivated: "Envío detenido"
+  status_draft: "Borrador"
+  status_pending: "Pendiente"
+  status_published: "Publicada"
+  status_refused: "Rechazada"
+  status_scheduled: "Programada"
+  status_sending: "Enviando"
+  status_sent: "Enviada"
+  status_stale: "Cambió en el texto"
+  status_unconfirmed: "Sin confirmar"
+  status_unsubscribed: "Se dio de baja"
+  status_unverified: "Sin verificar"
+  subscribers: "Suscriptores"
+  subscribers_activation_refused: "No se puede detener el envío a una dirección que se dio de baja o rebotó."
+  subscribers_activation_resumed: "Se reanudó el envío a %{email}."
+  subscribers_activation_stopped: "Se detuvo el envío a %{email}."
+  subscribers_add_title: "Agregar suscriptores"
+  subscribers_added_many:
+    one: "Se agregó %{count} suscriptor"
+    other: "Se agregaron %{count} suscriptores"
+  subscribers_added_one: "Se agregó %{email}"
+  subscribers_batch_add_button: "Agregar"
+  subscribers_batch_add_row_label: "Agregar la fila %{number}"
+  subscribers_batch_already_on_the_list: "Ya está en la lista"
+  subscribers_batch_email_label: "Email %{number}"
+  subscribers_batch_email_placeholder: "Email"
+  subscribers_batch_error_empty: "Completá al menos una fila"
+  subscribers_batch_found_none:
+    one: "Encontramos %{count} dirección en %{filename}, y no se puede agregar."
+    other: "Encontramos %{count} direcciones en %{filename}, y ninguna se puede agregar."
+  subscribers_batch_found_nothing: "No encontramos direcciones en ese archivo. Podés escribirlas abajo."
+  subscribers_batch_found_some:
+    one: "Encontramos %{count} dirección en %{filename}. Destildá las que no quieras agregar."
+    other: "Encontramos %{count} direcciones en %{filename}. Destildá las que no quieras agregar."
+  subscribers_batch_more_rows: "Una fila más"
+  subscribers_batch_not_address: "Se omite: no es una dirección de email"
+  subscribers_batch_refusal_bounced: "rebotó, y solo la persona puede volver a suscribirse"
+  subscribers_batch_refusal_deactivated: "tiene el envío detenido por un admin, y se reanuda desde su propia página"
+  subscribers_batch_refusal_unsubscribed: "se dio de baja, y solo la persona puede volver a suscribirse"
+  subscribers_batch_remove_row_label: "Quitar la fila %{number}"
+  subscribers_batch_skipped_bounced: "Se omite: rebotó, y solo la persona puede volver a suscribirse"
+  subscribers_batch_skipped_deactivated: "Se omite: tiene el envío detenido por un admin, y se reanuda desde su propia página"
+  subscribers_batch_skipped_unsubscribed: "Se omite: se dio de baja, y solo la persona puede volver a suscribirse"
+  subscribers_bounce_button: "Marcar como rebotada"
+  subscribers_bounce_confirm: "¿Marcar %{email} como rebotada? No se envían más publicaciones a esta dirección, y solo la persona puede deshacerlo volviendo a suscribirse."
+  subscribers_bounce_marked: "Se marcó %{email} como rebotada."
+  subscribers_confirm_button: "Confirmar"
+  subscribers_confirm_confirm: "¿Confirmar %{email}? La dirección entra en la lista y empiezan los emails de bienvenida."
+  subscribers_confirmation_confirmed: "Se confirmó %{email}."
+  subscribers_confirmation_refused: "Solo se puede confirmar acá una dirección que nunca confirmó. Quien se dio de baja o rebotó se vuelve a suscribir por su cuenta."
+  subscribers_create_refused: "No se agregó %{email}. No es una dirección de email, o se dio de baja, rebotó o tiene el envío detenido."
+  subscribers_delete_button: "Eliminar este suscriptor"
+  subscribers_delete_confirm: "¿Seguro que querés eliminar %{email} para siempre? Su historial se elimina también, y no va a quedar registro de si se dio de baja o rebotó."
+  subscribers_deleted: "Se eliminó %{email}."
+  subscribers_empty_filtered: "No hay suscriptores acá."
+  subscribers_empty_html: "<strong>Todavía no hay suscriptores.</strong> %{link} o poné el formulario de suscripción en tu sitio."
+  subscribers_empty_link: "Agregá algunos"
+  subscribers_event_bounced: "Rebotó: el servidor de correo dejó de entregar a esta dirección"
+  subscribers_event_confirmation_sent: "Email de confirmación enviado"
+  subscribers_event_deactivated: "Un admin detuvo el envío"
+  subscribers_event_delivery_pending: "“%{subject}” espera su envío"
+  subscribers_event_delivery_refused: "El servidor de correo rechazó “%{subject}”"
+  subscribers_event_delivery_sent: "Se envió “%{subject}”"
+  subscribers_event_delivery_unverified: "“%{subject}” sin verificar: no se sabe si llegó"
+  subscribers_event_run_finished: "Terminó el recorrido “%{journey}”"
+  subscribers_event_run_left: "Se detuvo el recorrido “%{journey}”: cambió el estado de la persona"
+  subscribers_event_run_refused: "Se detuvo el recorrido “%{journey}”: el servidor de correo rechazó un email"
+  subscribers_event_subscribed: "Se suscribió"
+  subscribers_event_subscribed_from_host: "Se suscribió desde %{host}"
+  subscribers_event_subscribed_from_post: "Se suscribió desde “%{title}”"
+  subscribers_filter_what: "suscriptores"
+  subscribers_history: "Historial"
+  subscribers_import_failed: "No pudimos leer %{filename}"
+  subscribers_import_file_missing: "hace falta"
+  subscribers_import_file_too_large: "es demasiado grande"
+  subscribers_import_file_wrong_type: "tiene que ser un CSV o un archivo de texto"
+  subscribers_import_hint_html: "Un CSV con una columna \"email\", o un archivo de texto con una dirección por línea, hasta %{number} direcciones. %{link}"
+  subscribers_import_read_button: "Importar suscriptores..."
+  subscribers_import_reading: "Leyendo el archivo…"
+  subscribers_import_template_link: "Descargar una plantilla"
+  subscribers_import_title: "Importar suscriptores..."
+  subscribers_import_too_long: "Tiene más de %{number} direcciones. Dividilo en archivos más chicos y leelos de a uno."
+  subscribers_import_unreadable: "Tiene que ser un CSV o un archivo de texto plano."
+  subscribers_not_address: "no es una dirección de email"
+  subscribers_resume_button: "Reanudar el envío"
+  subscribers_row_bounced_html: "Rebotó el %{date}"
+  subscribers_row_deactivated_html: "Envío detenido el %{date}"
+  subscribers_row_subscribed_html: "Se suscribió el %{date}"
+  subscribers_row_unconfirmed_html: "Sin confirmar desde el %{date}"
+  subscribers_row_unsubscribed_html: "Se dio de baja el %{date}"
+  subscribers_snippet_button: "Suscribirme"
+  subscribers_snippet_email_label: "Email"
+  subscribers_state_bounced_html: "El servidor de correo dejó de entregar a esta dirección el %{date}. La persona puede volver suscribiéndose de nuevo."
+  subscribers_state_confirmed_html: "Confirmó el %{date}. Recibe todas las publicaciones que se envían."
+  subscribers_state_deactivated_html: "Un admin detuvo el envío el %{date}. No se envía ninguna publicación hasta que se reanude."
+  subscribers_state_unconfirmed: "Todavía sin confirmar. No se envía ninguna publicación hasta que confirme."
+  subscribers_state_unsubscribed_html: "Se dio de baja el %{date}. Solo la persona puede volver a suscribirse."
+  subscribers_stop_button: "Detener el envío"
+  subscribers_stop_confirm: "¿Detener el envío a %{email}? No se envían más publicaciones a esta dirección hasta que se reanude."
+  support_email_link: "Escribinos un email"
+  support_email_link_inline: "escribinos un email"
+  support_need_help_html: "¿Necesitás ayuda? %{link}."
+  support_stuck_html: "Si te trabás, %{link} y te ayudamos a seguir."
+  untitled: "Sin título"
+  users_access_tokens_hint: "Para usar la API de Mailpiece."
+  users_add_users: "Agregar usuarios"
+  users_appearance: "Apariencia"
+  users_change_email: "Cambiar email"
+  users_change_email_title: "Cambiar tu email"
+  users_change_my_email_address: "Cambiar mi email"
+  users_check_email_title: "Revisá tu email"
+  users_color_theme: "Tema de color"
+  users_confirming_email_change_title: "Confirmando cambio de email"
+  users_email_address_confirmation_click: "Hacé clic en el enlace del email para confirmar tu nueva dirección."
+  users_email_address_confirmation_description: "Un momento mientras confirmamos tu nuevo email."
+  users_email_address_confirmation_sent_html: "Enviamos un enlace de confirmación a <strong>%{email}</strong>."
+  users_email_change_enter_instructions: "Escribí tu nuevo email y después revisá tu email para confirmar el cambio."
+  users_error_already_your_email: "Ese ya es tu email"
+  users_error_email_used_in_account: "Ya tenés un usuario en esta cuenta con ese email"
+  users_error_invalid_email: "Escribí un email válido"
+  users_error_invalid_token: "El token no es válido o venció"
+  users_full_name: "Nombre completo"
+  users_invalid_token_description: "Ese enlace de confirmación ya no sirve: los enlaces vencen a los 30 minutos. Probá de nuevo."
+  users_invalid_token_title: "El enlace venció"
+  users_name_input_label: "Nombre"
+  users_name_placeholder: "Tu nombre…"
+  users_new_email_address: "Nuevo email"
+  users_new_email_address_placeholder: "Nuevo email"
+  users_none_yet: "Todavía no hay"
+  users_notification_settings: "Configuración de notificaciones"
+  users_notification_settings_new_subscriber: "Avisarme por email cuando alguien se suscribe"
+  users_notifications: "Notificaciones"
+  users_passkey_count:
+    one: "1 llave de acceso"
+    other: "%{count} llaves de acceso"
+  users_passkeys_hint: "Ingresá sin esperar el código por email."
+  users_people: "Personas"
+  users_people_description: "Compartí el enlace de invitación para agregar personas a esta cuenta."
+  users_profile_updated: "Perfil actualizado."
+  users_role_admin: "Admin"
+  users_role_member: "Miembro"
+  users_role_owner: "Titular"
+  users_role_system: "Sistema"
+  users_save_changes: "Guardar cambios"
+  users_sign_in_section: "Ingreso"
+  users_sign_out: "Salir"
+  users_theme_always_dark: "Siempre oscuro"
+  users_theme_always_light: "Siempre claro"
+  users_theme_same_as_os: "Como el sistema"
+  users_token_count:
+    one: "1 token"
+    other: "%{count} tokens"
+  users_what_is_your_name: "¿Cuál es tu nombre?"
+  # Rails looks these paths up itself, so this block alone stays nested.
+  activerecord:
+    attributes:
+      account:
+        avatar: Logo
+        description: Descripción
+        domain: Dominio
+        handle: Nombre en la dirección
+        locale: Idioma
+        name: Nombre del newsletter
+        subscription_return_url: La página a la que enviar a la gente
+      account/join_code:
+        usage_limit: Límite de usos
+      account/sender:
+        from_address: Email del remitente
+        from_name: Nombre del remitente
+        reply_to_address: Responder a
+      journey/email:
+        body: Mensaje
+        delay_days: Días después de la suscripción
+        subject: Asunto
+      post/link:
+        url: Destino
+      subscriber:
+        email: Email
+      subscriber/import:
+        file: Archivo
+    errors:
+      messages:
+        record_invalid: 'La validación falló: %{errors}'
+        restrict_dependent_destroy:
+          has_one: No se puede eliminar el registro porque existe un %{record} que depende de él
+          has_many: No se puede eliminar el registro porque existen %{record} que dependen de él
+  errors:
+    format: "%{attribute} %{message}"
+    messages:
+      accepted: tiene que aceptarse
+      blank: no puede estar en blanco
+      confirmation: no coincide con %{attribute}
+      empty: no puede quedar sin completar
+      equal_to: tiene que ser igual a %{count}
+      even: tiene que ser par
+      exclusion: no está disponible
+      greater_than: tiene que ser mayor que %{count}
+      greater_than_or_equal_to: tiene que ser mayor o igual que %{count}
+      in: tiene que estar entre %{count}
+      inclusion: no es una de las opciones
+      invalid: no tiene un valor válido
+      less_than: tiene que ser menor que %{count}
+      less_than_or_equal_to: tiene que ser menor o igual que %{count}
+      model_invalid: 'La validación falló: %{errors}'
+      not_a_number: no es un número
+      not_an_integer: tiene que ser un número entero
+      odd: tiene que ser impar
+      other_than: no puede ser %{count}
+      password_too_long: tiene demasiados caracteres
+      present: tiene que estar en blanco
+      required: tiene que existir
+      taken: ya está en uso
+      too_long:
+        one: tiene demasiados caracteres (máximo 1)
+        other: tiene demasiados caracteres (máximo %{count})
+      too_short:
+        one: tiene muy pocos caracteres (mínimo 1)
+        other: tiene muy pocos caracteres (mínimo %{count})
+      wrong_length:
+        one: no tiene el largo correcto (tiene que tener 1 carácter)
+        other: no tiene el largo correcto (tiene que tener %{count} caracteres)
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      short: "%-d %b"
+      long: "%-d de %B de %Y"
+      month_and_year: "%B de %Y"
+      public_post: "%-d de %B de %Y"
+    day_names:
+    - domingo
+    - lunes
+    - martes
+    - miércoles
+    - jueves
+    - viernes
+    - sábado
+    abbr_day_names:
+    - dom
+    - lun
+    - mar
+    - mié
+    - jue
+    - vie
+    - sáb
+    month_names:
+    -
+    - enero
+    - febrero
+    - marzo
+    - abril
+    - mayo
+    - junio
+    - julio
+    - agosto
+    - septiembre
+    - octubre
+    - noviembre
+    - diciembre
+    abbr_month_names:
+    -
+    - ene
+    - feb
+    - mar
+    - abr
+    - may
+    - jun
+    - jul
+    - ago
+    - sep
+    - oct
+    - nov
+    - dic
+  datetime:
+    distance_in_words:
+      half_a_minute: medio minuto
+      less_than_x_seconds:
+        one: menos de 1 segundo
+        other: menos de %{count} segundos
+      x_seconds:
+        one: 1 segundo
+        other: "%{count} segundos"
+      less_than_x_minutes:
+        one: menos de un minuto
+        other: menos de %{count} minutos
+      x_minutes:
+        one: 1 minuto
+        other: "%{count} minutos"
+      about_x_hours:
+        one: alrededor de 1 hora
+        other: alrededor de %{count} horas
+      x_days:
+        one: 1 día
+        other: "%{count} días"
+      about_x_months:
+        one: alrededor de 1 mes
+        other: alrededor de %{count} meses
+      x_months:
+        one: 1 mes
+        other: "%{count} meses"
+      about_x_years:
+        one: alrededor de 1 año
+        other: alrededor de %{count} años
+      over_x_years:
+        one: más de 1 año
+        other: más de %{count} años
+      almost_x_years:
+        one: casi 1 año
+        other: casi %{count} años
+      x_years:
+        one: 1 año
+        other: "%{count} años"
+  helpers:
+    select:
+      prompt: Elegí una opción
+    submit:
+      create: Crear %{model}
+      submit: Guardar %{model}
+      update: Actualizar %{model}
+  number:
+    format:
+      separator: ","
+      delimiter: "."
+    human:
+      format:
+        delimiter: ''
+        precision: 3
+        significant: true
+        strip_insignificant_zeros: true
+      storage_units:
+        format: "%n %u"
+        units:
+          byte:
+            one: byte
+            other: bytes
+          kb: KB
+          mb: MB
+          gb: GB
+          tb: TB
+          pb: PB
+          eb: EB
+          zb: ZB
+  support:
+    array:
+      words_connector: ", "
+      two_words_connector: " y "
+      last_word_connector: " y "
+  time:
+    am: a. m.
+    pm: p. m.
+    formats:
+      default: "%d/%m/%Y %H:%M"
+      short: "%-d %b %H:%M"
+      long: "%-d de %B de %Y %H:%M"

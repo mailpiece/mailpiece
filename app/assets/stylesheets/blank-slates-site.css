@@ -1,0 +1,13 @@
+@layer components {
+  .blank-slate:not(.blank-slate--drag) {
+    border-color: var(--color-ink-light);
+    rotate: 0deg;
+    text-wrap: pretty;
+
+    > strong {
+      color: var(--color-ink);
+      display: block;
+      font-weight: 700;
+    }
+  }
+}

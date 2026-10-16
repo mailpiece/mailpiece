@@ -1,0 +1,15 @@
+draft_before:
+  account: davids_account
+  post: draft
+  creator: mia
+  title: Keeping a contractor file
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
+
+other_accounts_before:
+  account: other_account
+  post: other_accounts
+  creator: other_admin
+  title: A post from another account, before
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>

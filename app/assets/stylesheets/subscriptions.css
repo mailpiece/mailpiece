@@ -1,0 +1,95 @@
+@layer components {
+  /* A small centred block under a short rule. Its size is its own, so the reading surface's larger type stops here. */
+  .subscription {
+    font-size: var(--text-small);
+    line-height: 1.4;
+    margin-block: calc(var(--block-space) * 2);
+    padding-block-start: 1.25em;
+    position: relative;
+    text-align: center;
+
+    &::before {
+      border-block-start: 1px solid var(--color-ink-lighter);
+      content: "";
+      inline-size: 8rem;
+      inset-block-start: 0;
+      inset-inline-start: calc(50% - 4rem);
+      position: absolute;
+    }
+  }
+
+  /* Under the newsletter's own words it follows them closely, with no rule between. */
+  .newsletter-home .subscription,
+  .post-about + .subscription {
+    margin-block-start: var(--block-space-half);
+    padding-block-start: 0;
+
+    &::before {
+      display: none;
+    }
+  }
+
+  .newsletter-home .subscription {
+    margin-block-end: calc(var(--block-space) * 1.5);
+  }
+
+  .newsletter-home .newsletter-header {
+    padding-block-end: 0;
+  }
+
+  .subscription__label {
+    display: block;
+    text-wrap: balance;
+  }
+
+  .subscription__feed {
+    color: inherit;
+  }
+
+  /* The field and its button read as one control. */
+  .subscribe {
+    display: flex;
+    margin-block-start: 0.625em;
+    margin-inline: auto;
+    max-inline-size: 40ch;
+  }
+
+  /* Named under its block, three classes deep, to sit above the public layout's large form fields. */
+  .subscription .subscribe .subscribe__email {
+    --input-background: var(--color-canvas);
+    --input-border-color: var(--color-ink-lighter);
+    --input-border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+    --input-padding: 0.5em 1em;
+
+    border-inline-end-color: transparent;
+    flex: 1 1 auto;
+    font-size: max(16px, 1em);
+    inline-size: auto;
+    min-inline-size: 0;
+  }
+
+  .subscribe .subscribe__submit {
+    --btn-background: var(--color-link);
+    --btn-border-color: var(--color-link);
+    --btn-color: var(--color-ink-inverted);
+    --btn-border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    --btn-border-size: 1px;
+    --btn-font-weight: 500;
+    --btn-padding: 0.5em 1em;
+
+    border-inline-start-color: transparent;
+    flex: none;
+    transition-property: background-color, border, box-shadow, color, filter, opacity, scale; /* .btn's own, and the hover's filter */
+  }
+
+  /* One control, so the field's edge answers the pointer and the focus anywhere on it; the button keeps its own colour. */
+  .subscription .subscribe:focus-within {
+    .subscribe__email { --input-border-color: var(--color-ink-medium); }
+  }
+
+  @media (any-hover: hover) {
+    .subscription .subscribe:hover {
+      .subscribe__email { --input-border-color: var(--color-ink-medium); }
+    }
+  }
+}

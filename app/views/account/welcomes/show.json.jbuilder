@@ -1,0 +1,1 @@
+json.active @account.welcoming?

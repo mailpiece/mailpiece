@@ -1,0 +1,15 @@
+training:
+  account: davids_account
+  post: sent
+  code: "7k2m9qxa"
+  original_url: https://forms.example.com/training
+  url: https://forms.example.com/training
+  text: Sign up here
+
+handbook:
+  account: davids_account
+  post: sent
+  code: "4d8w1zpc"
+  original_url: https://example.com/handbook/ladders
+  url: https://example.com/handbook/ladders
+  text: the handbook

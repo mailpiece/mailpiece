@@ -1,0 +1,62 @@
+leo:
+  account: davids_account
+  identity: leo
+  name: Leo
+  role: owner
+  active: true
+  verified_at: <%= 1.year.ago %>
+  created_at: <%= 1.year.ago %>
+
+nonstaff:
+  account: davids_account
+  identity: nonstaff
+  name: Non Staff
+  role: member
+  active: true
+  verified_at: <%= 1.year.ago %>
+  created_at: <%= 1.year.ago %>
+
+anlab:
+  account: davids_account
+  identity: anlab
+  name: Anlab Member
+  role: member
+  active: true
+  verified_at: <%= 1.month.ago %>
+  created_at: <%= 1.year.ago %>
+
+mia:
+  account: davids_account
+  identity: mia
+  name: Mia Admin
+  role: admin
+  active: true
+  verified_at: <%= 1.month.ago %>
+  created_at: <%= 1.year.ago %>
+
+# The other account's own person, so work on it is never done in this account's name.
+
+other_admin:
+  account: other_account
+  identity: other_admin
+  name: Other Admin
+  role: admin
+  active: true
+  verified_at: <%= 1.month.ago %>
+  created_at: <%= 1.year.ago %>
+
+# Every account has one, holds no identity, and stands for whatever nobody did by hand.
+
+system:
+  account: davids_account
+  name: System
+  role: system
+  active: true
+  created_at: <%= 1.year.ago %>
+
+other_system:
+  account: other_account
+  name: System
+  role: system
+  active: true
+  created_at: <%= 1.year.ago %>

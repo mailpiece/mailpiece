@@ -1,0 +1,15 @@
+sign_off:
+  account: davids_account
+  name: Sign-off
+
+reply:
+  account: davids_account
+  name: Reply to me
+
+subscribe:
+  account: davids_account
+  name: Subscribe
+
+other_accounts:
+  account: other_account
+  name: Theirs

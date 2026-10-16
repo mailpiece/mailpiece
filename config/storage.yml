@@ -1,0 +1,18 @@
+test:
+  service: Disk
+  root: <%= Rails.root.join("tmp/storage") %>
+
+local:
+  service: Disk
+  root: <%= Rails.root.join("storage") %>
+
+s3:
+  service: S3
+  access_key_id: <%= ENV["S3_ACCESS_KEY_ID"] %>
+  bucket: <%= ENV["S3_BUCKET"] || "mailpiece-#{Rails.env}-activestorage" %>
+  endpoint: <%= ENV["S3_ENDPOINT"] %>
+  force_path_style: <%= ENV["S3_FORCE_PATH_STYLE"] == "true" %>
+  region: <%= ENV.fetch("S3_REGION", "us-east-1") %>
+  request_checksum_calculation: <%= ENV.fetch("S3_REQUEST_CHECKSUM_CALCULATION", "when_required") %>
+  response_checksum_validation: <%= ENV.fetch("S3_RESPONSE_CHECKSUM_VALIDATION", "when_required") %>
+  secret_access_key: <%= ENV["S3_SECRET_ACCESS_KEY"] %>

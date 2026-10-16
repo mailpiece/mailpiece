@@ -1,0 +1,15 @@
+sent_to_active:
+  account: davids_account
+  post: sent
+  subscriber: active
+  deliver_at: <%= 2.weeks.ago %>
+  sent_at: <%= 2.weeks.ago %>
+  message_id: one@newsletter.example
+
+sent_to_unsubscribed:
+  account: davids_account
+  post: sent
+  subscriber: unsubscribed
+  deliver_at: <%= 2.weeks.ago %>
+  sent_at: <%= 2.weeks.ago %>
+  message_id: two@newsletter.example

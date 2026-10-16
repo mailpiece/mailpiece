@@ -1,0 +1,7 @@
+davids_account:
+  name: Leo's Account
+  external_account_id: 1234567
+
+other_account:
+  name: Other Account
+  external_account_id: 7654321

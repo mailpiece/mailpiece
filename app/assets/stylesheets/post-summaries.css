@@ -1,0 +1,78 @@
+@layer components {
+  /* Stretched, so the rules run the width of the column the page centres it in. */
+  .post-summaries {
+    align-self: stretch;
+    border-block-end: 1px solid var(--color-ink-lighter);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* A row for each post under a thin rule, and all of it leads to the post: the title's link is stretched over it. */
+  .post-summary {
+    border-block-start: 1px solid var(--color-ink-lighter);
+    display: flex;
+    flex-direction: column;
+    padding-block: 1.5rem;
+    position: relative;
+  }
+
+  .post-summary__title {
+    color: var(--color-writing-ink);
+    font-family: var(--font-title);
+    font-size: clamp(1.3rem, 5.5vw, 1.55rem);
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    line-height: 1.15;
+    margin-block: 0 0.4rem;
+    text-wrap: balance;
+  }
+
+  /* The underline is always there and only its colour changes, so it can fade in at the pace base.css gives a link. */
+  .post-summary__link {
+    color: inherit;
+    text-decoration-color: transparent;
+    text-decoration-line: underline;
+    transition-property: background-color, border-color, box-shadow, outline, text-decoration-color;
+
+    &::after {
+      content: "";
+      inset: 0;
+      position: absolute;
+    }
+
+    @media (any-hover: hover) {
+      &:hover {
+        text-decoration-color: currentColor;
+      }
+    }
+  }
+
+  .post-summary__excerpt {
+    color: var(--color-writing-subtle);
+    font-size: 0.95em;
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  /* A quiet pill: nothing on the index weighs more than the titles. Above the stretched link, so it answers to its own hover. */
+  .post-summary__more {
+    --btn-background: transparent;
+    --btn-border-color: var(--color-ink-lighter);
+    --btn-border-radius: 3rem;
+    --btn-color: var(--color-writing-subtle);
+    --btn-font-weight: 500;
+    --btn-padding: 0.3em 0.8em;
+
+    align-self: start;
+    font-size: 0.8rem;
+    margin-block-start: 0.9rem;
+    z-index: 1;
+
+    @media (any-hover: hover) {
+      &:hover {
+        --btn-border-color: var(--color-ink-light);
+        --btn-color: var(--color-writing-ink);
+      }
+    }
+  }
+}

@@ -1,0 +1,213 @@
+:root {
+  /* The ink of the surface a post is written and read on: a neutral near-black, and its quiet tone. */
+  --lch-writing-ink: 24.64% 0.0437 297.09;
+  --color-writing-ink: oklch(var(--lch-writing-ink));
+  --color-writing-subtle: oklch(var(--lch-writing-ink) / 66%);
+
+  /* Titles, written or read. Fizzy's --font-serif stays as Fizzy has it. */
+  --font-title: Georgia, ui-serif, serif;
+}
+
+html[data-theme="dark"] {
+  --lch-writing-ink: 93.55% 0.0052 67.76;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) {
+    --lch-writing-ink: 93.55% 0.0052 67.76;
+  }
+}
+
+@layer components {
+  /* The surface a post is written and read on, set as HEY World sets its pages: a neutral near-black on the canvas, a little over 17px on a phone and a little under 20px on a desk, and tight leading with a full line between paragraphs. The ink is the surface's own token; the app keeps its own. */
+  .writing {
+    --input-color: var(--color-writing-ink);
+
+    color: var(--color-writing-ink);
+    font-size: 1.1rem;
+    padding-block-end: clamp(var(--block-space), 5%, calc(var(--block-space) * 3));
+
+    /* The root grows at this width, so the text is stepped back to land on HEY's desk size. */
+    @media (min-width: 100ch) {
+      font-size: 1.04rem;
+    }
+  }
+
+  .writing__form {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* One face, size and leading for the title, written or read, so the page does not jump between the two. */
+  .writing .post-form__heading,
+  .writing .post__title {
+    color: var(--color-writing-ink);
+    font-family: var(--font-title);
+    font-size: clamp(1.7rem, 7vw, 2.3rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+    text-wrap: wrap;
+  }
+
+  .writing .post__title {
+    margin-block-end: 0.8em;
+    text-wrap: balance;
+  }
+
+  /* The writer's own line about the post, under its title: larger than the text and quieter. */
+  .writing .post__title:has(+ .post__summary) {
+    margin-block-end: 0.4em;
+  }
+
+  .writing .post__summary,
+  .writing .post-form__summary {
+    color: var(--color-writing-subtle);
+    font-size: 1.15em;
+    line-height: 1.35;
+    text-wrap: balance;
+  }
+
+  .writing .post__summary {
+    margin-block: 0 1.6em;
+  }
+
+  .writing .post__meta {
+    color: var(--color-writing-subtle);
+    font-size: 0.75em;
+    margin-block-end: var(--block-space-half);
+  }
+
+  .writing .post {
+    padding-block-start: var(--block-space);
+  }
+
+  /* On the reader's pages a post opens centred over its text, under its date in small capitals. These follow the rules above, which they outrank only by coming later. */
+  .reading .post__meta {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .reading .post > .post__meta {
+    margin-block-end: 0.75rem;
+    text-align: center;
+  }
+
+  .reading .post__title {
+    text-align: center;
+  }
+
+  .reading .post__title:has(+ .post__summary) {
+    margin-block-end: 0.75rem;
+  }
+
+  .reading .post__summary {
+    font-size: 1.1em;
+    line-height: 1.4;
+    margin-block-end: 1.75rem;
+    text-align: center;
+  }
+
+  .writing .lexxy-editor__content {
+    min-block-size: 50dvh;
+  }
+
+  /* A page toolbar, squared to the buttons' corner: it stays in view while the page scrolls under it. */
+  .writing lexxy-toolbar,
+  .writing-toolbar {
+    --padding-block: 0.5em;
+    --padding-inline: 1.1em;
+
+    background-color: var(--color-ink-lightest);
+    border: 0;
+    border-radius: var(--radius-lg);
+    inset-block-start: calc(var(--strip-height) + var(--custom-safe-inset-top) + var(--block-space-half));
+    margin-block-end: var(--block-space-double);
+    padding: var(--padding-block) var(--padding-inline);
+    position: sticky;
+    z-index: 1;
+  }
+
+  .writing-toolbar {
+    align-items: center;
+    display: flex;
+    gap: var(--inline-space);
+    inline-size: fit-content;
+    margin-inline: auto;
+    max-inline-size: 100%;
+  }
+
+  .writing-bar {
+    background-color: var(--color-canvas);
+    border-block-start: 1px solid var(--color-ink-lighter);
+    color: var(--color-ink);
+    font-size: var(--text-small);
+    inset-block-end: 0;
+    margin-block-start: var(--block-space);
+    padding-block: var(--block-space-half) calc(var(--block-space-half) + var(--custom-safe-inset-bottom));
+    position: sticky;
+    view-transition-name: writing-bar;
+    z-index: 1;
+  }
+
+  .writing__version--current {
+    border-block-start: 1px solid var(--color-ink-lighter);
+    margin-block-start: var(--block-space-double);
+    padding-block-start: var(--block-space-double);
+  }
+
+  /* Reading rhythm: a full line after every block, and a heading with more air above than below. */
+  .writing .lexxy-content {
+    line-height: 1.4;
+
+    p, ul, ol, dl, blockquote, pre, table {
+      margin-block: 0 1lh;
+      text-wrap: pretty;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-title);
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      line-height: 1.25;
+      margin-block: 1.4em 0.5em;
+      text-wrap: wrap;
+
+      &:first-child {
+        margin-block-start: 0;
+      }
+    }
+
+    h1 { font-size: 1.6em; }
+    h2 { font-size: 1.4em; }
+    h3 { font-size: 1.2em; }
+    h4 { font-size: 1.1em; }
+    h5, h6 { font-size: 1em; }
+
+    li {
+      margin-block: 0 0.35lh;
+    }
+
+    li > ul,
+    li > ol {
+      margin-block: 0.35lh 0;
+    }
+
+    blockquote {
+      font-style: italic;
+      margin-inline: 0;
+      padding-inline-start: 2ch;
+    }
+
+    hr {
+      margin-block: 2lh;
+    }
+
+    .attachment {
+      margin-block: 0 1lh;
+    }
+  }
+}

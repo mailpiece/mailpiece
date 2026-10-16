@@ -1,0 +1,16 @@
+read:
+  account: davids_account
+  creator: mia
+  status: completed
+  rows:
+    - email: new@example.com
+    - email: ada@example.com
+    - email: dan@example.com
+    - email: not an address
+
+other_accounts:
+  account: other_account
+  creator: other_admin
+  status: completed
+  rows:
+    - email: new@example.com

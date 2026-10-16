@@ -1,0 +1,17 @@
+default: &default
+  adapter: sqlite
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default
+
+beta:
+  <<: *default
+
+staging:
+  <<: *default

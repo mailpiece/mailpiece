@@ -1,0 +1,18 @@
+@layer components {
+  .reading {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .reading__spinner {
+    block-size: 1em;
+    color: var(--color-ink-medium);
+    flex: none;
+    inline-size: 2em;
+  }
+
+  .reading__message {
+    margin: 0;
+  }
+}

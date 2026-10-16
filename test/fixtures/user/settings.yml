@@ -1,0 +1,22 @@
+_fixture:
+  model_class: User::Settings
+
+david_settings:
+  account: davids_account
+  user: leo
+
+nonstaff_settings:
+  account: davids_account
+  user: nonstaff
+
+anlab_settings:
+  account: davids_account
+  user: anlab
+
+mia_settings:
+  account: davids_account
+  user: mia
+
+other_admin_settings:
+  account: other_account
+  user: other_admin

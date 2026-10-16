@@ -1,0 +1,94 @@
+@layer components {
+  /* A public page carries the newsletter's identity itself, so the layout's brand above would say it twice. */
+  .newsletter-home .site-header__brand,
+  .newsletter-post .site-header__brand {
+    display: none;
+  }
+
+  .newsletter-header {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding-block: 0 var(--block-space-half);
+    text-align: center;
+  }
+
+  .newsletter-header__identity {
+    align-items: center;
+    color: var(--color-writing-ink);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    text-decoration: none;
+  }
+
+  .newsletter-header__logo {
+    block-size: 3rem;
+    border-radius: var(--radius-lg);
+    inline-size: auto;
+  }
+
+  .newsletter-header__name {
+    font-family: var(--font-title);
+    font-size: clamp(2rem, 9vw, 2.4rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  /* Over a post the identity is one small line that leads home. */
+  .newsletter-post .newsletter-header__identity {
+    flex-direction: row;
+  }
+
+  .newsletter-post .newsletter-header__logo {
+    block-size: 1.75rem;
+  }
+
+  .newsletter-post .newsletter-header__name {
+    font-size: 1.35rem;
+  }
+
+  .newsletter-header__description,
+  .post-about__description {
+    color: var(--color-writing-subtle);
+    font-size: 0.95em;
+    line-height: 1.4;
+    margin: 0;
+    max-inline-size: 32rem;
+    text-wrap: balance;
+  }
+
+  /* A few words under a name, not a text: the reading rhythm's line after the last block would open a gap under them. */
+  .newsletter-header .lexxy-content > :last-child,
+  .post-about .lexxy-content > :last-child {
+    margin-block-end: 0;
+  }
+
+  /* Stretched, so its rule runs the width of the column the page centres it in. */
+  .post-about {
+    align-items: center;
+    align-self: stretch;
+    border-block-start: 1px solid var(--color-ink-lighter);
+    display: flex;
+    flex-direction: column;
+    gap: var(--block-space-half);
+    margin-block-start: calc(var(--block-space) * 1.5);
+    padding-block-start: var(--block-space-double);
+    text-align: center;
+  }
+
+  /* The label HEY puts over an "About": very small, capitals, widely spaced. */
+  .post-about__title {
+    color: var(--color-writing-subtle);
+    font-size: 0.75em;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    line-height: 1.3;
+    margin: 0;
+    text-transform: uppercase;
+  }
+}

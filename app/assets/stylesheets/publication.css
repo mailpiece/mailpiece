@@ -1,0 +1,35 @@
+@layer components {
+  .publication {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: var(--block-space);
+    inline-size: 100%;
+    margin-inline: auto;
+    max-inline-size: 32rem;
+    text-align: center;
+  }
+
+  .publication__box {
+    align-items: center;
+    background-color: var(--color-ink-lightest);
+    border-radius: 0.5em;
+    display: flex;
+    flex-direction: column;
+    gap: var(--block-space-half);
+    inline-size: 100%;
+    padding: var(--block-space) var(--inline-space);
+  }
+
+  .publication__box--published {
+    background-color: color-mix(in oklch, var(--color-link) 12%, var(--color-canvas));
+  }
+
+  .publication__switch {
+    --icon-size: 1.5em;
+
+    align-items: center;
+    display: flex;
+    gap: var(--inline-space);
+  }
+}

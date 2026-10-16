@@ -1,0 +1,74 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "37f34ce3255e152ce26709bb329052059db13b0237b1c7dc3717b666f3e34c85",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/public/links_controller.rb",
+      "line": 3,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Current.account.post_links.find_by!(:code => params[:code]).url, :allow_other_host => true)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Public::LinksController",
+        "method": "show"
+      },
+      "user_input": "Current.account.post_links.find_by!(:code => params[:code]).url",
+      "confidence": "Weak",
+      "cwe_id": [
+        601
+      ],
+      "note": "The target is a stored row's destination, never read from the request: the request only picks the row by its code. A destination is recorded from an issue the newsletter mailed or corrected by an admin, and Post::Link validates it as an http(s) address."
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "cee22e76d0a41d4279227ac7bf90938d980cb7b8f2b8b28cb0696223411f32b4",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/public/embedded_subscriptions_controller.rb",
+      "line": 13,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Current.account.subscription_return_url, :allow_other_host => true)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Public::EmbeddedSubscriptionsController",
+        "method": "create"
+      },
+      "user_input": "Current.account.subscription_return_url",
+      "confidence": "Weak",
+      "cwe_id": [
+        601
+      ],
+      "note": "The target is the account's own stored setting, never read from the request. Only an admin sets it, in Settings, and Account validates it as a full https address."
+    },
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 70,
+      "fingerprint": "f63a332310781db971eb712cfca9fb4769ddaeab13f22697d7fa59d9365bec7f",
+      "check_name": "MassAssignment",
+      "message": "Specify exact keys allowed for mass assignment instead of using `permit!` which allows any keys",
+      "file": "app/helpers/pagination_helper.rb",
+      "line": 73,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.permit!",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "PaginationHelper",
+        "method": "forwardable_request_params"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "cwe_id": [
+        915
+      ],
+      "note": "Params are forwarded to url_for, not mass-assigned to a model; url_for control options are stripped"
+    }
+  ],
+  "brakeman_version": "8.1.0"
+}

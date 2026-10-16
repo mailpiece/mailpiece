@@ -1,0 +1,22 @@
+@layer components {
+  .popup {
+    opacity: 0;
+    scale: 0.95;
+    transform-origin: top;
+    transition: var(--duration-medium) var(--ease-out-expo);
+    transition-behavior: allow-discrete;
+    transition-property: display, opacity, overlay, scale;
+
+    &[open] {
+      opacity: 1;
+      scale: 1;
+    }
+
+    @starting-style {
+      &[open] {
+        opacity: 0;
+        scale: 0.95;
+      }
+    }
+  }
+}

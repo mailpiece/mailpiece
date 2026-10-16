@@ -1,0 +1,6 @@
+@layer components {
+  /* Components answer to the column they sit in. The page is a layout. */
+  #main {
+    container: layout / inline-size;
+  }
+}

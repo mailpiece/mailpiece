@@ -1,0 +1,51 @@
+sent:
+  account: davids_account
+  creator: leo
+  title: Three deadlines in March
+  code: "5e417a01"
+  published_at: <%= 2.weeks.ago %>
+  dated_at: <%= 2.weeks.ago %>
+  sent_at: <%= 2.weeks.ago %>
+  deliveries_count: 2
+
+draft:
+  account: davids_account
+  creator: mia
+  title: How to keep a contractor file
+  code: "d4af7002"
+
+scheduled:
+  account: davids_account
+  creator: mia
+  title: What an inspector checks at the gate
+  code: "5c4ed003"
+  scheduled_posting_at: <%= 1.day.from_now %>
+  dated_at: <%= 1.day.from_now %>
+  scheduled_delivery: true
+
+unlisted:
+  account: davids_account
+  creator: leo
+  title: Notes for the March workshop
+  code: "0a11574d"
+  published_at: <%= 3.days.ago %>
+  dated_at: <%= 3.days.ago %>
+  visibility: unlisted
+
+email_only:
+  account: davids_account
+  creator: leo
+  title: For subscribers only
+  code: "e3a11006"
+  published_at: <%= 2.days.ago %>
+  dated_at: <%= 2.days.ago %>
+  sent_at: <%= 2.days.ago %>
+  visibility: email_only
+
+other_accounts:
+  account: other_account
+  creator: other_admin
+  title: A post from another account
+  code: "07be4005"
+  published_at: <%= 1.week.ago %>
+  dated_at: <%= 1.week.ago %>

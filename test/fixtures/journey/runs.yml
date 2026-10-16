@@ -1,0 +1,6 @@
+active_confirmed:
+  account: davids_account
+  subscriber: active
+  trigger: subscriber_confirmed
+  state: finished
+  ended_at: <%= 1.week.ago %>

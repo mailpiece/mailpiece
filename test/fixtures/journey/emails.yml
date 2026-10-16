@@ -1,0 +1,17 @@
+davids:
+  account: davids_account
+  trigger: subscriber_confirmed
+  subject: Welcome to the bulletin
+  active: true
+
+davids_goodbye:
+  account: davids_account
+  trigger: subscriber_unsubscribed
+  subject: Sorry to see you go
+  active: false
+
+other_accounts:
+  account: other_account
+  trigger: subscriber_confirmed
+  subject: Hello from elsewhere
+  active: false

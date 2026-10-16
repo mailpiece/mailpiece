@@ -1,0 +1,26 @@
+production: &production
+  clear_solid_queue_finished_jobs:
+    command: "SolidQueue::Job.clear_finished_in_batches(sleep_between_batches: 0.3)"
+    schedule: every hour at minute 12
+  cleanup_magic_links:
+    command: "MagicLink.cleanup"
+    schedule: every 4 hours
+  cleanup_subscriber_imports:
+    command: "Subscriber::Import.cleanup"
+    schedule: every hour at minute 25
+  sweep_unattached_blobs:
+    command: "ActiveStorage::Blob.sweep_unattached"
+    schedule: every day at 04:00
+  deliver_stalled_post_deliveries:
+    command: "Post::Delivery.deliver_stalled_later"
+    schedule: every 15 minutes
+  deliver_stalled_journey_deliveries:
+    command: "Journey::Delivery.deliver_stalled_later"
+    schedule: every 15 minutes
+  publish_due_posts:
+    command: "Post.publish_due_later"
+    schedule: every minute
+
+staging: *production
+beta: *production
+development: *production

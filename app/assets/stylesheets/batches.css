@@ -1,0 +1,64 @@
+@layer components {
+  .batch__rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--block-space-half);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .batch__row {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--inline-space-half);
+    margin-block: 0.25rem;
+
+    > .btn {
+      flex: none;
+      margin: 0;
+    }
+  }
+
+  .batch__row--registered {
+    justify-content: space-between;
+  }
+
+  .batch__fields {
+    display: flex;
+    flex: 1 1 0;
+    gap: var(--inline-space-half);
+    min-inline-size: 0;
+
+    > .input {
+      flex: 1 1 12ch;
+      inline-size: auto;
+      margin: 0;
+      min-inline-size: 0;
+    }
+
+    > .input--select {
+      flex: 0 1 auto;
+    }
+  }
+
+  .batch__note {
+    flex-basis: 100%;
+    margin: 0;
+  }
+
+  /* On a phone each row is a small card. */
+  @media (width < 640px) {
+    .batch__row:not(.batch__row--registered) {
+      align-items: start;
+      border: var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--block-space-half) var(--inline-space-half);
+    }
+
+    .batch__fields {
+      flex-wrap: wrap;
+    }
+  }
+}

@@ -1,0 +1,16 @@
+@layer components {
+  /* panels.css centres a lone panel in the page's height; on a public page the card stays under its title. */
+  body.public #main:has(> .panel--centered) {
+    margin-block: 0 auto;
+  }
+
+  /* Without a logo of its own, the account is named beside ours. */
+  .site-header__account-name {
+    color: var(--color-ink);
+    font-weight: 700;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

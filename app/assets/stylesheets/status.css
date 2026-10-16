@@ -1,0 +1,87 @@
+@layer components {
+  :root {
+    --color-success: oklch(var(--lch-green-dark));
+    --color-info: oklch(var(--lch-blue-dark));
+    --color-warning: oklch(var(--lch-yellow-dark));
+    --color-error: oklch(var(--lch-red-dark));
+    --color-waiting: oklch(var(--lch-violet-dark));
+    --color-progress: oklch(var(--lch-aqua-dark));
+
+    --color-success-text: oklch(var(--lch-green-darker));
+    --color-info-text: oklch(var(--lch-blue-darker));
+    --color-warning-text: oklch(var(--lch-yellow-darker));
+    --color-error-text: oklch(var(--lch-red-darker));
+    --color-waiting-text: oklch(var(--lch-violet-darker));
+    --color-progress-text: oklch(var(--lch-aqua-darker));
+  }
+
+  .status {
+    --status-color: var(--color-ink-dark);
+    --status-text: var(--color-ink-dark);
+    font-size: var(--text-small);
+    color: var(--status-text);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  /* In a menu or on its button a status keeps its colour and takes the size and weight of the words beside it. */
+  .btn .status {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  .status--success {
+    --status-color: var(--color-success);
+    --status-text: var(--color-success-text);
+  }
+
+  .status--info {
+    --status-color: var(--color-info);
+    --status-text: var(--color-info-text);
+  }
+
+  .status--warning {
+    --status-color: var(--color-warning);
+    --status-text: var(--color-warning-text);
+  }
+
+  .status--error {
+    --status-color: var(--color-error);
+    --status-text: var(--color-error-text);
+  }
+
+  .status--waiting {
+    --status-color: var(--color-waiting);
+    --status-text: var(--color-waiting-text);
+  }
+
+  .status--progress {
+    --status-color: var(--color-progress);
+    --status-text: var(--color-progress-text);
+  }
+
+  .status--neutral {
+    --status-color: var(--color-ink-dark);
+    --status-text: var(--color-ink-dark);
+  }
+
+  .status--badge {
+    padding: 0.25em 0.7em;
+    border-radius: var(--radius-md);
+    font-size: var(--text-small);
+    background-color: color-mix(in oklch, var(--status-color) 14%, transparent);
+  }
+
+  /* The quiet ink on a tint of itself falls under 4.5:1. As a plain word it stays as quiet as its neighbours. */
+  .status--badge.status--neutral,
+  .status--badge.status--muted {
+    --status-text: var(--color-ink-darker);
+  }
+
+  /* A state that is off, said in a quieter colour. Never struck through: a line through
+     "Unblocked" reads as the negation of the word, which is the opposite of what it says. */
+  .status--muted {
+    --status-color: var(--color-ink-medium);
+    --status-text: var(--color-ink-dark);
+  }
+}

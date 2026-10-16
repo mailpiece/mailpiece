@@ -1,0 +1,53 @@
+/* Adapted from Writebook (37signals, MIT licence). Its opening, closing and backdrop are dialog.css's. */
+@layer components {
+  .lightbox {
+    --lightbox-padding-block: var(--block-space);
+    --lightbox-padding-inline: var(--inline-space-double);
+
+    background-color: transparent;
+    block-size: 100dvh;
+    inline-size: 100dvw;
+    inset: 0;
+    margin: auto;
+    max-block-size: unset;
+    max-inline-size: unset;
+    overflow: hidden;
+    padding:
+      calc(var(--lightbox-padding-block) + var(--custom-safe-inset-top))
+      calc(var(--lightbox-padding-inline) + var(--custom-safe-inset-right))
+      calc(var(--lightbox-padding-block) + var(--custom-safe-inset-bottom))
+      calc(var(--lightbox-padding-inline) + var(--custom-safe-inset-left));
+
+    &[open] {
+      display: grid;
+      place-items: center;
+
+      &::backdrop {
+        opacity: 0.8;
+      }
+    }
+  }
+
+  .lightbox__close {
+    align-self: start;
+    grid-area: 1 / 1;
+    justify-self: end;
+  }
+
+  .lightbox__image {
+    border-radius: var(--radius-lg);
+    grid-area: 1 / 1;
+    max-block-size: calc(100dvh - var(--lightbox-padding-block) * 2);
+    max-inline-size: calc(100dvw - var(--lightbox-padding-inline) * 2);
+    object-fit: contain;
+
+    &:not([src]) {
+      display: none;
+    }
+  }
+
+  /* Only where the lightbox is there to open it. */
+  [data-controller~="lightbox"] [data-lightbox-target="image"] {
+    cursor: zoom-in;
+  }
+}

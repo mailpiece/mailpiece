@@ -1,0 +1,1 @@
+json.new_subscriber_notifications @settings.new_subscriber_notifications

@@ -1,0 +1,59 @@
+sent_body:
+  account: davids_account
+  record: sent (Post)
+  name: body
+  body: <p>Three deadlines fall together in March.</p>
+
+draft_body:
+  account: davids_account
+  record: draft (Post)
+  name: body
+  body: <p>The file starts with three things.</p>
+
+scheduled_body:
+  account: davids_account
+  record: scheduled (Post)
+  name: body
+  body: <p>The inspector starts with the insurance.</p>
+
+unlisted_body:
+  account: davids_account
+  record: unlisted (Post)
+  name: body
+  body: <p>Only for those who hold the link.</p>
+
+other_accounts_body:
+  account: other_account
+  record: other_accounts (Post)
+  name: body
+  body: <p>Not seen from the other account.</p>
+
+draft_before_body:
+  account: davids_account
+  record: draft_before (Post::Revision)
+  name: body
+  body: <p>The file used to start with two things.</p>
+
+other_accounts_before_body:
+  account: other_account
+  record: other_accounts_before (Post::Revision)
+  name: body
+  body: <p>What the other account said before.</p>
+
+email_only_body:
+  account: davids_account
+  record: email_only (Post)
+  name: body
+  body: <p>This one went out by email and has no page.</p>
+
+davids_journey_email_body:
+  account: davids_account
+  record: davids (Journey::Email)
+  name: body
+  body: <p>Glad you are here. Reply and say hello.</p>
+
+davids_goodbye_body:
+  account: davids_account
+  record: davids_goodbye (Journey::Email)
+  name: body
+  body: <p>You will get no more issues. Come back any time.</p>

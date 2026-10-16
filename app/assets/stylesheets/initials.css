@@ -1,0 +1,53 @@
+@layer components {
+  /* Initials on a colour picked from the address, so the ink is white in both themes. */
+  .avatar {
+    color: var(--color-white);
+    font-size: var(--text-small);
+    font-weight: 800;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .avatar--initials {
+    white-space: nowrap;
+    word-break: normal;
+  }
+
+  /* Three initials shrink to the circle they are in, whatever unit sized it. */
+  .avatar--squeezed {
+    container-type: inline-size;
+  }
+
+  .avatar__letters {
+    font-size: min(1em, 30cqi);
+  }
+
+  .avatar--icon {
+    --icon-size: 1.25rem;
+
+    background-color: var(--color-canvas);
+    border: var(--border);
+    color: var(--color-ink);
+
+    /* Outranks avatars.css, which sizes the icon to the whole avatar. */
+    &.avatar .icon {
+      block-size: var(--icon-size);
+      inline-size: var(--icon-size);
+    }
+  }
+
+  .avatar__form {
+    --avatar-size: 4rem;
+  }
+
+  .avatar--square {
+    --avatar-border-radius: var(--radius-lg);
+  }
+
+  .input--file {
+    img:not([src]),
+    &:has(img[src]) .icon {
+      display: none;
+    }
+  }
+}
