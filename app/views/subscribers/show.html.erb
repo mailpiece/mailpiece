@@ -18,18 +18,25 @@
       <p class="record__byline"><%= subscriber_state_sentence(@subscriber) %></p>
     </header>
 
-    <% if @subscriber.deactivated? %>
-      <div class="flex justify-center">
-        <%= button_to t("subscribers_resume_button"), subscriber_activation_path(@subscriber), class: "btn" %>
-      </div>
-    <% elsif @subscriber.deactivatable? %>
-      <div class="flex justify-center gap-half">
-        <% if @subscriber.unconfirmed? %>
-          <%= button_to t("subscribers_confirm_button"), subscriber_confirmation_path(@subscriber), class: "btn",
-                data: { turbo_confirm: t("subscribers_confirm_confirm", email: @subscriber.email) } %>
+    <% unless @subscriber.bounced? %>
+      <div class="flex flex-column align-center gap-half">
+        <% if @subscriber.deactivated? %>
+          <div class="flex justify-center">
+            <%= button_to t("subscribers_resume_button"), subscriber_activation_path(@subscriber), class: "btn" %>
+          </div>
+        <% elsif @subscriber.deactivatable? %>
+          <div class="flex justify-center gap-half">
+            <% if @subscriber.unconfirmed? %>
+              <%= button_to t("subscribers_confirm_button"), subscriber_confirmation_path(@subscriber), class: "btn",
+                    data: { turbo_confirm: t("subscribers_confirm_confirm", email: @subscriber.email) } %>
+            <% end %>
+            <%= button_to t("subscribers_stop_button"), subscriber_activation_path(@subscriber), method: :delete, class: "btn",
+                  data: { turbo_confirm: t("subscribers_stop_confirm", email: @subscriber.email) } %>
+          </div>
         <% end %>
-        <%= button_to t("subscribers_stop_button"), subscriber_activation_path(@subscriber), method: :delete, class: "btn",
-              data: { turbo_confirm: t("subscribers_stop_confirm", email: @subscriber.email) } %>
+
+        <%= button_to t("subscribers_bounce_button"), subscriber_bounce_path(@subscriber), class: "btn btn--plain txt-link txt-small",
+              data: { turbo_confirm: t("subscribers_bounce_confirm", email: @subscriber.email) } %>
       </div>
     <% end %>
   </article>
@@ -52,12 +59,7 @@
     </div>
   </section>
 
-  <div class="flex justify-center gap-half">
-    <% unless @subscriber.bounced? %>
-      <%= button_to t("subscribers_bounce_button"), subscriber_bounce_path(@subscriber), class: "btn txt-negative borderless txt-small",
-            data: { turbo_confirm: t("subscribers_bounce_confirm", email: @subscriber.email) } %>
-    <% end %>
-
+  <div class="flex justify-center">
     <%= button_to subscriber_path(@subscriber), method: :delete, class: "btn txt-negative borderless txt-small",
           data: { turbo_confirm: t("subscribers_delete_confirm", email: @subscriber.email) } do %>
       <%= icon_tag "trash" %>
