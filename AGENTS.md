@@ -135,7 +135,8 @@ inside the label.
 
 There are no foreign keys (except Active Storage's) and no check constraints.
 Migrations are always new files. Configuration comes from ENV; credentials are
-not used. Production will not boot without `MAILER_FROM_ADDRESS`.
+not used. `MAILER_FROM_ADDRESS` falls back to support@mailpiece.dev, as Fizzy's
+does to its own, so a fresh install boots before its mail is set.
 
 ## Development
 

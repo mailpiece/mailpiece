@@ -49,10 +49,8 @@ COPY . .
 # -j 1 disable parallel compilation to avoid a QEMU bug: https://github.com/rails/bootsnap/issues/495
 RUN bundle exec bootsnap precompile -j 1 app/ lib/
 
-# Production will not boot without these. The values stay in the build stage.
-RUN SECRET_KEY_BASE_DUMMY=1 \
-    MAILER_FROM_ADDRESS=build@localhost \
-    ./bin/rails assets:precompile
+# Production will not boot without it. The value stays in the build stage.
+RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
 
 
