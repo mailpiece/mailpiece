@@ -38,8 +38,8 @@ module CurrentLocale
 
     def accepted_language_ranges
       request.headers["Accept-Language"].to_s.split(",").filter_map do |range|
-        tag, quality = range.strip.split(/\s*;\s*q=/i)
-        quality = quality ? quality.to_f : 1.0
+        tag, parameter = range.split(";", 2).map(&:strip)
+        quality = parameter ? parameter.sub(/\Aq=/i, "").to_f : 1.0
 
         [ tag[/\A[a-z]+/i].to_s.downcase, quality ] if tag.present? && quality.positive?
       end
