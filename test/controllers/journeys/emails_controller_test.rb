@@ -191,6 +191,25 @@ class Journeys::EmailsControllerTest < ActionDispatch::IntegrationTest
     assert_equal journey_email_url(@journey, @email, format: :json), response.parsed_body["url"]
   end
 
+  test "body_html as JSON keeps an image attached when it is sent back" do
+    blob = ActiveStorage::Blob.create_and_upload!(io: file_fixture("moon.jpg").open, filename: "moon.jpg", content_type: "image/jpeg")
+    @email.update!(body: %(<p>Look.</p><action-text-attachment sgid="#{blob.attachable_sgid}"></action-text-attachment>))
+
+    get journey_email_path(@journey, @email, format: :json)
+    body_html = response.parsed_body["body_html"]
+
+    assert_includes body_html, "action-text-attachment"
+    assert_includes body_html, blob.attachable_sgid
+
+    assert_no_enqueued_jobs only: ActiveStorage::PurgeJob do
+      patch journey_email_path(@journey, @email, format: :json), params: { body: body_html }, as: :json
+    end
+
+    assert_response :success
+    assert_includes @email.reload.body.body.attachables, blob
+    assert ActiveStorage::Blob.exists?(blob.id)
+  end
+
   test "update saves and stays in the editor" do
     patch journey_email_path(@journey, @email), params: { journey_email: { subject: "  Glad   you came ", body: "<p>Say <strong>hello</strong>.</p>" } }
 

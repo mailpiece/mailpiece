@@ -652,6 +652,26 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_equal [ "email", "Reply to this email." ], audience_box_in(response.parsed_body["body_html"])
   end
 
+  test "body_html as JSON keeps an image attached when it is sent back" do
+    post = posts(:draft)
+    blob = ActiveStorage::Blob.create_and_upload!(io: file_fixture("moon.jpg").open, filename: "moon.jpg", content_type: "image/jpeg")
+    post.update!(body: %(<p>Look.</p><action-text-attachment sgid="#{blob.attachable_sgid}"></action-text-attachment>))
+
+    get post_path(post, format: :json)
+    body_html = response.parsed_body["body_html"]
+
+    assert_includes body_html, "action-text-attachment"
+    assert_includes body_html, blob.attachable_sgid
+
+    assert_no_enqueued_jobs only: ActiveStorage::PurgeJob do
+      patch post_path(post, format: :json), params: { body: body_html }, as: :json
+    end
+
+    assert_response :success
+    assert_includes post.reload.body.body.attachables, blob
+    assert ActiveStorage::Blob.exists?(blob.id)
+  end
+
   test "update from Save draft saves and stays in the editor" do
     patch post_path(posts(:draft)), params: { post: { title: "The file" }, auto_save: true }
 
