@@ -2,6 +2,9 @@ davids:
   account: davids_account
   from_name: Leo
   from_address: leo@newsletter.example
+  transport: relay
+  relay_url: https://relay.example/messages
+  relay_token: stream_token
 
 other:
   account: other_account

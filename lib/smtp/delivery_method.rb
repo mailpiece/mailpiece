@@ -43,7 +43,7 @@ class Smtp::DeliveryMethod < Mail::SMTP
     def open_session
       start_smtp_session
     rescue Net::SMTPAuthenticationError => error
-      raise MailDelivery::Unauthorized, "The SMTP server turned the install down: #{reply_in(error)}"
+      raise MailDelivery::Unauthorized, "The SMTP server turned the newsletter down: #{reply_in(error)}"
     rescue Net::SMTPServerBusy => error
       raise MailDelivery::Throttled, "The SMTP server is busy: #{reply_in(error)}"
     rescue Net::SMTPFatalError, Net::SMTPSyntaxError => error
@@ -60,7 +60,7 @@ class Smtp::DeliveryMethod < Mail::SMTP
     rescue *UNANSWERED => error
       raise MailDelivery::Unverified, "The SMTP server gave no answer for a message handed to it: #{error.class}"
     rescue Net::SMTPAuthenticationError => error
-      raise MailDelivery::Unauthorized, "The SMTP server turned the install down: #{reply_in(error)}"
+      raise MailDelivery::Unauthorized, "The SMTP server turned the newsletter down: #{reply_in(error)}"
     rescue Net::SMTPServerBusy => error
       raise MailDelivery::Throttled, "The SMTP server is busy: #{reply_in(error)}"
     rescue Net::SMTPFatalError, Net::SMTPSyntaxError => error

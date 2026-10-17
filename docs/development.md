@@ -72,18 +72,36 @@ unset, as in development, those lines are not shown.
 
 ### A newsletter's own mail
 
-Issues, test issues and subscription confirmations leave through a relay or
-over SMTP, as `NEWSLETTER_MAIL_TRANSPORT` says. They never use the `SMTP_*`
-settings above.
+Issues, test issues, subscription confirmations and journey emails leave
+through a relay or an SMTP server that each newsletter sets on Settings ›
+Outgoing mail. Nothing in ENV sets it, and it never uses the
+`SMTP_*` settings above: team-facing mail (sign-in, notifications) still goes
+over `SMTP_*` from `MAILER_FROM_ADDRESS`.
 
-| ENV | |
-| --- | --- |
-| `NEWSLETTER_MAIL_TRANSPORT` | `relay` or `smtp` |
-| `NEWSLETTER_MAIL_RELAY_URL` | Relay: the full address each message is POSTed to, used as given |
-| `NEWSLETTER_MAIL_RELAY_TOKEN` | Relay: sent as `Authorization: Bearer` with every message |
-| `NEWSLETTER_MAIL_SMTP_ADDRESS`, `_SMTP_PORT` | SMTP: the server, shared by every newsletter |
-| `NEWSLETTER_MAIL_SMTP_USERNAME`, `_SMTP_PASSWORD` | SMTP, optional: the install's own sign-in. Left out, the SMTP server is asked for none |
-| `NEWSLETTER_MAIL_SMTP_AUTHENTICATION`, `_SMTP_DOMAIN`, `_SMTP_TLS`, `_SMTP_SSL_VERIFY_MODE` | SMTP, optional: `plain` unless said (and only with a username), the HELO domain, `true` for a TLS-only port such as 465 (STARTTLS is required otherwise), and `none` or `peer` |
+- **Relay**: the full address each message is POSTed to, used as given, and a
+  token sent as `Authorization: Bearer` with every message.
+- **SMTP server**: the server and port (587 upgrades to TLS with STARTTLS
+  before anything is sent; 465 is TLS from the first byte), and optionally a
+  username and password, signed in with `plain`. Left out, the server is asked
+  for no sign-in.
+
+The address, server, port and username are edited in place; the token and
+the password are set once, never shown again on the screen or in the JSON, and
+changed by removing the transport and setting it up again. They are
+encrypted with a key derived from `SECRET_KEY_BASE`: rotating it, or
+restoring a database under another, makes them unreadable, and the app raises
+wherever it reads them. The admin then clears every transport from a console
+and each newsletter sets Outgoing mail up again:
+
+```ruby
+Account::Sender.update_all(transport: nil, relay_url: nil, relay_token: nil,
+  smtp_address: nil, smtp_port: nil, smtp_username: nil, smtp_password: nil)
+```
+
+Using one
+transport forgets the other's settings, and removing it forgets them all. A
+newsletter with no transport, like one with no from address, is not set up and
+sends nothing.
 
 The relay is posted each message as JSON, with only the keys that have a
 value: `from`, `from_name`, `to`, `cc`, `bcc`, `reply_to`, `reply_to_name`,
@@ -98,19 +116,19 @@ with `{"message_id": "…"}`; 400, 413 or 422 when refused; 401 or 403 when the
 token is wrong; 429 or 503 when nothing was sent. Anything else, or no answer,
 is tried again later under the same key.
 
-Settings holds only who a newsletter writes as: a from name, a from address
-and a reply-to, on its Sending page. Nothing marks a subscriber bounced from
-the mail server's side.
+Nothing marks a subscriber bounced from the mail server's side.
 
 SMTP has no idempotency key, so a delivery whose send was cut short is not
 sent again: it stays "unverified", counted on the post, and whether it
 arrived is not known.
 
-In production a transport left unset, or set to a name nobody knows, raises
-`MailDelivery::Unavailable` for each message, so its jobs retry and then fail.
-In development it sends nowhere: the mail is opened in the browser after
-`touch tmp/email-dev.txt`. Set `NEWSLETTER_MAIL_*` to send it for real. Tests
-ignore all of these.
+Only production delivers through a newsletter's transport. There a message
+built for a newsletter with no transport all the same raises
+`MailDelivery::Unavailable`, so its job retries and then fails, and it never
+falls back to the system's SMTP. In development the mail is opened in the
+browser after `touch tmp/email-dev.txt`, whatever the transport, and nothing
+reaches the relay or SMTP server; the demo newsletter is seeded with a
+placeholder relay so it is set up.
 
 `MAIL_DELIVERIES_PER_MINUTE` is the sending rate (default 20;
 `config/deploy.yml` sets 30). Deliveries are spaced out to stay under that rate, and a sweep every 15

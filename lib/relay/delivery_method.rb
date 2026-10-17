@@ -1,6 +1,6 @@
 require "net/http"
 
-# The install's relay, posted each message as JSON at the address it is given. What it is posted is a contract
+# The relay, posted each message as JSON at the address it is given. What it is posted is a contract
 # relays are written against: a key is never renamed or dropped. A message whose fate is unknown is posted again
 # with the same Idempotency-Key, so a relay must honour it: remember each key it has taken and answer a repeat as
 # already done without sending again, since a provider with no key of its own would mail the reader twice.

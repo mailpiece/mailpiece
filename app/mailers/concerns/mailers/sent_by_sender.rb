@@ -4,19 +4,13 @@ module Mailers::SentBySender
   included do
     default from: -> { @account.sender.from },
       reply_to: -> { @account.sender.reply_to },
-      delivery_method: -> { mail_transport.delivery_method || fallback_delivery_method },
+      delivery_method: -> { mail_transport.delivery_method },
       delivery_method_options: -> { mail_transport.settings }
   end
 
   private
     def mail_transport
-      MailTransport.newsletter
-    end
-
-    # With no transport set the mail goes the environment's own way. Production names another, since its own
-    # way is the system's SMTP: there the mail goes nowhere and the message fails.
-    def fallback_delivery_method
-      Rails.configuration.x.newsletter_mail.fallback_delivery_method
+      MailTransport.newsletter(@account)
     end
 
     # A delivery's own message is the same however often it is built: the row's id is its idempotency key

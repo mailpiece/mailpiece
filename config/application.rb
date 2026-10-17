@@ -12,12 +12,20 @@ module Mailpiece
     # Set here rather than in an initializer: Active Record copies these into filter_attributes when it
     # loads, and an initializer can load it before a later one runs.
     config.filter_parameters += %i[
-      passw passkey secret token _key crypt salt certificate otp ssn email
-      subject text html attachments headers
-      rcpt_to mail_from payload
+      passw secret token _key crypt salt certificate otp ssn
     ]
 
     config.autoload_lib ignore: %w[ assets tasks rails_ext puma ]
+
+    # Keys for the relay token and SMTP password, derived from SECRET_KEY_BASE so a copy of the database without the
+    # box's ENV holds only ciphertext. Registered before active_record_encryption.configuration, which copies them
+    # when Active Record loads; a file under config/initializers can run after that. Under another SECRET_KEY_BASE
+    # they raise when read: docs/development.md says how to clear them.
+    initializer "active_record_encryption.keys", before: "active_record_encryption.configuration" do |app|
+      %i[ primary_key deterministic_key key_derivation_salt ].each do |name|
+        app.config.active_record.encryption[name] = app.key_generator.generate_key("active_record_encryption/#{name}", 32)
+      end
+    end
 
     config.i18n.available_locales = [ :en, :es ]
     config.i18n.default_locale = :en

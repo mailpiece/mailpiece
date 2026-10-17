@@ -44,6 +44,9 @@ Rails.application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
+  # Fixtures hold credentials in the clear; they are stored encrypted, as the app stores them.
+  config.active_record.encryption.encrypt_fixtures = true
+
   # Set host to be used by links generated in mailer templates, and by URL helpers outside a request.
   config.action_mailer.default_url_options = { host: "example.com" }
   routes.default_url_options = { host: "example.com" }

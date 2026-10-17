@@ -1,8 +1,5 @@
 ENV["RAILS_ENV"] ||= "test"
 
-# No test sends through the mail settings of whoever runs it. Parallel workers fork from this process, so they inherit it.
-ENV.delete_if { |name, _| name.start_with?("NEWSLETTER_MAIL_") }
-
 require_relative "../config/environment"
 require "rails/test_help"
 require "webmock/minitest"

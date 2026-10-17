@@ -121,7 +121,7 @@ module SentOnce
     # SMTP the row is taken in one UPDATE before the mail goes, so of two workers only one sends, and a
     # claim nobody released or stamped stands for good: the sweep and a retry both pass it by.
     def claim
-      if MailTransport.newsletter.idempotent?
+      if MailTransport.newsletter(account).idempotent?
         true
       elsif self.class.pending.where(id: id).update_all(claimed_at: Time.current) == 1
         reload

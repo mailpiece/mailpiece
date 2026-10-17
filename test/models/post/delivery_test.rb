@@ -160,6 +160,18 @@ class Post::DeliveryTest < ActiveSupport::TestCase
     assert @delivery.claimed_at?
   end
 
+  test "over the newsletter's relay the row is posted with its token and the delivery's key, and never claimed" do
+    send_mail_over :relay, relay_url: "https://own.example/messages", relay_token: "own_token"
+    stub = stub_request(:post, "https://own.example/messages")
+      .with(headers: { "Authorization" => "Bearer own_token", "Idempotency-Key" => @delivery.id }).to_return(status: 201, body: "{}")
+
+    @delivery.deliver_now
+
+    assert_requested stub
+    assert @delivery.reload.sent_at?
+    assert_nil @delivery.claimed_at
+  end
+
   test "over SMTP a claim left standing is passed by a second deliver_now and by the sweep" do
     send_mail_over :smtp
     smtp_session.expects(:sendmail).never
@@ -228,7 +240,7 @@ class Post::DeliveryTest < ActiveSupport::TestCase
     assert @delivery.reload.pending?
   end
 
-  test "over SMTP the job retries when the server is out of reach or turns the install down, with no claim left" do
+  test "over SMTP the job retries when the server is out of reach or turns the newsletter down, with no claim left" do
     send_mail_over :smtp
 
     [ Errno::ECONNREFUSED, Net::SMTPAuthenticationError.new("535 5.7.8 Bad credentials") ].each do |failure|

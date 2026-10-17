@@ -11,8 +11,12 @@ namespace :account do
   resource :handle, only: :show, format: true, constraints: { format: "json" }
   resource :domain, only: %i[ edit update ]
   resource :domain, only: :show, format: true, constraints: { format: "json" }
-  resource :sender, only: %i[ edit update ], path: "sending"
+  resource :sender, only: %i[ edit update ], path: "sending" do
+    resource :relay, only: %i[ edit update destroy ], module: :senders
+    resource :smtp_server, only: %i[ edit update destroy ], module: :senders, path: "smtp"
+  end
   resource :sender, only: :show, path: "sending", format: true, constraints: { format: "json" }
+  resource :outgoing_mail, only: :show
   resource :subscribe_form, only: %i[ edit update ]
   resource :subscribe_form, only: :show, format: true, constraints: { format: "json" }
   resource :welcome, only: %i[ show create destroy ]
