@@ -12,9 +12,7 @@ module Mailpiece
     # Set here rather than in an initializer: Active Record copies these into filter_attributes when it
     # loads, and an initializer can load it before a later one runs.
     config.filter_parameters += %i[
-      passw passkey secret token _key crypt salt certificate otp ssn email
-      subject text html attachments headers
-      rcpt_to mail_from payload
+      passw secret token _key crypt salt certificate otp ssn
     ]
 
     config.autoload_lib ignore: %w[ assets tasks rails_ext puma ]
