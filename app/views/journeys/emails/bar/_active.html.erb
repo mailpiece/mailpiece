@@ -27,7 +27,7 @@
     <%= render "journeys/emails/bar/delay", form: form, journey: journey, email: email %>
 
     <% if !email.deliverable? %>
-      <p><%= t("posts_email_not_set_up_html", link: link_to(t("posts_finish_settings"), edit_account_sender_path)) %></p>
+      <p><%= t("posts_email_not_set_up_html", link: link_to(t("posts_finish_settings"), settings_path_to_finish_sending)) %></p>
     <% end %>
   </dialog>
 </div>

@@ -129,5 +129,6 @@ else
     end
   end
 
-  account.create_sender! from_name: "Mailpiece Demo", from_address: "demo@mailpiece.example", reply_to_address: "editor@mailpiece.example"
+  account.create_sender! from_name: "Mailpiece Demo", from_address: "demo@mailpiece.example", reply_to_address: "editor@mailpiece.example",
+    transport: "relay", relay_url: "https://relay.example/messages", relay_token: "demo"
 end

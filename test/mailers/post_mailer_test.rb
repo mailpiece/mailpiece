@@ -55,7 +55,7 @@ class PostMailerTest < ActionMailer::TestCase
     end
   end
 
-  test "over SMTP issue leaves from the sender with the install's sign-in and no token" do
+  test "over SMTP issue leaves from the sender with the newsletter's sign-in and no token" do
     send_mail_over :smtp
 
     [ PostMailer.issue(@post, @subscriber), PostMailer.test_issue(@post, "editor@example.com") ].each do |email|

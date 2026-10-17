@@ -22,9 +22,9 @@ Rails.application.configure do
     }
   end
 
-  # Where a newsletter's own mail goes with no transport in NEWSLETTER_MAIL_TRANSPORT: nowhere, and never over
-  # the SMTP above. The app boots all the same, and the message fails when it is tried.
-  config.x.newsletter_mail.fallback_delivery_method = :unconfigured
+  # A newsletter's own mail leaves through the relay or SMTP server set on its Sending page, never over the SMTP
+  # above: with none set the message fails when it is tried. Development and test send it their own way.
+  config.x.newsletter_mail.delivered_by_transport = true
 
   # Base URL for links in emails and other external references.
   # Set BASE_URL to your instance's public URL (e.g., https://mailpiece.example.com)

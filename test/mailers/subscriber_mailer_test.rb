@@ -23,17 +23,22 @@ class SubscriberMailerTest < ActionMailer::TestCase
     assert_equal({ url: "https://relay.example/messages", token: "newsletter_token" }, email.delivery_method.settings)
   end
 
-  test "with no transport set confirmation goes the environment's own way" do
-    assert_kind_of Mail::TestMailer, SubscriberMailer.confirmation(@subscriber, token: @token).delivery_method
+  test "outside production confirmation goes the environment's own way, whatever the newsletter's transport" do
+    email = SubscriberMailer.confirmation(@subscriber, token: @token)
+
+    assert_kind_of Mail::TestMailer, email.delivery_method
+    assert_not_includes email.delivery_method.settings.values, "stream_token"
   end
 
   test "in production confirmation with no transport fails when it is sent, and never leaves over the system's SMTP" do
+    send_mail_over :nothing
+
     deliver_as_production do
       email = SubscriberMailer.confirmation(@subscriber, token: @token)
       assert_kind_of MailTransport::Unconfigured, email.delivery_method
 
       error = assert_raises(MailDelivery::Unavailable) { email.deliver_now }
-      assert_match "NEWSLETTER_MAIL_TRANSPORT must be smtp or relay", error.message
+      assert_match "The newsletter has no transport", error.message
     end
 
     assert_empty ActionMailer::Base.deliveries
@@ -60,7 +65,7 @@ class SubscriberMailerTest < ActionMailer::TestCase
     end
   end
 
-  test "over SMTP confirmation leaves from the sender with the install's sign-in" do
+  test "over SMTP confirmation leaves from the sender with the newsletter's sign-in" do
     send_mail_over :smtp
 
     email = SubscriberMailer.confirmation(@subscriber, token: @token)

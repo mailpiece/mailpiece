@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_10_15_100000) do
+ActiveRecord::Schema[8.2].define(version: 2026_10_17_100000) do
   create_table "account_cancellations", id: :uuid, force: :cascade do |t|
     t.uuid "account_id", null: false
     t.uuid "initiated_by_id", null: false
@@ -40,6 +40,13 @@ ActiveRecord::Schema[8.2].define(version: 2026_10_15_100000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "reply_to_address", limit: 255
+    t.string "transport", limit: 255
+    t.string "relay_url", limit: 255
+    t.text "relay_token"
+    t.string "smtp_address", limit: 255
+    t.integer "smtp_port"
+    t.string "smtp_username", limit: 255
+    t.text "smtp_password"
     t.index ["account_id"], name: "index_account_senders_on_account_id", unique: true
   end
 

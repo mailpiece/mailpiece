@@ -36,6 +36,12 @@ Then log in and check the data. The script prints the commands for both
 outcomes: start Litestream and delete `aside`, or put the old databases back.
 Do not start Litestream on data you have not checked.
 
+The server must have the same `SECRET_KEY_BASE` the databases were written
+under: each newsletter's relay token or SMTP password is encrypted with a key
+derived from it. Under another, Outgoing mail raises until the transports are
+cleared from a console and set up again (see "A newsletter's own mail" in
+development.md).
+
 The same script rehearses a restore on a running server, or after a
 `kamal remove` and a `kamal deploy`.
 

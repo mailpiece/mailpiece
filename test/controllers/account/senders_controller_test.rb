@@ -46,14 +46,21 @@ class Account::SendersControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
-  test "show as JSON has what the form edits, and no credentials" do
-    send_mail_over :relay
-
+  test "show as JSON has who it writes as and how its mail leaves, and no credentials" do
     get account_sender_path(format: :json)
 
     assert_response :success
-    assert_equal({ "from_name" => "Leo", "from_address" => "leo@newsletter.example", "reply_to_address" => nil }, response.parsed_body.to_h)
+    assert_equal({ "from_name" => "Leo", "from_address" => "leo@newsletter.example", "reply_to_address" => nil, "transport" => "relay",
+      "relay_url" => "https://relay.example/messages", "smtp_address" => nil, "smtp_port" => nil, "smtp_username" => nil }, response.parsed_body.to_h)
     assert_not_includes response.body, "stream_token"
+
+    account_senders(:davids).use_smtp_server(smtp_address: "smtp.example", smtp_port: 587, smtp_username: "leo", smtp_password: "own_password")
+
+    get account_sender_path(format: :json)
+
+    assert_equal({ "transport" => "smtp", "relay_url" => nil, "smtp_address" => "smtp.example", "smtp_port" => 587, "smtp_username" => "leo" },
+      response.parsed_body.to_h.slice("transport", "relay_url", "smtp_address", "smtp_port", "smtp_username"))
+    assert_not_includes response.body, "own_password"
   end
 
   test "show as JSON before there is a sender" do
@@ -62,15 +69,25 @@ class Account::SendersControllerTest < ActionDispatch::IntegrationTest
     get account_sender_path(format: :json)
 
     assert_response :success
-    assert_equal({ "from_name" => nil, "from_address" => nil, "reply_to_address" => nil }, response.parsed_body.to_h)
+    assert_equal({ "from_name" => nil, "from_address" => nil, "reply_to_address" => nil, "transport" => nil,
+      "relay_url" => nil, "smtp_address" => nil, "smtp_port" => nil, "smtp_username" => nil }, response.parsed_body.to_h)
   end
 
   test "update as JSON answers with the sender" do
     patch account_sender_path, params: { from_name: "The Bulletin", reply_to_address: "Editor@Newsletter.example" }, as: :json
 
     assert_response :success
-    assert_equal({ "from_name" => "The Bulletin", "from_address" => "leo@newsletter.example", "reply_to_address" => "editor@newsletter.example" }, response.parsed_body.to_h)
+    assert_equal({ "from_name" => "The Bulletin", "from_address" => "leo@newsletter.example", "reply_to_address" => "editor@newsletter.example" },
+      response.parsed_body.to_h.slice("from_name", "from_address", "reply_to_address"))
     assert_equal "The Bulletin", account_senders(:davids).reload.from_name
+  end
+
+  test "update takes nothing of how the mail leaves" do
+    patch account_sender_path, params: { from_name: "The Bulletin", transport: "smtp", relay_url: "https://elsewhere.example", relay_token: "other_token" }, as: :json
+
+    assert_response :success
+    assert_equal "The Bulletin", account_senders(:davids).reload.from_name
+    assert_equal [ "relay", "https://relay.example/messages", "stream_token" ], account_senders(:davids).attributes.values_at("transport", "relay_url", "relay_token")
   end
 
   test "update as JSON that does not save answers with the errors" do

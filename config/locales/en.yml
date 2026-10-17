@@ -30,11 +30,33 @@ en:
   account_newsletter_logo_remove_confirm: "Are you sure you want to remove the logo? The header goes back to showing the name."
   account_newsletter_name_label: "Newsletter name"
   account_newsletter_title: "Newsletter"
+  account_outgoing_mail_empty_html: "<strong>Not set up.</strong> Use %{relay} or %{smtp_server}, or nothing is sent."
+  account_outgoing_mail_empty_relay: "a relay"
+  account_outgoing_mail_empty_smtp_server: "an SMTP server"
+  account_outgoing_mail_no_sign_in: "No sign-in"
+  account_outgoing_mail_over_relay: "Over a relay"
+  account_outgoing_mail_over_relay_hint: "Over a relay at %{host}"
+  account_outgoing_mail_over_smtp_hint: "Over SMTP at %{host}"
+  account_outgoing_mail_over_smtp_server: "Over an SMTP server"
+  account_outgoing_mail_password_set: "Password set"
+  account_outgoing_mail_remove: "Stop sending this way"
+  account_outgoing_mail_remove_confirm: "Stop sending this way? Its token or password is forgotten, and nothing is sent until you set one up again, which is also how to change it."
+  account_outgoing_mail_title: "Outgoing mail"
+  account_outgoing_mail_token_set: "Token set"
   account_return_url_format: "must be a full address starting with https://"
   account_sender_from_address_hint: "On a domain verified with the sending service."
   account_sender_from_address_label: "From address"
   account_sender_from_name_label: "From name"
+  account_sender_relay_title: "Relay"
+  account_sender_relay_token_label: "Token"
+  account_sender_relay_url_label: "Relay address"
   account_sender_reply_to_label: "Reply to"
+  account_sender_smtp_address_label: "Server"
+  account_sender_smtp_password_label: "Password"
+  account_sender_smtp_port_hint: "587 upgrades to TLS before anything is sent; 465 is TLS from the first byte."
+  account_sender_smtp_port_label: "Port"
+  account_sender_smtp_server_title: "SMTP server"
+  account_sender_smtp_username_label: "Username"
   account_sender_title: "Sending"
   account_settings_address_pick_hint: "Pick an address"
   account_settings_domain_none_hint: "No domain"
@@ -594,7 +616,13 @@ en:
       account/sender:
         from_address: From address
         from_name: From name
+        relay_token: Token
+        relay_url: Relay address
         reply_to_address: Reply to
+        smtp_address: Server
+        smtp_password: Password
+        smtp_port: Port
+        smtp_username: Username
       journey/email:
         body: Message
         delay_days: Days after subscribing

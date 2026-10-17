@@ -1,7 +1,6 @@
-# How a newsletter's own mail (issues, test issues, subscription confirmations) leaves the install, as
-# NEWSLETTER_MAIL_* in ENV says. System mail is not its business: that goes over Action Mailer's own SMTP,
-# set from SMTP_* in the environment, and nothing here reads those. Nothing checks the settings either: the
-# newsletter sends with what it is given, and a message fails when it is tried if that is not enough.
+# How a newsletter's own mail (issues, test issues, confirmations, journey emails) leaves: over the relay or SMTP
+# server set on its Sending page. System mail is not its business: that goes over Action Mailer's own SMTP, set
+# from SMTP_* in the environment, and nothing here reads those.
 class MailTransport
   class Unconfigured
     attr_accessor :settings
@@ -11,34 +10,39 @@ class MailTransport
     end
 
     def deliver!(mail)
-      raise MailDelivery::Unavailable, "The newsletter's mail is not configured: " \
-        "NEWSLETTER_MAIL_TRANSPORT must be smtp or relay"
+      raise MailDelivery::Unavailable, "The newsletter has no transport: set one on its Sending page"
     end
   end
 
   class << self
-    def newsletter
-      new
+    def newsletter(account)
+      new(account.sender)
     end
   end
 
-  def initialize(env = ENV)
-    @env = env
+  def initialize(sender)
+    @sender = sender
   end
 
+  # Only production delivers through the newsletter's transport, and there a newsletter with none fails rather
+  # than leave over the system's SMTP. Elsewhere the mail goes the environment's own way, with that way's own settings.
   def delivery_method
-    if smtp?
-      :smtp_relay
-    elsif relay?
-      :relay
+    if delivered_by_transport?
+      if smtp?
+        :smtp_relay
+      elsif relay?
+        :relay
+      else
+        :unconfigured
+      end
     end
   end
 
   def settings
-    if smtp?
+    if delivered_by_transport? && smtp?
       smtp_settings
-    elsif relay?
-      { url: value("RELAY_URL"), token: value("RELAY_TOKEN") }.compact
+    elsif delivered_by_transport? && relay?
+      { url: @sender.relay_url, token: @sender.relay_token }
     else
       {}
     end
@@ -51,36 +55,38 @@ class MailTransport
   end
 
   private
+    def delivered_by_transport?
+      Rails.configuration.x.newsletter_mail.delivered_by_transport
+    end
+
     def smtp?
-      value("TRANSPORT") == "smtp"
+      @sender&.smtp?
     end
 
     def relay?
-      value("TRANSPORT") == "relay"
+      @sender&.relay?
+    end
+
+    def smtp_settings
+      { address: @sender.smtp_address, port: @sender.smtp_port }.merge(sign_in_settings, tls_settings)
     end
 
     # An SMTP server that asks for no sign-in is given none: without a username there is nothing to authenticate with.
-    def smtp_settings
-      {
-        address: value("SMTP_ADDRESS"),
-        port: value("SMTP_PORT")&.to_i,
-        user_name: value("SMTP_USERNAME"),
-        password: value("SMTP_PASSWORD"),
-        authentication: (value("SMTP_AUTHENTICATION") || "plain" if value("SMTP_USERNAME")),
-        domain: value("SMTP_DOMAIN"),
-        tls: tls?,
-        enable_starttls: (:always unless tls?),
-        openssl_verify_mode: value("SMTP_SSL_VERIFY_MODE")
-      }.compact
+    def sign_in_settings
+      if @sender.smtp_username.present?
+        { user_name: @sender.smtp_username, password: @sender.smtp_password, authentication: "plain" }
+      else
+        {}
+      end
     end
 
     # Without TLS from the first byte the session must upgrade before anything is said: a server that offers
-    # no STARTTLS is not given the install's password in the clear.
-    def tls?
-      value("SMTP_TLS") == "true"
-    end
-
-    def value(setting)
-      @env["NEWSLETTER_MAIL_#{setting}"].presence
+    # no STARTTLS is not given the password in the clear.
+    def tls_settings
+      if @sender.smtp_port == 465
+        { tls: true }
+      else
+        { enable_starttls: :always }
+      end
     end
 end

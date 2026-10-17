@@ -53,7 +53,8 @@ unsubscribe and the embedded subscription form.
 
 System mail leaves over Action Mailer's `SMTP_*`, as in Fizzy. A newsletter's
 own mail (mailers including `Mailers::SentBySender`) leaves through
-`MailTransport` from `NEWSLETTER_MAIL_*` and never borrows `SMTP_*`.
+`MailTransport` from the relay or SMTP server set on its Sending page and
+never borrows `SMTP_*`.
 
 The relay is posted a `Post::Delivery` id as `Idempotency-Key` and may be
 retried; SMTP has no key, so the row is claimed in one UPDATE first and a

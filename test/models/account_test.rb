@@ -13,11 +13,14 @@ class AccountTest < ActiveSupport::TestCase
     end
   end
 
-  test "sends_mail? needs a complete sender, and asks nothing of the transport" do
+  test "sends_mail? needs a complete sender, with a way to send" do
     assert accounts(:davids_account).sends_mail?
 
-    send_mail_over :smtp
-    assert accounts(:davids_account).sends_mail?
+    account_senders(:davids).stop_sending
+    assert_not accounts(:davids_account).reload.sends_mail?
+
+    account_senders(:davids).use_smtp_server(smtp_address: "smtp.example", smtp_port: 587)
+    assert accounts(:davids_account).reload.sends_mail?
 
     account_senders(:davids).update!(from_address: nil)
     assert_not accounts(:davids_account).reload.sends_mail?

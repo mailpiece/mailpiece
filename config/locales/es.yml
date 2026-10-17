@@ -30,11 +30,33 @@ es:
   account_newsletter_logo_remove_confirm: "¿Seguro que querés quitar el logo? El encabezado vuelve a mostrar el nombre."
   account_newsletter_name_label: "Nombre del newsletter"
   account_newsletter_title: "Newsletter"
+  account_outgoing_mail_empty_html: "<strong>Sin configurar.</strong> Usá %{relay} o %{smtp_server}, o no se envía nada."
+  account_outgoing_mail_empty_relay: "un relay"
+  account_outgoing_mail_empty_smtp_server: "un servidor SMTP"
+  account_outgoing_mail_no_sign_in: "Sin inicio de sesión"
+  account_outgoing_mail_over_relay: "Por un relay"
+  account_outgoing_mail_over_relay_hint: "Por un relay en %{host}"
+  account_outgoing_mail_over_smtp_hint: "Por SMTP en %{host}"
+  account_outgoing_mail_over_smtp_server: "Por un servidor SMTP"
+  account_outgoing_mail_password_set: "Contraseña guardada"
+  account_outgoing_mail_remove: "Dejar de enviar así"
+  account_outgoing_mail_remove_confirm: "¿Dejar de enviar así? Su token o contraseña se olvidan, y no se envía nada hasta que configures una de nuevo, que es también la forma de cambiarla."
+  account_outgoing_mail_title: "Correo saliente"
+  account_outgoing_mail_token_set: "Token guardado"
   account_return_url_format: "tiene que ser una dirección completa que empiece con https://"
   account_sender_from_address_hint: "En un dominio verificado con el servicio de envío."
   account_sender_from_address_label: "Email del remitente"
   account_sender_from_name_label: "Nombre del remitente"
+  account_sender_relay_title: "Relay"
+  account_sender_relay_token_label: "Token"
+  account_sender_relay_url_label: "Dirección del relay"
   account_sender_reply_to_label: "Responder a"
+  account_sender_smtp_address_label: "Servidor"
+  account_sender_smtp_password_label: "Contraseña"
+  account_sender_smtp_port_hint: "587 pasa a TLS antes de enviar nada; 465 es TLS desde el primer byte."
+  account_sender_smtp_port_label: "Puerto"
+  account_sender_smtp_server_title: "Servidor SMTP"
+  account_sender_smtp_username_label: "Usuario"
   account_sender_title: "Envío"
   account_settings_address_pick_hint: "Elegí una dirección"
   account_settings_domain_none_hint: "Sin dominio"
@@ -594,7 +616,13 @@ es:
       account/sender:
         from_address: Email del remitente
         from_name: Nombre del remitente
+        relay_token: Token
+        relay_url: Dirección del relay
         reply_to_address: Responder a
+        smtp_address: Servidor
+        smtp_password: Contraseña
+        smtp_port: Puerto
+        smtp_username: Usuario
       journey/email:
         body: Mensaje
         delay_days: Días después de la suscripción
