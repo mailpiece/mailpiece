@@ -30,6 +30,7 @@ en:
   account_newsletter_logo_remove_confirm: "Are you sure you want to remove the logo? The header goes back to showing the name."
   account_newsletter_name_label: "Newsletter name"
   account_newsletter_title: "Newsletter"
+  account_outgoing_mail_edit: "Edit"
   account_outgoing_mail_empty_html: "<strong>Not set up.</strong> Use %{relay} or %{smtp_server}, or nothing is sent."
   account_outgoing_mail_empty_relay: "a relay"
   account_outgoing_mail_empty_smtp_server: "an SMTP server"
@@ -39,8 +40,8 @@ en:
   account_outgoing_mail_over_smtp_hint: "Over SMTP at %{host}"
   account_outgoing_mail_over_smtp_server: "Over an SMTP server"
   account_outgoing_mail_password_set: "Password set"
-  account_outgoing_mail_remove: "Stop sending this way"
-  account_outgoing_mail_remove_confirm: "Stop sending this way? Its token or password is forgotten, and nothing is sent until you set one up again, which is also how to change it."
+  account_outgoing_mail_remove: "Delete"
+  account_outgoing_mail_remove_confirm: "Are you sure you want to permanently delete this? Its token or password is forgotten, and nothing is sent until you set one up again."
   account_outgoing_mail_title: "Outgoing mail"
   account_outgoing_mail_token_set: "Token set"
   account_return_url_format: "must be a full address starting with https://"
@@ -49,10 +50,12 @@ en:
   account_sender_from_name_label: "From name"
   account_sender_relay_title: "Relay"
   account_sender_relay_token_label: "Token"
+  account_sender_relay_token_set_hint: "Token set. It can't be shown again. To change it, delete the relay and set it up again."
   account_sender_relay_url_label: "Relay address"
   account_sender_reply_to_label: "Reply to"
   account_sender_smtp_address_label: "Server"
   account_sender_smtp_password_label: "Password"
+  account_sender_smtp_password_set_hint: "Password set. It can't be shown again. To change it, delete the SMTP server and set it up again."
   account_sender_smtp_port_hint: "587 upgrades to TLS before anything is sent; 465 is TLS from the first byte."
   account_sender_smtp_port_label: "Port"
   account_sender_smtp_server_title: "SMTP server"
@@ -633,6 +636,10 @@ en:
         email: Email
       subscriber/import:
         file: File
+    errors:
+      messages:
+        relay_set_once: "can't be changed: remove the relay and set it up again"
+        smtp_set_once: "can't be changed: remove the SMTP server and set it up again"
   date:
     formats:
       month_and_year: "%B %Y"

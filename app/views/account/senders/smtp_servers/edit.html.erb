@@ -41,12 +41,16 @@
             <%= form.text_field :smtp_username, class: "input", autocomplete: "off", autocapitalize: "none", autocorrect: "off", spellcheck: false %>
           </div>
 
-          <div class="flex flex-column gap-half">
-            <%= form.label :smtp_password do %>
-              <strong><%= t("account_sender_smtp_password_label") %></strong>
-            <% end %>
-            <%= form.password_field :smtp_password, class: "input", autocomplete: "new-password" %>
-          </div>
+          <% if @sender.smtp_password_in_database.present? %>
+            <p class="margin-none txt-small txt-subtle"><%= t("account_sender_smtp_password_set_hint") %></p>
+          <% else %>
+            <div class="flex flex-column gap-half">
+              <%= form.label :smtp_password do %>
+                <strong><%= t("account_sender_smtp_password_label") %></strong>
+              <% end %>
+              <%= form.password_field :smtp_password, class: "input", autocomplete: "new-password" %>
+            </div>
+          <% end %>
 
           <div class="flex gap-half">
             <%= form.button t("save"), type: "submit", class: "btn btn--link" %>

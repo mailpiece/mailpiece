@@ -85,8 +85,9 @@ over `SMTP_*` from `MAILER_FROM_ADDRESS`.
   username and password, signed in with `plain`. Left out, the server is asked
   for no sign-in.
 
-The token and the password are never shown again, on the screen or in the
-JSON: to change one, remove the transport and set it up again. They are
+The address, server, port and username are edited in place; the token and
+the password are set once, never shown again on the screen or in the JSON, and
+changed by removing the transport and setting it up again. They are
 encrypted with a key derived from `SECRET_KEY_BASE`: rotating it, or
 restoring a database under another, makes them unreadable, and the app raises
 wherever it reads them. The admin then clears every transport from a console

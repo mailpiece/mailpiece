@@ -4,6 +4,7 @@ class MailTransportTest < ActiveSupport::TestCase
   setup do
     Rails.configuration.x.newsletter_mail.delivered_by_transport = true
     @sender = account_senders(:davids)
+    @sender.stop_sending
   end
 
   test "the relay is posted to with the newsletter's own address and token" do
@@ -38,8 +39,6 @@ class MailTransportTest < ActiveSupport::TestCase
   end
 
   test "a newsletter with no transport is delivered by nothing that sends" do
-    @sender.stop_sending
-
     assert_equal :unconfigured, transport.delivery_method
     assert_empty transport.settings
     assert_equal :unconfigured, MailTransport.newsletter(Account.create!(name: "No Sender")).delivery_method

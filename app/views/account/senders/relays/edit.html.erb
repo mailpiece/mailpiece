@@ -26,12 +26,16 @@
             <%= form.url_field :relay_url, class: "input", autocapitalize: "none", autocorrect: "off", spellcheck: false %>
           </div>
 
-          <div class="flex flex-column gap-half">
-            <%= form.label :relay_token do %>
-              <strong><%= t("account_sender_relay_token_label") %></strong>
-            <% end %>
-            <%= form.password_field :relay_token, class: "input", autocomplete: "new-password" %>
-          </div>
+          <% if @sender.relay_token_in_database.present? %>
+            <p class="margin-none txt-small txt-subtle"><%= t("account_sender_relay_token_set_hint") %></p>
+          <% else %>
+            <div class="flex flex-column gap-half">
+              <%= form.label :relay_token do %>
+                <strong><%= t("account_sender_relay_token_label") %></strong>
+              <% end %>
+              <%= form.password_field :relay_token, class: "input", autocomplete: "new-password" %>
+            </div>
+          <% end %>
 
           <div class="flex gap-half">
             <%= form.button t("save"), type: "submit", class: "btn btn--link" %>

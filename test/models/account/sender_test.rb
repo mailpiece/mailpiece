@@ -88,6 +88,7 @@ class Account::SenderTest < ActiveSupport::TestCase
 
   test "its token and password are stored encrypted" do
     sender = account_senders(:davids)
+    sender.stop_sending
     sender.use_relay(relay_url: "https://relay.example/messages", relay_token: "own_token")
 
     assert_not_includes sender.reload.relay_token_before_type_cast, "own_token"
@@ -99,6 +100,7 @@ class Account::SenderTest < ActiveSupport::TestCase
 
   test "its credentials stay out of what it shows of itself" do
     sender = account_senders(:davids)
+    sender.stop_sending
     sender.update!(relay_token: "own_token", smtp_password: "own_password")
 
     assert_not_includes sender.inspect, "own_token"

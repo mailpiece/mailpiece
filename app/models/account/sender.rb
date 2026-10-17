@@ -17,6 +17,7 @@ class Account::Sender < ApplicationRecord
   validates :relay_url, format: { with: /\A#{URI::DEFAULT_PARSER.make_regexp(%w[ http https ])}\z/ }, allow_blank: true
   validates :smtp_address, :smtp_port, presence: true, if: :smtp?
   validates :smtp_password, presence: true, if: -> { smtp? && smtp_username.present? }
+  validate :credentials_set_once, if: -> { persisted? && !transport_changed? }
 
   def complete?
     missing.empty?
@@ -60,9 +61,19 @@ class Account::Sender < ApplicationRecord
 
   private
     def replace_transport(settings)
-      assign_attributes TRANSPORT_ATTRIBUTES.index_with(nil)
+      assign_attributes TRANSPORT_ATTRIBUTES.index_with(nil) unless transport == settings[:transport]
       assign_attributes settings
       self.smtp_password = nil if smtp_username.blank?
       save
+    end
+
+    # A token or password is never shown again, so it is set with its transport and goes when the transport does.
+    def credentials_set_once
+      errors.add :relay_token, :relay_set_once if replacing_stored?(:relay_token)
+      errors.add :smtp_password, :smtp_set_once if replacing_stored?(:smtp_password)
+    end
+
+    def replacing_stored?(credential)
+      attribute_changed?(credential) && attribute_in_database(credential).present? && self[credential].present?
     end
 end

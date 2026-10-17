@@ -27,14 +27,14 @@ class Account::OutgoingMailsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".blank-slate a[href=?]", edit_account_sender_relay_path
   end
 
-  test "show has the relay as a row that can only be removed, and never its token" do
+  test "show has the relay as a row to edit or remove, and never its token" do
     get account_outgoing_mail_path
 
     assert_response :success
     assert_select "li.row .row__title", text: "Over a relay"
     assert_select "li.row .row__meta", text: "https://relay.example/messages · Token set"
     assert_select "li.row form[action=?] input[name=_method][value=delete]", account_sender_relay_path
-    assert_select "li.row a", count: 0
+    assert_select "li.row a[href=?]", edit_account_sender_relay_path, text: "Edit"
     assert_select ".blank-slate", count: 0
     assert_not_includes response.body, "stream_token"
   end
@@ -47,6 +47,7 @@ class Account::OutgoingMailsControllerTest < ActionDispatch::IntegrationTest
     assert_select "li.row .row__title", text: "Over an SMTP server"
     assert_select "li.row .row__meta", text: "smtp.example:465 · Password set"
     assert_select "li.row form[action=?]", account_sender_smtp_server_path
+    assert_select "li.row a[href=?]", edit_account_sender_smtp_server_path, text: "Edit"
     assert_not_includes response.body, "own_password"
 
     account_senders(:davids).use_smtp_server(smtp_address: "smtp.example", smtp_port: 587, smtp_username: "")

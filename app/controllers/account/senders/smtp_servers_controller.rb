@@ -5,7 +5,6 @@ class Account::Senders::SmtpServersController < ApplicationController
   before_action :set_sender
 
   def edit
-    redirect_to account_outgoing_mail_path if @sender.smtp?
   end
 
   def update

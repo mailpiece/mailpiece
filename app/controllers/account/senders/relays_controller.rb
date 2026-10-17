@@ -5,7 +5,6 @@ class Account::Senders::RelaysController < ApplicationController
   before_action :set_sender
 
   def edit
-    redirect_to account_outgoing_mail_path if @sender.relay?
   end
 
   def update

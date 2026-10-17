@@ -14,12 +14,12 @@
 <div class="page flex flex-column gap">
   <% if @sender.relay? %>
     <ul class="rows">
-      <%= render "account/outgoing_mails/transport", title: t("account_outgoing_mail_over_relay"), path: account_sender_relay_path,
+      <%= render "account/outgoing_mails/transport", title: t("account_outgoing_mail_over_relay"), path: account_sender_relay_path, edit_path: edit_account_sender_relay_path,
             meta: [ @sender.relay_url, t("account_outgoing_mail_token_set") ] %>
     </ul>
   <% elsif @sender.smtp? %>
     <ul class="rows">
-      <%= render "account/outgoing_mails/transport", title: t("account_outgoing_mail_over_smtp_server"), path: account_sender_smtp_server_path,
+      <%= render "account/outgoing_mails/transport", title: t("account_outgoing_mail_over_smtp_server"), path: account_sender_smtp_server_path, edit_path: edit_account_sender_smtp_server_path,
             meta: [ "#{@sender.smtp_address}:#{@sender.smtp_port}", @sender.smtp_username.present? ? t("account_outgoing_mail_password_set") : t("account_outgoing_mail_no_sign_in") ] %>
     </ul>
   <% else %>
