@@ -17,10 +17,10 @@
 <% elsif blob.variable? %>
   <%# Where a page has the lightbox, the picture opens in it; anywhere else, and without JavaScript, the link opens it. %>
   <%= link_to rails_representation_path(blob.variant(variant)), data: { lightbox_target: "image" } do %>
-    <%= image_tag rails_representation_path(blob.variant(variant)), width: width, height: height %>
+    <%= image_tag rails_representation_path(blob.variant(variant)), alt: blob.try(:alt), width: width, height: height %>
   <% end %>
 <% elsif blob.previewable? %>
-  <%= image_tag rails_representation_path(blob.preview(variant)), width: width, height: height %>
+  <%= image_tag rails_representation_path(blob.preview(variant)), alt: blob.try(:alt), width: width, height: height %>
 <% else %>
   <span class="attachment__icon"><%= blob.filename.extension&.downcase.presence || "unknown" %></span>
 <% end %>
