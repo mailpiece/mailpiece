@@ -28,6 +28,7 @@ class SubscribersControllerTest < ActionDispatch::IntegrationTest
     get subscribers_path
 
     assert_select ".filter__empty a[href=?][data-quick-find-target=searchLink]", search_path
+    assert_select ".rows .row[data-quick-find-target=item]"
   end
 
   test "index as JSON lists who the screen lists and never exposes the token" do
