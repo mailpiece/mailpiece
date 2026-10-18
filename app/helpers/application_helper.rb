@@ -21,7 +21,7 @@ module ApplicationHelper
   end
 
   def toolbar_button(label, url, icon:, current: false, **options)
-    link_to url, class: class_names("btn btn--circle-mobile", options[:class]), aria: { label: label, current: ("true" if current) } do
+    link_to url, class: class_names("btn btn--circle-mobile", options.delete(:class)), aria: { label: label, current: ("true" if current) }, **options do
       icon_tag(icon) + tag.span(label)
     end
   end
