@@ -86,13 +86,21 @@ class Relay::DeliveryMethod
       settings[:token].presence || raise(MailDelivery::Unavailable, "there is no relay token for this message")
     end
 
+    # The nil proxy address ignores http_proxy: a proxy would look the host up again, past the pinned address.
     def http
-      Net::HTTP.new(uri.host, uri.port).tap do |http|
+      Net::HTTP.new(uri.host, uri.port, nil).tap do |http|
+        http.ipaddr = public_address
         http.use_ssl = uri.scheme == "https"
         http.open_timeout = OPEN_TIMEOUT
         http.read_timeout = READ_TIMEOUT
         http.write_timeout = READ_TIMEOUT
       end
+    end
+
+    def public_address
+      Surfguard.resolve_public_ips(uri.host).first || raise(MailDelivery::Unauthorized, "The relay address resolves to no public address")
+    rescue Surfguard::Unresolvable
+      raise MailDelivery::Unavailable, "The relay address could not be looked up"
     end
 
     def headers_for(mail)

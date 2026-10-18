@@ -31,6 +31,7 @@ gem "ruby-vips", "~> 2.3", require: false
 gem "platform_agent"
 gem "aws-sdk-s3", require: false
 gem "useragent", github: "basecamp/useragent"
+gem "surfguard", github: "basecamp/surfguard"
 
 # Operations
 gem "mission_control-jobs"

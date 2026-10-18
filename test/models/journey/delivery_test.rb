@@ -179,6 +179,7 @@ class Journey::DeliveryTest < ActiveSupport::TestCase
 
   test "over the relay a message never answered claims nothing, and the job retries it under the same key" do
     send_mail_over :relay
+    stub_dns_resolution PUBLIC_IP
     stub_request(:post, "https://relay.example/messages").with(headers: { "Idempotency-Key" => @delivery.id }).to_raise(Net::ReadTimeout)
 
     assert_enqueued_jobs 1, only: Journey::DeliveryJob do

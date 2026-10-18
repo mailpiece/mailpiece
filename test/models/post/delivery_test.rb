@@ -99,6 +99,7 @@ class Post::DeliveryTest < ActiveSupport::TestCase
 
   test "over the relay a row is never claimed, and a failed send is swept as before" do
     send_mail_over :relay
+    stub_dns_resolution PUBLIC_IP
     stub_request(:post, RELAY_URL).to_return({ status: 503 }, { status: 201, body: { message_id: "<abc@newsletter.example>" }.to_json })
 
     assert_raises(MailDelivery::Unavailable) { @delivery.deliver_now }
@@ -115,6 +116,7 @@ class Post::DeliveryTest < ActiveSupport::TestCase
 
   test "over the relay a message posted and never answered is retried with the same key" do
     send_mail_over :relay
+    stub_dns_resolution PUBLIC_IP
     stub_request(:post, RELAY_URL).with(headers: { "Idempotency-Key" => @delivery.id }).to_raise(Net::ReadTimeout)
 
     assert_enqueued_jobs 1, only: Post::DeliveryJob do
@@ -130,6 +132,7 @@ class Post::DeliveryTest < ActiveSupport::TestCase
 
   test "over the relay two workers holding the same row both post it under one key, for the relay to send once" do
     send_mail_over :relay
+    stub_dns_resolution PUBLIC_IP
     stub = stub_request(:post, RELAY_URL).with(headers: { "Idempotency-Key" => @delivery.id }).to_return(status: 201, body: "{}")
     other = Post::Delivery.find(@delivery.id)
 
@@ -142,6 +145,7 @@ class Post::DeliveryTest < ActiveSupport::TestCase
 
   test "over the relay a message taken with an answer that cannot be read is recorded as sent" do
     send_mail_over :relay
+    stub_dns_resolution PUBLIC_IP
     stub_request(:post, RELAY_URL).to_return(status: 201, body: "")
 
     @delivery.deliver_now
@@ -162,6 +166,7 @@ class Post::DeliveryTest < ActiveSupport::TestCase
 
   test "over the newsletter's relay the row is posted with its token and the delivery's key, and never claimed" do
     send_mail_over :relay, relay_url: "https://own.example/messages", relay_token: "own_token"
+    stub_dns_resolution PUBLIC_IP
     stub = stub_request(:post, "https://own.example/messages")
       .with(headers: { "Authorization" => "Bearer own_token", "Idempotency-Key" => @delivery.id }).to_return(status: 201, body: "{}")
 
