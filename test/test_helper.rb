@@ -17,6 +17,7 @@ module ActiveSupport
     fixtures :all
 
     include ActiveJob::TestHelper
+    include DnsTestHelper
     include MailTransportTestHelper
     include SupportTestHelper
 

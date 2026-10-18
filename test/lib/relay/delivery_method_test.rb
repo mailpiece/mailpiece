@@ -4,6 +4,7 @@ class Relay::DeliveryMethodTest < ActiveSupport::TestCase
   ENDPOINT = "https://relay.example/7/messages"
 
   setup do
+    stub_dns_resolution PUBLIC_IP
     @mail = Mail.new(from: "Leo <leo@newsletter.example>", to: "ada@example.com", subject: "Hello") do
       text_part { body "Text" }
       html_part { content_type "text/html; charset=UTF-8"; body "<p>HTML</p>" }
@@ -135,6 +136,20 @@ class Relay::DeliveryMethodTest < ActiveSupport::TestCase
 
     stub_request(:post, ENDPOINT).to_raise(Errno::ECONNRESET)
     assert_raises(MailDelivery::Unverified) { deliver @mail }
+  end
+
+  test "a relay address with no public address is unauthorized, and nothing is posted" do
+    stub_dns_resolution "127.0.0.1", "169.254.169.254"
+
+    assert_raises(MailDelivery::Unauthorized) { deliver @mail }
+    assert_not_requested :post, ENDPOINT
+  end
+
+  test "a relay address that cannot be looked up is unavailable" do
+    stub_dns_failure
+
+    error = assert_raises(MailDelivery::Unavailable) { deliver @mail }
+    assert_not_kind_of MailDelivery::Unauthorized, error
   end
 
   test "without a token or an address nothing is posted" do
