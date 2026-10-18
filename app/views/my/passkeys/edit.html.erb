@@ -34,8 +34,14 @@
         <%= link_to t("cancel_and_go_back"), my_passkeys_path, class: "btn borderless" %>
       </div>
     <% end %>
-  </div>
 
-  <%= button_to t("my_passkey_remove"), my_passkey_path(@passkey), method: :delete, class: "btn btn--negative",
-        data: { turbo_confirm: t("my_passkey_remove_confirm") } %>
+    <div class="txt-align-center">
+      <%= button_to my_passkey_path(@passkey), method: :delete,
+            class: "btn txt-negative borderless txt-small",
+            data: { turbo_confirm: t("my_passkey_remove_confirm") } do %>
+        <%= icon_tag "trash" %>
+        <span><%= t("my_passkey_remove") %></span>
+      <% end %>
+    </div>
+  </div>
 </div>

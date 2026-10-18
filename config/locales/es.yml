@@ -222,7 +222,7 @@ es:
   my_passkey_register_error: "No pudimos registrar esa llave de acceso. Probá de nuevo."
   my_passkey_registered: "Se registró tu llave de acceso. Ponele un nombre para reconocerla después."
   my_passkey_remove: "Quitar esta llave de acceso"
-  my_passkey_remove_confirm: "¿Seguro que querés quitar esta llave de acceso? Ya no vas a poder ingresar con ella."
+  my_passkey_remove_confirm: "¿Seguro que querés quitar esta llave de acceso?"
   posts: "Publicaciones"
   posts_add_one: "Agregá una"
   posts_already_sent_notice: "Esta publicación ya se envió a los suscriptores"
