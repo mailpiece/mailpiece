@@ -1,0 +1,10 @@
+[extend]
+useDefault = true
+
+[allowlist]
+paths = [
+  '''log''',
+  '''tmp''',
+  '''docs/''',
+  '''test/''',
+]
