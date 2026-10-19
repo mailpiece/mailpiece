@@ -75,9 +75,29 @@ html[data-theme="dark"] {
   .writing .post__summary,
   .writing .post-form__summary {
     color: var(--color-writing-subtle);
-    font-size: 1.15em;
-    line-height: 1.35;
+    font-size: 1.1em;
+    line-height: 1.4;
     text-wrap: balance;
+  }
+
+  /* The editor sets its title and summary as the reader's page does; the textarea does not inherit the label's alignment. */
+  .writing .post-form__heading,
+  .writing .post-form__title,
+  .writing .post-form__summary {
+    text-align: center;
+  }
+
+  /* An empty summary all but fades out until its field or the title is held. */
+  .writing .post-form__summary {
+    transition: opacity 150ms ease;
+
+    &:placeholder-shown:not(:focus, :hover) {
+      opacity: 0.15;
+    }
+  }
+
+  .writing .post-form__heading:is(:hover, :focus-within) + .post-form__summary {
+    opacity: 1;
   }
 
   .writing .post__summary {
@@ -116,8 +136,6 @@ html[data-theme="dark"] {
   }
 
   .reading .post__summary {
-    font-size: 1.1em;
-    line-height: 1.4;
     margin-block-end: 1.75rem;
     text-align: center;
   }
