@@ -2,7 +2,6 @@
 
 <%= form.label :subject,
       class: "autoresize__wrapper post-form__heading",
-      style: "view-transition-name: #{dom_id(email)}",
       data: { autoresize_target: "wrapper", autoresize_clone_value: "" } do %>
   <%= form.text_area :subject,
         autofocus: email.new_record?,

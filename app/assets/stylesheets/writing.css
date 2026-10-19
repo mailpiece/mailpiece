@@ -153,6 +153,10 @@ html[data-theme="dark"] {
     z-index: 1;
   }
 
+  ::view-transition-group(writing-bar) {
+    z-index: 99;
+  }
+
   .writing__version--current {
     border-block-start: 1px solid var(--color-ink-lighter);
     margin-block-start: var(--block-space-double);

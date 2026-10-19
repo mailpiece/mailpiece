@@ -16,7 +16,7 @@
 <% end %>
 
 <div class="page writing">
-  <%= form_with model: @email, url: journey_emails_path(@journey), class: "writing__form", data: { controller: "autoresize advance-to-editor" } do |form| %>
+  <%= form_with model: @email, url: journey_emails_path(@journey), class: "writing__form", style: "view-transition-name: #{dom_id(@email)}", data: { controller: "autoresize advance-to-editor" } do |form| %>
     <%= render "journeys/emails/fields", form: form, email: @email %>
 
     <div class="writing-bar post-actions">

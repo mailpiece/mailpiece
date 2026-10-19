@@ -19,7 +19,7 @@
   <%# The form itself is the save, which is what auto-save submits, in the background and when a draft's writer asks
       for it. Every other button posts to its own resource and carries its own _method, which comes after the
       form's and so replaces it. %>
-  <%= form_with model: @post, class: "writing__form", data: post_editor_data(@post) do |form| %>
+  <%= form_with model: @post, class: "writing__form", style: "view-transition-name: #{dom_id(@post)}", data: post_editor_data(@post) do |form| %>
     <%= render "posts/fields", form: form, post: @post, auto_save: @post.draft? %>
 
     <% if @post.draft? %>

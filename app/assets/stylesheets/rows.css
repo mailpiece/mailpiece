@@ -103,12 +103,6 @@
     border-block-start: var(--border);
   }
 
-  /* A list has no end, so its rows are not all named for the view transition: only the one under the pointer
-     or holding the focus is, which is the one being opened. It says its own name in --row-transition-name. */
-  .row:is(:hover, :focus-within) {
-    view-transition-name: var(--row-transition-name, none);
-  }
-
   .row--inactive {
     color: var(--color-ink-dark);
   }
