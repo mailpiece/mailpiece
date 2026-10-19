@@ -252,7 +252,6 @@ en:
   posts_email_only_needs_sending: "An email-only post can only be scheduled with sending"
   posts_filter_what: "posts"
   posts_finish_settings: "Finish the settings"
-  posts_fullscreen: "Fullscreen"
   posts_history: "History"
   posts_invalid_test_address: "Enter a valid email address for the test"
   posts_links_invalid_url: "must be a full address starting with http:// or https://"

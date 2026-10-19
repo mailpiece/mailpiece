@@ -117,5 +117,8 @@ jobs:
       - name: Run tests
         run: bin/rails db:test:prepare test
 
+      - name: Run system tests
+        run: bin/rails test:system
+
       - name: Check seeds
         run: bin/rails db:seed:replant
