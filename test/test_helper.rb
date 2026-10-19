@@ -62,6 +62,12 @@ module ActionDispatch
       bearer_token_env("test_token_davids_readonly_00000")
     end
   end
+
+  class SystemTestCase
+    setup do
+      self.default_url_options = default_url_options.merge(script_name: "/#{accounts(:davids_account).external_account_id}")
+    end
+  end
 end
 
 ActiveSupport.on_load(:active_record_fixture_set) do
