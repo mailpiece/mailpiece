@@ -21,6 +21,16 @@ module ActiveSupport
     include MailTransportTestHelper
     include SupportTestHelper
 
+    # Jobs must carry their own account context via AccountTenanted,
+    # not rely on Current.account leaking from the test setup.
+    def perform_enqueued_jobs(...)
+      saved_account, saved_user = Current.account, Current.user
+      Current.account = Current.user = nil
+      super
+    ensure
+      Current.account, Current.user = saved_account, saved_user
+    end
+
     setup do
       Current.account = accounts(:davids_account)
       Current.user = users(:leo)
