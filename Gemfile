@@ -51,8 +51,10 @@ group :development do
 end
 
 group :test do
+  gem "capybara"
   gem "minitest-reporters", require: false
   gem "mocha"
+  gem "selenium-webdriver"
   gem "webmock"
 end
 
