@@ -45,7 +45,8 @@
 # Agent worktrees are scratch checkouts, never part of the app.
 /.claude/worktrees/
 
-# Each install's own deploy destinations, their secrets and its deploy hooks stay out of the repo
+# Each install's own deploy destinations, their secrets, its backup and its deploy hooks stay out of the repo
 /config/deploy.*.yml
+/config/litestream.yml
 /.kamal/secrets.*
 /.kamal/hooks/pre-connect

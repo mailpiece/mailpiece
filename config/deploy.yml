@@ -31,27 +31,8 @@ env:
     - SMTP_USERNAME
     - SMTP_ADDRESS
 
-accessories:
-  litestream:
-    image: litestream/litestream:0.5.17
-    roles:
-      - web
-    cmd: replicate
-    files:
-      - config/litestream.yml:/etc/litestream.yml
-    options:
-      # The uid that owns /rails/storage in the app's image.
-      user: "1000:1000"
-    env:
-      secret:
-        - LITESTREAM_ACCESS_KEY_ID
-        - LITESTREAM_ENDPOINT
-        - LITESTREAM_SECRET_ACCESS_KEY
-
 aliases:
   console: app exec --interactive --reuse "bin/rails console"
   shell: app exec --interactive --reuse bash
   logs: app logs -f
-  restore-check: accessory exec litestream "restore -o /rails/storage/restored.sqlite3 /rails/storage/production.sqlite3"
-  backups: accessory exec litestream "ltx -level all /rails/storage/production.sqlite3"
   storage: app exec "ls -la /rails/storage"
