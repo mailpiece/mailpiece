@@ -12,7 +12,7 @@
 <% end %>
 
 <div class="page writing">
-  <%= form_with model: @post, class: "writing__form", data: { controller: "autoresize advance-to-editor" } do |form| %>
+  <%= form_with model: @post, class: "writing__form", style: "view-transition-name: #{dom_id(@post)}", data: { controller: "autoresize advance-to-editor" } do |form| %>
     <%= render "posts/fields", form: form, post: @post %>
 
     <div class="writing-bar post-actions">

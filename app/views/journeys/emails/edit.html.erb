@@ -18,7 +18,7 @@
 <div class="page writing" data-controller="post-bar">
   <%# The form itself is the save, which is what auto-save submits. Every other button posts to its own resource and
       carries its own _method, which comes after the form's and so replaces it. %>
-  <%= form_with model: @email, url: journey_email_path(@journey, @email), class: "writing__form", data: post_editor_data(@email) do |form| %>
+  <%= form_with model: @email, url: journey_email_path(@journey, @email), class: "writing__form", style: "view-transition-name: #{dom_id(@email)}", data: post_editor_data(@email) do |form| %>
     <%= render "journeys/emails/fields", form: form, email: @email, auto_save: @email.draft? %>
 
     <% if @email.draft? %>

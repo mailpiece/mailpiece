@@ -1,6 +1,6 @@
 <%= tag.li id: dom_id(post),
       class: "row",
-      style: "--row-transition-name: #{dom_id post}",
+      style: "view-transition-name: #{dom_id post}",
       tabindex: -1,
       data: { quick_find_target: "item", navigable_list_target: "item" } do %>
   <%= link_to edit_post_path(post), class: "row__body" do %>

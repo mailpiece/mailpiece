@@ -1,5 +1,4 @@
 <li id="<%= dom_id subscriber %>" class="<%= class_names "row", "row--inactive": !subscriber.active? && !subscriber.unconfirmed? %>"
-    style="--row-transition-name: <%= dom_id subscriber %>"
     data-quick-find-target="item" data-navigable-list-target="item" tabindex="-1">
   <%= link_to subscriber_path(subscriber), class: "row__body" do %>
     <strong class="row__title"><%= subscriber.email %></strong>

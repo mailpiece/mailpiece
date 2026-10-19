@@ -1,6 +1,6 @@
 <%= tag.li id: dom_id(snippet),
       class: "row",
-      style: "--row-transition-name: #{dom_id snippet}",
+      style: "view-transition-name: #{dom_id snippet}",
       tabindex: -1,
       data: { quick_find_target: "item", navigable_list_target: "item" } do %>
   <%= link_to edit_snippet_path(snippet), class: "row__body" do %>
