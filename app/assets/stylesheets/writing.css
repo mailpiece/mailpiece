@@ -6,6 +6,9 @@
 
   /* Titles, written or read. Fizzy's --font-serif stays as Fizzy has it. */
   --font-title: Georgia, ui-serif, serif;
+
+  /* The text's size on a desk, read by the strip as well so it stays as wide as the column. */
+  --writing-desk-size: clamp(1.04rem, 0.85rem + 0.45vw, 1.15rem);
 }
 
 html[data-theme="dark"] {
@@ -19,7 +22,7 @@ html[data-theme="dark"] {
 }
 
 @layer components {
-  /* The surface a post is written and read on, set as HEY World sets its pages: a neutral near-black on the canvas, a little over 17px on a phone and a little under 20px on a desk, and tight leading with a full line between paragraphs. The ink is the surface's own token; the app keeps its own. */
+  /* The surface a post is written and read on: a neutral near-black on the canvas, a little over 17px on a phone as HEY World sets it, and tight leading with a full line between paragraphs. The ink is the surface's own token; the app keeps its own. */
   .writing {
     --input-color: var(--color-writing-ink);
 
@@ -27,9 +30,17 @@ html[data-theme="dark"] {
     font-size: 1.1rem;
     padding-block-end: clamp(var(--block-space), 5%, calc(var(--block-space) * 3));
 
-    /* The root grows at this width, so the text is stepped back to land on HEY's desk size. */
+    /* The root grows at this width, so the text starts back at HEY's desk size and grows with the screen, as Writebook's does. The column is in em so it grows with the text, landing on the page's 40rem at the step. */
     @media (min-width: 100ch) {
-      font-size: 1.04rem;
+      --page-size: 38.5em;
+
+      font-size: var(--writing-desk-size);
+    }
+  }
+
+  .strip:has(~ #main > .page.writing) {
+    @media (min-width: 100ch) {
+      --strip-size: calc(38.5 * var(--writing-desk-size));
     }
   }
 
