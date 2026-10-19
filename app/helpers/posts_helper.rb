@@ -3,6 +3,12 @@ module PostsHelper
     post.title.presence || t("untitled")
   end
 
+  def post_fullscreen_button
+    tag.button type: "button", class: "btn btn--circle-mobile", aria: { label: t("posts_fullscreen") }, data: { controller: "fullscreen", action: "fullscreen#toggle" } do
+      icon_tag("expand") + tag.span(t("posts_fullscreen"))
+    end
+  end
+
   def post_meta(post)
     safe_join [ post_progress(post), post_visibility(post) ].compact, " · "
   end
