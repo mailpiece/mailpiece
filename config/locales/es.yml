@@ -252,7 +252,6 @@ es:
   posts_email_only_needs_sending: "Una publicación solo por email se programa únicamente con envío"
   posts_filter_what: "publicaciones"
   posts_finish_settings: "Terminá la configuración"
-  posts_fullscreen: "Pantalla completa"
   posts_history: "Historial"
   posts_invalid_test_address: "Escribí un email válido para la prueba"
   posts_links_invalid_url: "tiene que ser una dirección completa que empiece con http:// o https://"
