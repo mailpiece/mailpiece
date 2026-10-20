@@ -222,7 +222,7 @@ en:
   my_passkey_register_error: "We couldn't register that passkey. Please try again."
   my_passkey_registered: "Your passkey has been registered. Give it a name so you can identify it later."
   my_passkey_remove: "Remove this passkey"
-  my_passkey_remove_confirm: "Are you sure you want to remove this passkey?"
+  my_passkey_remove_confirm: "Are you sure you want to remove this passkey? You can no longer sign in with it."
   posts: "Posts"
   posts_add_one: "Add one"
   posts_already_sent_notice: "This post was already sent to subscribers"
