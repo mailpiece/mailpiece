@@ -1,12 +1,9 @@
 class Signups::CompletionsController < ApplicationController
-  include TenantLimited
-
   wrap_parameters :signup, include: %i[ full_name ]
 
   layout "public"
 
   disallow_account_scope
-  before_action :enforce_tenant_limit
 
   def new
     @signup = Signup.new(identity: Current.identity)

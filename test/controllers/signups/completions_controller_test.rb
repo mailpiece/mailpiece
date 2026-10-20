@@ -31,16 +31,15 @@ class Signups::CompletionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
-  test "create is refused once the one account exists" do
+  test "create with multi-tenant off" do
     with_multi_tenant_mode(false) do
-      untenanted do
-        assert_no_difference -> { Account.count } do
-          post signup_completion_path, params: { signup: { full_name: "New Comer" } }
-        end
-
-        assert_redirected_to new_session_url
+      assert_difference -> { Account.count }, +1 do
+        untenanted { post signup_completion_path, params: { signup: { full_name: "New Comer" } } }
       end
     end
+
+    assert_response :redirect
+    assert newcomer.users.sole.owner?
   end
 
   private
