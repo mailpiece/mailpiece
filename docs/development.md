@@ -16,7 +16,8 @@ one of the two: plain `bin/dev` runs no jobs.
 The demo account's owner signs in as `mike@example.com`; in development the
 code is shown on the screen.
 
-New accounts are open while `MULTI_TENANT=true`, or while there is none.
+New accounts are open while `MULTI_TENANT=true`, or while there is none. A
+signed-in person can always add one from the account menu.
 
 ## A newsletter's own domain
 
