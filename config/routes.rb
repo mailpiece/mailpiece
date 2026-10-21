@@ -15,10 +15,12 @@ Rails.application.routes.draw do
     resource :subscription, only: %i[ show create ]
     resource :embedded_subscription, only: :create, path: "subscribe"
     resource :rating, only: %i[ new create show ]
-    resources :subscriptions, only: [], param: :token do
-      scope module: :subscriptions do
-        resource :confirmation, only: %i[ show create ], path: "confirm"
-        resource :unsubscription, only: %i[ show create ], path: "unsubscribe"
+    filter_path_parameters :subscription_token do
+      resources :subscriptions, only: [], param: :token do
+        scope module: :subscriptions do
+          resource :confirmation, only: %i[ show create ], path: "confirm"
+          resource :unsubscription, only: %i[ show create ], path: "unsubscribe"
+        end
       end
     end
   end

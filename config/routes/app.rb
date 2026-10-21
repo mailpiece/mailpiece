@@ -93,15 +93,21 @@ resources :subscribers, only: %i[ index show create destroy ] do
   end
 end
 
-resources :qr_codes
+filter_path_parameters :id do
+  resources :qr_codes
+end
 
-get "join/:code", to: "join_codes#new", as: :join
-post "join/:code", to: "join_codes#create"
+filter_path_parameters :code do
+  get "join/:code", to: "join_codes#new", as: :join
+  post "join/:code", to: "join_codes#create"
+end
 
 resources :users, only: %i[ show update ] do
   scope module: :users do
-    resources :email_addresses, param: :token do
-      resource :confirmation, module: :email_addresses
+    filter_path_parameters :token, :email_address_token do
+      resources :email_addresses, param: :token do
+        resource :confirmation, module: :email_addresses
+      end
     end
   end
 end
