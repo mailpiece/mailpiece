@@ -32,6 +32,7 @@ gem "platform_agent"
 gem "aws-sdk-s3", require: false
 gem "useragent", github: "basecamp/useragent"
 gem "surfguard", github: "basecamp/surfguard"
+gem "filter_path_parameters", github: "mailpiece/filter_path_parameters", branch: "main"
 
 # Operations
 gem "mission_control-jobs"
