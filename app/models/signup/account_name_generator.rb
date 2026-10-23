@@ -37,11 +37,11 @@ class Signup::AccountNameGenerator
 
     # An earlier account may have been named in the other language, so a name is read in both.
     def first_account_name_regex
-      @first_account_name_regex ||= /\A(?:#{prefix}\s+#{SUFFIX}|#{SUFFIX} de #{first_name})\Z/i
+      @first_account_name_regex ||= /\A(?:#{Regexp.escape(prefix)}\s+#{SUFFIX}|#{SUFFIX} de #{Regexp.escape(first_name)})\Z/i
     end
 
     def nth_account_name_regex
-      @nth_account_name_regex ||= /\A(?:#{prefix}\s+(1st|2nd|3rd|\d+th)\s+#{SUFFIX}|#{SUFFIX} de #{first_name} (\d+)\Z)/i
+      @nth_account_name_regex ||= /\A(?:#{Regexp.escape(prefix)}\s+(1st|2nd|3rd|\d+th)\s+#{SUFFIX}|#{SUFFIX} de #{Regexp.escape(first_name)} (\d+)\Z)/i
     end
 
     def prefix
