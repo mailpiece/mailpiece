@@ -1,5 +1,9 @@
 class SearchesController < ApplicationController
+  include SearchRateLimiting
+
   before_action :ensure_admin
+
+  limit_searches only: :show
 
   def show
     @query = params[:q].presence
@@ -8,6 +12,10 @@ class SearchesController < ApplicationController
   end
 
   private
+    def searching?
+      params[:q].present?
+    end
+
     def matching(records, **scope)
       if @query
         records.matching(@query, **scope)
