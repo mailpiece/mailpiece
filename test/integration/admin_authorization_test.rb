@@ -132,7 +132,6 @@ class AdminAuthorizationTest < ActionDispatch::IntegrationTest
     my/access_tokens#index
     my/access_tokens#new
     my/access_tokens#create
-    my/access_tokens#show
     my/access_tokens#destroy
     my/passkeys#index
     my/passkeys#create
