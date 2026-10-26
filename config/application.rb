@@ -10,11 +10,15 @@ module Mailpiece
     config.load_defaults 8.1
 
     # Set here rather than in an initializer: Active Record copies these into filter_attributes when it
-    # loads, and an initializer can load it before a later one runs. `signature` covers a presigned storage
-    # URL's X-Amz-Signature, which makes a redirect's logged location a working link to the file until it
-    # expires.
-    config.filter_parameters += %i[
-      passw secret token _key crypt salt certificate otp ssn code signature
+    # loads, and an initializer can load it before a later one runs.
+    #
+    # A `url` is matched whole, so a parameter that merely ends in "url" keeps its value. The pattern also
+    # matches a nested key's dotted path ("post_link.url"), which is what it is tested against once any
+    # dotted filter, such as those `encrypts` adds, is present. `signature` covers a presigned storage URL's
+    # X-Amz-Signature, which makes a redirect's logged location a working link to the file until it expires.
+    config.filter_parameters += [
+      *%i[ passw secret token _key crypt salt certificate otp ssn code signature ],
+      /(?:\A|\.)url\z/
     ]
 
     config.autoload_lib ignore: %w[ assets tasks rails_ext puma ]
