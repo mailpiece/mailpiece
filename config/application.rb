@@ -14,9 +14,10 @@ module Mailpiece
     #
     # A `url` is matched whole, so a parameter that merely ends in "url" keeps its value. The pattern also
     # matches a nested key's dotted path ("post_link.url"), which is what it is tested against once any
-    # dotted filter, such as those `encrypts` adds, is present.
+    # dotted filter, such as those `encrypts` adds, is present. `signature` covers a presigned storage URL's
+    # X-Amz-Signature, which makes a redirect's logged location a working link to the file until it expires.
     config.filter_parameters += [
-      *%i[ passw secret token _key crypt salt certificate otp ssn code ],
+      *%i[ passw secret token _key crypt salt certificate otp ssn code signature ],
       /(?:\A|\.)url\z/
     ]
 
