@@ -74,6 +74,7 @@ class JourneyMailerTest < ActionMailer::TestCase
   end
 
   test "email loads an image from an address in its own account, and links an attached video to its file" do
+    ActiveStorage::Previewer::VideoPreviewer.stubs(:ffmpeg_exists?).returns(false)
     image = ActiveStorage::Blob.create_and_upload! io: file_fixture("moon.jpg").open, filename: "moon.jpg", content_type: "image/jpeg"
     video = ActiveStorage::Blob.create_and_upload! io: StringIO.new("video"), filename: "clip.mp4", content_type: "video/mp4", identify: false
     @email.update!(body: "<p>#{ActionText::Attachment.from_attachable(image).to_html}</p>#{ActionText::Attachment.from_attachable(video).to_html}")
