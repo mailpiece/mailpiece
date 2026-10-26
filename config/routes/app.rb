@@ -142,7 +142,7 @@ end
 namespace :my do
   resource :passkey_challenge, only: :create
   resource :identity, only: :show
-  resources :access_tokens
+  resources :access_tokens, except: %i[ show edit update ]
   resources :passkeys, except: %i[ show new ]
   resource :timezone
 end
