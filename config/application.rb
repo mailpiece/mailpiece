@@ -11,8 +11,13 @@ module Mailpiece
 
     # Set here rather than in an initializer: Active Record copies these into filter_attributes when it
     # loads, and an initializer can load it before a later one runs.
-    config.filter_parameters += %i[
-      passw secret token _key crypt salt certificate otp ssn code
+    #
+    # A `url` is matched whole, so a parameter that merely ends in "url" keeps its value. The pattern also
+    # matches a nested key's dotted path ("post_link.url"), which is what it is tested against once any
+    # dotted filter, such as those `encrypts` adds, is present.
+    config.filter_parameters += [
+      *%i[ passw secret token _key crypt salt certificate otp ssn code ],
+      /(?:\A|\.)url\z/
     ]
 
     config.autoload_lib ignore: %w[ assets tasks rails_ext puma ]
