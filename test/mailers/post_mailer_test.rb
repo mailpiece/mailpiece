@@ -332,6 +332,7 @@ class PostMailerTest < ActionMailer::TestCase
     end
 
     def video_attachment_html
+      ActiveStorage::Previewer::VideoPreviewer.stubs(:ffmpeg_exists?).returns(false)
       blob = ActiveStorage::Blob.create_and_upload! io: StringIO.new("video"), filename: "clip.mp4", content_type: "video/mp4", identify: false
       ActionText::Attachment.from_attachable(blob).to_html
     end
