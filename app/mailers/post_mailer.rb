@@ -8,7 +8,6 @@ class PostMailer < ApplicationMailer
     @subscriber = subscriber
     @account = post.account
     @unsubscribe_url = public_subscription_unsubscription_url(subscriber.token)
-    @rating_token = delivery.generate_token_for(:rating) if delivery
 
     headers["List-Unsubscribe"] = "<#{@unsubscribe_url}>"
     headers["List-Unsubscribe-Post"] = "List-Unsubscribe=One-Click"

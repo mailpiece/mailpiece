@@ -5,7 +5,6 @@ class Subscriber < ApplicationRecord
   belongs_to :source_post, class_name: "Post", optional: true
   # Destroyed one by one, so each post's count of deliveries follows.
   has_many :deliveries, class_name: "Post::Delivery", dependent: :destroy
-  has_many :ratings, class_name: "Post::Rating", dependent: :delete_all
 
   has_secure_token :token
 

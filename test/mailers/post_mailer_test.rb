@@ -94,21 +94,6 @@ class PostMailerTest < ActionMailer::TestCase
     assert_equal "List-Unsubscribe=One-Click", email["List-Unsubscribe-Post"].value
   end
 
-  test "issue asks in both parts whether the reader liked it, with links from its delivery's token" do
-    freeze_time
-    delivery = @post.deliveries.find_by!(subscriber: @subscriber)
-    email = PostMailer.issue(@post, @subscriber, delivery: delivery)
-    token = delivery.generate_token_for(:rating)
-
-    [ CGI.unescapeHTML(email.html_part.body.to_s), email.text_part.body.to_s ].each do |body|
-      %w[ liked disliked ].each do |choice|
-        assert_includes body, "#{@post.account.slug}/rating/new?#{{ access_token: token, choice: choice }.to_query}"
-      end
-    end
-    assert_includes email.html_part.body.to_s, "you liked this issue</a> or if"
-    assert_includes email.text_part.body.to_s, "Tell me if you liked this issue:"
-  end
-
   test "issue links to its own account with no account set" do
     Current.without_account do
       assert_includes PostMailer.issue(@post, @subscriber).text_part.body.to_s, @unsubscribe_path
@@ -252,7 +237,6 @@ class PostMailerTest < ActionMailer::TestCase
     assert_nil email["X-Tags"]
     assert_not_includes email.html_part.body.to_s, "/unsubscribe"
     assert_not_includes email.text_part.body.to_s, "/unsubscribe"
-    assert_not_includes email.text_part.body.to_s, "/rating"
   end
 
   test "issue draws what is only in the email in both parts, and nothing of what is only on the web" do

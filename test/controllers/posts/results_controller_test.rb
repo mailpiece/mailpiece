@@ -33,16 +33,6 @@ class Posts::ResultsControllerTest < ActionDispatch::IntegrationTest
     assert_select "p", text: "Brought 2 subscribers"
   end
 
-  test "show counts the readers who liked it and who did not, and says nothing of none" do
-    get post_results_path(posts(:sent))
-    assert_select "p", text: /Liked it/, count: 0
-
-    posts(:sent).rate_by(subscribers(:active), "liked")
-
-    get post_results_path(posts(:sent))
-    assert_select "p", text: "Liked it: 1 · Wasn't for them: 0"
-  end
-
   test "show marks a link the text no longer has" do
     get post_results_path(posts(:sent))
 

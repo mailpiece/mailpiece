@@ -6,6 +6,5 @@ class Posts::ResultsController < ApplicationController
   def show
     @links = @post.links
     @brought_subscribers_count = @post.brought_subscribers.count
-    @ratings_count = @post.ratings.group(:choice).count
   end
 end
