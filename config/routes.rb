@@ -14,7 +14,6 @@ Rails.application.routes.draw do
 
     resource :subscription, only: %i[ show create ]
     resource :embedded_subscription, only: :create, path: "subscribe"
-    resource :rating, only: %i[ new create show ]
     filter_path_parameters :subscription_token do
       resources :subscriptions, only: [], param: :token do
         scope module: :subscriptions do

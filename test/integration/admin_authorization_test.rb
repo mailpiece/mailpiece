@@ -166,9 +166,6 @@ class AdminAuthorizationTest < ActionDispatch::IntegrationTest
     public/subscriptions/confirmations#create
     public/subscriptions/unsubscriptions#show
     public/subscriptions/unsubscriptions#create
-    public/ratings#new
-    public/ratings#create
-    public/ratings#show
     hosts#show
   ]
 

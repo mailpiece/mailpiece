@@ -5,8 +5,6 @@ class Post::Delivery < ApplicationRecord
   belongs_to :post, counter_cache: :deliveries_count
   belongs_to :subscriber
 
-  generates_token_for :rating, expires_in: 1.month
-
   private
     def delivery_job
       Post::DeliveryJob

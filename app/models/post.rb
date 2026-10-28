@@ -1,5 +1,5 @@
 class Post < ApplicationRecord
-  include Deliverable, Editable, Linkable, Publishable, Rateable, Readable, Releasable, Schedulable, Sluggable, Thumbnailed
+  include Deliverable, Editable, Linkable, Publishable, Readable, Releasable, Schedulable, Sluggable, Thumbnailed
 
   EXCERPT_LENGTH = 400
   SUMMARY_LENGTH = 300

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_10_17_100000) do
+ActiveRecord::Schema[8.2].define(version: 2026_10_28_100000) do
   create_table "account_cancellations", id: :uuid, force: :cascade do |t|
     t.uuid "account_id", null: false
     t.uuid "initiated_by_id", null: false
@@ -42,11 +42,11 @@ ActiveRecord::Schema[8.2].define(version: 2026_10_17_100000) do
     t.string "reply_to_address", limit: 255
     t.string "transport", limit: 255
     t.string "relay_url", limit: 255
-    t.text "relay_token"
+    t.text "relay_token", limit: 65535
     t.string "smtp_address", limit: 255
     t.integer "smtp_port"
     t.string "smtp_username", limit: 255
-    t.text "smtp_password"
+    t.text "smtp_password", limit: 65535
     t.index ["account_id"], name: "index_account_senders_on_account_id", unique: true
   end
 
@@ -232,17 +232,6 @@ ActiveRecord::Schema[8.2].define(version: 2026_10_17_100000) do
     t.datetime "updated_at", null: false
     t.index ["account_id", "code"], name: "index_post_links_on_account_id_and_code", unique: true
     t.index ["post_id", "original_url"], name: "index_post_links_on_post_id_and_original_url", unique: true
-  end
-
-  create_table "post_ratings", id: :uuid, force: :cascade do |t|
-    t.uuid "account_id", null: false
-    t.uuid "post_id", null: false
-    t.uuid "subscriber_id", null: false
-    t.string "choice", limit: 255, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["post_id", "subscriber_id"], name: "index_post_ratings_on_post_id_and_subscriber_id", unique: true
-    t.index ["subscriber_id"], name: "index_post_ratings_on_subscriber_id"
   end
 
   create_table "post_revisions", id: :uuid, force: :cascade do |t|

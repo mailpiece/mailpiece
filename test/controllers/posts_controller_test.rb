@@ -78,7 +78,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     get posts_path, as: :json
 
     assert_response :success
-    assert response.parsed_body.none? { it.key?("liked_count") || it.key?("brought_subscribers_count") }
+    assert response.parsed_body.none? { it.key?("brought_subscribers_count") }
   end
 
   test "index lists what is scheduled from the latest to the soonest, on the screen and as JSON" do
@@ -496,15 +496,6 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 1, response.parsed_body["brought_subscribers_count"]
   end
 
-  test "show as JSON counts the readers who liked it and who did not" do
-    posts(:sent).rate_by(subscribers(:active), "disliked")
-
-    get post_path(posts(:sent), format: :json)
-
-    assert_equal 0, response.parsed_body["liked_count"]
-    assert_equal 1, response.parsed_body["disliked_count"]
-  end
-
   test "show as JSON says the visibility and gives an email-only post no public address" do
     get post_path(posts(:email_only), format: :json)
 
@@ -723,9 +714,8 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_empty Post::Revision.where(post_id: posts(:draft).id)
   end
 
-  test "destroy deletes a mailed issue with its deliveries, links and ratings" do
+  test "destroy deletes a mailed issue with its deliveries and links" do
     post = posts(:sent)
-    post.rate_by(subscribers(:active), "liked")
 
     assert_difference -> { Post.count }, -1 do
       delete post_path(post)
@@ -734,7 +724,6 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to posts_path
     assert_empty Post::Delivery.where(post_id: post.id)
     assert_empty Post::Link.where(post_id: post.id)
-    assert_empty Post::Rating.where(post_id: post.id)
   end
 
   test "destroy leaves the subscribers a post brought with no source post" do
