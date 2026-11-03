@@ -3,7 +3,7 @@ module Mailers::SentBySender
 
   included do
     default from: -> { @account.sender.from },
-      reply_to: -> { @account.sender.reply_to },
+      reply_to: -> { replies_address },
       delivery_method: -> { mail_transport.delivery_method },
       delivery_method_options: -> { mail_transport.settings }
   end
@@ -17,8 +17,14 @@ module Mailers::SentBySender
     # where the transport takes one, and its Message-ID everywhere, since some mailbox providers drop a
     # second message that carries a Message-ID they have seen.
     def identify_as(delivery)
+      @delivery = delivery
       headers[MailDelivery::IDEMPOTENCY_KEY_HEADER] = delivery.id
       headers["Message-ID"] = "<#{delivery.id}@#{@account.sender.domain}>"
+    end
+
+    # Read when the action calls mail, after identify_as has set @delivery.
+    def replies_address
+      @account.sender.reply_to || (Reply.address_for(@delivery) if @delivery && @account.sender.receives_replies?)
     end
 
     # A newsletter's mail may be sent from a sweep, with no account set for the process. Its links are a

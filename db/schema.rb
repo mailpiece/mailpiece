@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_10_28_100000) do
+ActiveRecord::Schema[8.2].define(version: 2026_11_01_110000) do
   create_table "account_cancellations", id: :uuid, force: :cascade do |t|
     t.uuid "account_id", null: false
     t.uuid "initiated_by_id", null: false
@@ -68,6 +68,17 @@ ActiveRecord::Schema[8.2].define(version: 2026_10_28_100000) do
     t.index ["domain"], name: "index_accounts_on_domain", unique: true
     t.index ["external_account_id"], name: "index_accounts_on_external_account_id", unique: true
     t.index ["handle"], name: "index_accounts_on_handle", unique: true
+  end
+
+  create_table "action_mailbox_inbound_emails", id: :uuid, force: :cascade do |t|
+    t.uuid "account_id", null: false
+    t.integer "status", default: 0, null: false
+    t.string "message_id", limit: 255, null: false
+    t.string "message_checksum", limit: 255, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_action_mailbox_inbound_emails_on_account_id"
+    t.index ["message_id", "message_checksum"], name: "index_action_mailbox_inbound_emails_uniqueness", unique: true
   end
 
   create_table "action_pack_passkeys", id: :uuid, force: :cascade do |t|
@@ -328,6 +339,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_10_28_100000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "new_subscriber_notifications", default: true, null: false
+    t.boolean "reply_forwarding", default: true, null: false
     t.index ["account_id"], name: "index_user_settings_on_account_id"
     t.index ["user_id"], name: "index_user_settings_on_user_id"
   end

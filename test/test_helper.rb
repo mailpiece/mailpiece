@@ -19,6 +19,7 @@ module ActiveSupport
     include ActiveJob::TestHelper
     include DnsTestHelper
     include MailTransportTestHelper
+    include RepliesTestHelper
     include SupportTestHelper
 
     # Jobs must carry their own account context via AccountTenanted,

@@ -41,6 +41,23 @@ class Notifications::SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_not @settings.reload.new_subscriber_notifications?
   end
 
+  test "update switches the forwarding of replies off and on, and the other switch stays" do
+    patch notifications_settings_path, params: { user_settings: { reply_forwarding: "0", new_subscriber_notifications: "1" } }
+
+    assert_redirected_to notifications_settings_path
+    assert_not @settings.reload.reply_forwarding?
+    assert @settings.new_subscriber_notifications?
+
+    get notifications_settings_path
+    assert_select "input[type=checkbox][name=?]:not([checked])", "user_settings[reply_forwarding]"
+
+    patch notifications_settings_path, params: { reply_forwarding: true }, as: :json
+    assert @settings.reload.reply_forwarding?
+
+    get notifications_settings_path, as: :json
+    assert_equal true, response.parsed_body["reply_forwarding"]
+  end
+
   test "update changes only one's own settings" do
     patch notifications_settings_path, params: { user_settings: { new_subscriber_notifications: "0" } }
 

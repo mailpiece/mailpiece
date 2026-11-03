@@ -5,6 +5,10 @@ class Post::Delivery < ApplicationRecord
   belongs_to :post, counter_cache: :deliveries_count
   belongs_to :subscriber
 
+  def subject
+    post.title
+  end
+
   private
     def delivery_job
       Post::DeliveryJob

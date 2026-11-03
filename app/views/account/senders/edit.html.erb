@@ -35,7 +35,10 @@
 
           <div class="flex flex-column gap-half">
             <%= form.label :reply_to_address do %>
-              <strong><%= t("account_sender_reply_to_label") %></strong>
+              <strong><%= t("account_sender_reply_to_label") %></strong><br>
+              <% if Account.receiving_replies? %>
+                <p class="margin-none txt-x-small txt-subtle"><%= t("account_sender_reply_to_hint_html", link: link_to(t("account_sender_reply_to_hint_link"), notifications_settings_path)) %></p>
+              <% end %>
             <% end %>
             <%= form.email_field :reply_to_address, class: "input" %>
           </div>

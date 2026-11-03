@@ -112,7 +112,7 @@ module Subscriber::Confirmable
     end
 
     def notify_admins_later
-      account.users.admin.where.not(verified_at: nil).joins(:settings).merge(User::Settings.where(new_subscriber_notifications: true)).each do |user|
+      account.users.notified_of(:new_subscriber_notifications).each do |user|
         NotificationMailer.new_subscriber(user, self).deliver_later
       end
     end

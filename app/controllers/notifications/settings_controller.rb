@@ -1,5 +1,5 @@
 class Notifications::SettingsController < ApplicationController
-  wrap_parameters :user_settings, include: %i[ new_subscriber_notifications ]
+  wrap_parameters :user_settings, include: %i[ new_subscriber_notifications reply_forwarding ]
 
   before_action :ensure_admin
   before_action :set_settings
@@ -22,6 +22,6 @@ class Notifications::SettingsController < ApplicationController
     end
 
     def settings_params
-      params.expect(user_settings: :new_subscriber_notifications)
+      params.expect(user_settings: [ :new_subscriber_notifications, :reply_forwarding ])
     end
 end

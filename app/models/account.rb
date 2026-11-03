@@ -1,5 +1,5 @@
 class Account < ApplicationRecord
-  include Addressable, Avatar, Cancellable, Localizable, MultiTenantable, Welcoming
+  include Addressable, Avatar, Cancellable, Localizable, MultiTenantable, RepliesReceivable, Welcoming
 
   DESCRIPTION_LENGTH = 500
 

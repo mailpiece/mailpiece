@@ -127,4 +127,24 @@ class Account::SenderTest < ActiveSupport::TestCase
   test "domain is the from address's" do
     assert_equal "newsletter.example", account_senders(:davids).domain
   end
+
+  test "receives replies while the install does and no reply to address is set" do
+    sender = account_senders(:davids)
+    assert_not sender.receives_replies?
+
+    receive_replies
+    assert sender.receives_replies?
+
+    sender.update!(reply_to_address: "editor@newsletter.example")
+    assert_not sender.receives_replies?
+  end
+
+  test "receives replies only while an admin has forwarding on" do
+    receive_replies
+    users(:mia).settings.update!(reply_forwarding: false)
+    assert account_senders(:davids).receives_replies?
+
+    users(:leo).settings.update!(reply_forwarding: false)
+    assert_not account_senders(:davids).receives_replies?
+  end
 end

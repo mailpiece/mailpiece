@@ -1,1 +1,2 @@
 json.new_subscriber_notifications @settings.new_subscriber_notifications
+json.reply_forwarding @settings.reply_forwarding

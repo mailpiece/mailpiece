@@ -59,6 +59,10 @@ class Account::Sender < ApplicationRecord
     update! TRANSPORT_ATTRIBUTES.index_with(nil)
   end
 
+  def receives_replies?
+    reply_to_address.blank? && Account.receiving_replies? && account.users.notified_of(:reply_forwarding).exists?
+  end
+
   private
     def replace_transport(settings)
       assign_attributes TRANSPORT_ATTRIBUTES.index_with(nil) unless transport == settings[:transport]

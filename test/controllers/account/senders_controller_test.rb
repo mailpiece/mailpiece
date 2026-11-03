@@ -30,6 +30,15 @@ class Account::SendersControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "edit says a blank reply to address has replies forwarded while the install receives them" do
+    get edit_account_sender_path
+    assert_select "p a[href=?]", notifications_settings_path, count: 0
+
+    receive_replies
+    get edit_account_sender_path
+    assert_select "p a[href=?]", notifications_settings_path, text: "notification settings"
+  end
+
   test "edit has the form before there is a sender" do
     account_senders(:davids).destroy
 

@@ -17,6 +17,10 @@ class Journey::Delivery < ApplicationRecord
     email.journey.runs.find_by!(subscriber: subscriber)
   end
 
+  def subject
+    email.subject
+  end
+
   # Dropped unsent. An email switched off or deleted is passed over and the run goes on to the next; a person
   # the journey no longer reaches ends it. Only the call that deleted the row moves the run.
   def skip
