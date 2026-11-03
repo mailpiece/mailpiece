@@ -78,6 +78,33 @@ class PostMailerTest < ActionMailer::TestCase
     assert_nil PostMailer.issue(@post, @subscriber)["Reply-To"]
   end
 
+  test "issue of a delivery takes replies at the delivery's own address once the install receives them" do
+    receive_replies
+    delivery = @post.deliveries.find_by!(subscriber: @subscriber)
+
+    assert_equal [ "replies+#{delivery.id}@reply.mailpiece.example" ], PostMailer.issue(@post, @subscriber, delivery: delivery).reply_to
+    assert_nil PostMailer.test_issue(@post, "editor@example.com")["Reply-To"]
+
+    send_mail_over :smtp
+    assert_equal [ "replies+#{delivery.id}@reply.mailpiece.example" ], PostMailer.issue(@post, @subscriber, delivery: delivery).reply_to
+  end
+
+  test "issue of a delivery takes no replies while no admin has forwarding on" do
+    receive_replies
+    User::Settings.update_all(reply_forwarding: false)
+    delivery = @post.deliveries.find_by!(subscriber: @subscriber)
+
+    assert_nil PostMailer.issue(@post, @subscriber, delivery: delivery)["Reply-To"]
+  end
+
+  test "issue of a delivery takes replies at the sender's reply to address over the delivery's own" do
+    receive_replies
+    account_senders(:davids).update!(reply_to_address: "editor@newsletter.example")
+    delivery = @post.deliveries.find_by!(subscriber: @subscriber)
+
+    assert_equal [ "editor@newsletter.example" ], PostMailer.issue(@post, @subscriber, delivery: delivery).reply_to
+  end
+
   test "issue has the post in an HTML and a text part" do
     email = PostMailer.issue(@post, @subscriber)
 

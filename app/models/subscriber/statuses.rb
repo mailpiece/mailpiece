@@ -36,4 +36,8 @@ module Subscriber::Statuses
   def listed?
     persisted? && active?
   end
+
+  def reachable?
+    !bounced? && !deactivated?
+  end
 end

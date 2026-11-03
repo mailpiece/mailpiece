@@ -47,6 +47,9 @@ module Mailpiece
       g.orm :active_record, primary_key_type: :uuid
     end
 
+    config.action_mailbox.ingress = :relay
+    config.action_mailbox.incinerate_after = 3.days
+
     config.action_pack.passkey.draw_routes = false
     config.action_pack.passkey.challenge_url = -> { my_passkey_challenge_path(script_name: "") }
 

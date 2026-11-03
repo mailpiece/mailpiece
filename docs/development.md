@@ -136,6 +136,47 @@ placeholder relay so it is set up.
 minutes (`Post::Delivery.deliver_stalled_later`, in `config/recurring.yml`)
 queues again the pending rows whose turn passed two hours ago.
 
+### Replies
+
+A reader who answers an issue writes to the newsletter's reply-to address when it has one. Without one,
+while the install receives replies (`Account.receiving_replies?`) and at least one admin keeps
+"Email me when a reader replies" on under Notification settings, each delivery takes replies at an address
+of its own on the install's domain, `replies+<delivery id>@<REPLIES_DOMAIN>`, whatever the newsletter sends
+with. What comes back is forwarded as plain text to those admins, with the subscriber's page linked. The
+inbound email and its raw copy, incinerated after three days, belong to the newsletter the delivery id
+names; mail naming no delivery is answered and not stored.
+
+| ENV | What it is |
+| --- | --- |
+| `REPLIES_DOMAIN` | The domain every reply is received at, such as `reply.example.com`. Unset, new mail carries no replies address and the reply-to field under Settings › Sending doesn't mention forwarding, though replies to addresses already sent still arrive while the password is set |
+| `RAILS_INBOUND_EMAIL_PASSWORD` | What the relay posts with. Unset, the install receives no mail and sets no replies domain |
+
+`config/initializers/replies.rb` reads both into `Account.replies_domain`, and `config/deploy.yml` passes both as secrets. The operator sets receiving up once, on PostRider: add the
+receiving domain, turn receiving on and publish the MX record and the DKIM record PostRider shows for it, then
+wait until PostRider shows the domain verified: mail to the mailbox is refused ("Relay access denied") until
+it is, even for a domain that only receives; add a mailbox `replies` with no forwarding; add one webhook at
+`https://<host>/rails/action_mailbox/relay/inbound_emails` subscribed to `inbound_email_received`, with
+`RAILS_INBOUND_EMAIL_PASSWORD` as its signing secret. A newsletter publishes nothing and its admins see no
+password. PostRider posts the raw message under HTTP Basic
+`actionmailbox:<password>`, with `Delivered-To` prepended. To rotate the password, change the webhook's
+signing secret on PostRider and `RAILS_INBOUND_EMAIL_PASSWORD`, then deploy; replies posted in between are
+refused.
+
+Every reply that names a delivery is forwarded, whoever sent it and however it was produced, until
+PostRider filters spam.
+
+In development, `bin/dev` with `REPLIES_DOMAIN` and `RAILS_INBOUND_EMAIL_PASSWORD` set receives replies as
+production does, and the reply-to field under Settings › Sending says so. Post a hand-written reply to the ingress, with To set to
+`replies+<id>@<REPLIES_DOMAIN>` and the id of a sent delivery (`Post::Delivery.sent.last.id` in a console):
+
+```bash
+curl -u "actionmailbox:$RAILS_INBOUND_EMAIL_PASSWORD" -H "Content-Type: message/rfc822" \
+  --data-binary @reply.eml http://app.mailpiece.localhost:3020/rails/action_mailbox/relay/inbound_emails
+```
+
+The routing job runs with `bin/jobs`, and the forward opens in the browser after `touch tmp/email-dev.txt`.
+`/rails/mailers/reply_mailer` previews the forwards without any of this.
+
 ## Files
 
 Uploaded files go to the Disk service unless `ACTIVE_STORAGE_SERVICE=s3`,

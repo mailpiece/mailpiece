@@ -94,6 +94,22 @@ class JourneyMailerTest < ActionMailer::TestCase
     assert_equal [ "editor@newsletter.example" ], JourneyMailer.test_email(@email, "editor@example.com").reply_to
   end
 
+  test "email of a delivery takes replies at the delivery's own address once the install receives them" do
+    receive_replies
+    delivery = journey_deliveries(:sent_to_active)
+
+    assert_equal [ "replies+#{delivery.id}@reply.mailpiece.example" ], JourneyMailer.email(@email, @subscriber, delivery: delivery).reply_to
+    assert_nil JourneyMailer.email(@email, @subscriber)["Reply-To"]
+    assert_nil JourneyMailer.test_email(@email, "editor@example.com")["Reply-To"]
+  end
+
+  test "email of a delivery takes replies at the sender's reply to address over the delivery's own" do
+    receive_replies
+    account_senders(:davids).update!(reply_to_address: "editor@newsletter.example")
+
+    assert_equal [ "editor@newsletter.example" ], JourneyMailer.email(@email, @subscriber, delivery: journey_deliveries(:sent_to_active)).reply_to
+  end
+
   test "over the relay email leaves with the newsletter's token" do
     send_mail_over :relay, RELAY_TOKEN: "newsletter_token"
 

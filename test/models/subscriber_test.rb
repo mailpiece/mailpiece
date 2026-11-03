@@ -731,4 +731,12 @@ class SubscriberTest < ActiveSupport::TestCase
 
     assert @subscribers.add("dan@example.com").active?
   end
+
+  test "reachable unless bounced or stopped" do
+    assert subscribers(:active).reachable?
+    assert subscribers(:unconfirmed).reachable?
+    assert subscribers(:unsubscribed).reachable?
+    assert_not subscribers(:bounced).reachable?
+    assert_not subscribers(:stopped).reachable?
+  end
 end
