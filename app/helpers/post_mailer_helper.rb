@@ -12,15 +12,6 @@ module PostMailerHelper
     end
   end
 
-  def post_email_text(post)
-    post.text_in_email do |part|
-      case part
-      when ActionText::Attachment then post_email_text_attachment(part, post)
-      when Post::Link then public_link_url(part.code)
-      end
-    end
-  end
-
   private
     def post_email_attachment(attachment, post)
       attachable = attachment.attachable
@@ -65,16 +56,6 @@ module PostMailerHelper
         public_post_url(post.public_param)
       else
         rails_storage_proxy_url(blob)
-      end
-    end
-
-    def post_email_text_attachment(attachment, post)
-      attachable = attachment.attachable
-
-      if attachable.is_a?(ActiveStorage::Blob) && attachable.video?
-        link_to attachment.caption || attachable.filename.to_s, post_email_video_url(attachable, post)
-      else
-        attachment.node
       end
     end
 end

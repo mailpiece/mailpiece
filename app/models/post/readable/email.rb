@@ -50,12 +50,6 @@ class Post::Readable::Email
     end.to_html.html_safe
   end
 
-  def text
-    fragment = @content.render_attachments(&@view).fragment.update { |source| redirect_links(source) }
-
-    ActionText::Content.new(fragment, canonicalize: false).to_markdown
-  end
-
   private
     def sanitized_html
       ActionView::Base.safe_list_sanitizer.sanitize @content.render_attachments(&@view).to_html, tags: TAGS, attributes: ATTRIBUTES

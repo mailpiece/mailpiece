@@ -27,12 +27,8 @@ module Post::Readable
     end
   end
 
-  def text_in_email(&view)
-    if content = body_in_email
-      Email.new(content, links: links, &view).text
-    else
-      ""
-    end
+  def text_in_email
+    body_in_email&.to_plain_text
   end
 
   private
