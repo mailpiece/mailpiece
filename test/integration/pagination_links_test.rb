@@ -7,8 +7,8 @@ require "test_helper"
 class PaginationLinksTest < ActionDispatch::IntegrationTest
   QUERIES_NAMING_URL_FOR_OPTIONS = [
     { use_route: "root" },
-    { use_route: "card", id: "1" },
-    { path_params: { format: "xml", board_id: "elsewhere" } }
+    { use_route: "subscriber", id: "1" },
+    { path_params: { format: "xml" } }
   ]
 
   setup do
@@ -32,7 +32,7 @@ class PaginationLinksTest < ActionDispatch::IntegrationTest
     end
   end
 
-  { "subscribers" => [ :active, :subscribers_path ], "active" => [ :active, :subscribers_active_path ],
+  { "active" => [ :active, :subscribers_active_path ],
     "unconfirmed" => [ :unconfirmed, :subscribers_unconfirmed_path ], "unsubscribed" => [ :unsubscribed, :subscribers_unsubscribed_path ],
     "bounced" => [ :bounced, :subscribers_bounced_path ], "deactivated" => [ :deactivated, :subscribers_deactivated_path ] }.each do |name, (status, page)|
     test "#{name} page's next-page link stays on its own route" do

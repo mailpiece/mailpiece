@@ -5,8 +5,6 @@ require "test_helper"
 # URL-generation options, and any other key as a possible path segment, so a query
 # must never reach it as options: only as the link's own query string.
 class PaginationHelperTest < ActionView::TestCase
-  include Turbo::FramesHelper
-
   OWN_PATH = "/subscribers"
   OWN_ROUTE = { controller: "subscribers", action: "index" }
 
@@ -28,12 +26,11 @@ class PaginationHelperTest < ActionView::TestCase
     use_route: "root",
     path_params: { format: "xml" },
     params: { elsewhere: "true" },
-    _recall: { controller: "cards", action: "index" },
+    _recall: { controller: "snippets", action: "index" },
     format: "xml",
-    controller: "cards",
+    controller: "snippets",
     action: "index",
-    id: "elsewhere",
-    board_id: "elsewhere"
+    id: "elsewhere"
   }.each do |option, value|
     test "next-page link keeps to its own route when the query names #{option}" do
       with_request query: { option => value } do
@@ -76,7 +73,7 @@ class PaginationHelperTest < ActionView::TestCase
     end
 
     def pagination_uri
-      URI(Nokogiri::HTML::DocumentFragment.parse(pagination_link(:stream_column, 2)).at_css("a")["href"])
+      URI(Nokogiri::HTML::DocumentFragment.parse(pagination_link(:subscribers, 2)).at_css("a")["href"])
     end
 
     def pagination_query
