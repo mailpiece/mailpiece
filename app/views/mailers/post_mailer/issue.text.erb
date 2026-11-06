@@ -4,7 +4,7 @@
 <%= @post.summary %>
 <% end %>
 
-<%= @post.text_in_email %>
+<%= post_email_text(@post) %>
 
 --
 <% if @post.on_the_web? %>
