@@ -11,9 +11,8 @@ class Posts::SentsControllerTest < ActionDispatch::IntegrationTest
     get posts_sent_path
 
     assert_select ".breadcrumbs strong", text: "Sent"
-    assert_select "li##{dom_id(posts(:sent))} .row__meta", text: /\ASent to 2 subscribers on/ do
-      assert_select "time[datetime=?][data-reader-time-target=shortdate]", posts(:sent).sent_at.to_i.to_s
-    end
+    assert_select "li##{dom_id(posts(:sent))} .row__meta", text: "2 subscribers"
+    assert_select "li##{dom_id(posts(:sent))} .row__end time[datetime=?][data-reader-time-target=timeordate] + .status--muted", posts(:sent).sent_at.to_i.to_s, text: "Sent"
     assert_select "li##{dom_id(posts(:draft))}", count: 0
   end
 

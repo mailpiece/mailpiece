@@ -320,6 +320,13 @@ es:
     one: "Trajo 1 suscriptor"
     other: "Trajo %{count} suscriptores"
   posts_results_title: "Resultados"
+  posts_row_not_sent: "No enviada"
+  posts_row_recipients:
+    one: "%{number} suscriptor"
+    other: "%{number} suscriptores"
+  posts_row_recipients_some:
+    one: "%{sent} de %{number} suscriptor"
+    other: "%{sent} de %{number} suscriptores"
   posts_save_dirty: "Cambios sin guardar"
   posts_save_draft: "Guardar borrador"
   posts_save_failed: "No se guardó"

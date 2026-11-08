@@ -320,6 +320,13 @@ en:
     one: "Brought 1 subscriber"
     other: "Brought %{count} subscribers"
   posts_results_title: "Results"
+  posts_row_not_sent: "Not sent"
+  posts_row_recipients:
+    one: "%{number} subscriber"
+    other: "%{number} subscribers"
+  posts_row_recipients_some:
+    one: "%{sent} of %{number} subscriber"
+    other: "%{sent} of %{number} subscribers"
   posts_save_dirty: "Unsaved changes"
   posts_save_draft: "Save draft"
   posts_save_failed: "Not saved"

@@ -14,7 +14,8 @@ class SearchesControllerTest < ActionDispatch::IntegrationTest
     assert_select "h1", text: /Search results for “MARCH”/
     assert_select "input[name=q][value=MARCH]"
     assert_select ".rows__heading", text: "Posts"
-    assert_select "li##{dom_id(posts(:sent))} .row__meta", text: /\ASent to 2 subscribers on/
+    assert_select "li##{dom_id(posts(:sent))} .row__meta", text: "2 subscribers"
+    assert_select "li##{dom_id(posts(:sent))} .row__end time[datetime=?] + .status--muted", posts(:sent).sent_at.to_i.to_s, text: "Sent"
     assert_select "li##{dom_id(posts(:unlisted))}"
     assert_select "li##{dom_id(posts(:draft))}", count: 0
   end

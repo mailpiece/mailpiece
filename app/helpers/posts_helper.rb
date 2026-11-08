@@ -3,8 +3,21 @@ module PostsHelper
     post.title.presence || t("untitled")
   end
 
+  # The row's end says the state and when, so the line under the title says only the rest.
   def post_meta(post)
-    safe_join [ post_progress(post), post_visibility(post) ].compact, " · "
+    safe_join [ post_row_progress(post), post_visibility(post) ].compact, " · "
+  end
+
+  def post_status_time(post)
+    if post.sent?
+      post.sent_at
+    elsif post.published?
+      post.published_at
+    elsif post.scheduled?
+      post.scheduled_posting_at
+    else
+      post.updated_at
+    end
   end
 
   # The editor writes the state of a save over the progress, so a schedule stands beside it and not in it.
@@ -57,11 +70,11 @@ module PostsHelper
     end
   end
 
-  def post_schedule_description(post)
+  def post_schedule_description(post, time: post_schedule_time(post))
     if post.scheduled_delivery?
-      t("posts_schedule_with_sending_html", time: post_schedule_time(post))
+      t("posts_schedule_with_sending_html", time: time)
     else
-      t("posts_schedule_without_sending_html", time: post_schedule_time(post))
+      t("posts_schedule_without_sending_html", time: time)
     end
   end
 
@@ -132,6 +145,29 @@ module PostsHelper
   end
 
   private
+    def post_row_progress(post)
+      if post.sent?
+        post_row_recipients(post)
+      elsif post.published?
+        t("posts_row_not_sent")
+      elsif post.scheduled?
+        post_schedule_description(post, time: local_datetime_tag(post.scheduled_posting_at, style: :time))
+      end
+    end
+
+    def post_row_recipients(post)
+      count, unsent = post.deliveries_count, post_unsent(post.delivery_progress)
+      sent, total = number_with_delimiter(post.delivery_progress[:sent]), number_with_delimiter(count)
+
+      if post.sending?
+        [ t("posts_progress_sending", count: count, sent: sent, total: total), *unsent ].join(", ")
+      elsif unsent.empty?
+        t("posts_row_recipients", count: post.delivery_progress[:sent], number: sent)
+      else
+        [ t("posts_row_recipients_some", count: count, sent: sent, number: total), *unsent ].join(", ")
+      end
+    end
+
     def post_progress(post)
       if post.sent?
         post_sent_to(post)

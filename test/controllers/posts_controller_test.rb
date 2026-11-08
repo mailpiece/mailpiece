@@ -34,6 +34,44 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_select "input[data-quick-find-target=input]"
   end
 
+  test "index rows are one link each, with the title over the rest, and the time of the state over the state in a word" do
+    get posts_path
+
+    assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:sent))}" do
+      assert_select "a[href=?].display-contents", edit_post_path(posts(:sent)), count: 1
+      assert_select "a > .row__body > .row__title:not(strong)", text: "Three deadlines in March"
+      assert_select "a > .row__body > .row__meta", text: "2 subscribers"
+      assert_select "a > .row__end time[datetime=?][data-reader-time-target=timeordate]", posts(:sent).sent_at.to_i.to_s
+      assert_select "a > .row__end time + .status.status--muted", text: "Sent"
+      assert_select "strong", count: 0
+    end
+
+    assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:unlisted))}" do
+      assert_select ".row__meta", text: "Not sent · Unlisted"
+      assert_select ".row__end time[datetime=?] + .status--muted", posts(:unlisted).published_at.to_i.to_s, text: "Published"
+    end
+
+    assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:scheduled))}" do
+      assert_select ".row__meta", text: /, with sending to subscribers\z/ do
+        assert_select "time[datetime=?][data-reader-time-target=time]", posts(:scheduled).scheduled_posting_at.to_i.to_s
+      end
+      assert_select ".row__end time[datetime=?] + .status--waiting", posts(:scheduled).scheduled_posting_at.to_i.to_s, text: "Scheduled"
+    end
+
+    assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:draft))}" do
+      assert_select ".row__meta:empty"
+      assert_select ".row__end time[datetime=?] + .status--neutral", posts(:draft).updated_at.to_i.to_s, text: "Draft"
+    end
+  end
+
+  test "index rows count the refusals beside who a post was sent to" do
+    post_deliveries(:sent_to_unsubscribed).update!(sent_at: nil, refused_at: 2.weeks.ago)
+
+    get posts_path
+
+    assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:sent))} .row__meta", text: "1 of 2 subscribers, 1 refused"
+  end
+
   test "index offers each state in a status menu, all of them first and current, each with its count" do
     get posts_path
 

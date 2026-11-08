@@ -1,10 +1,10 @@
 module StatusHelper
   STATUS_SEMANTICS = {
-    "draft" => "muted",
+    "draft" => "neutral",
     "scheduled" => "waiting",
-    "published" => "info",
+    "published" => "muted",
     "sending" => "progress",
-    "sent" => "success",
+    "sent" => "muted",
 
     "active" => "muted",
     "unconfirmed" => "warning",
