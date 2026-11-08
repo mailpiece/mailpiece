@@ -1,0 +1,28 @@
+@layer components {
+  /* A row that is one link throughout: the link is no box, so its body grows and the row lights up under it. */
+  .row > .display-contents > .row__body {
+    flex-grow: 1;
+  }
+
+  @media (any-hover: hover) {
+    .row:has(> a:hover) {
+      background-color: var(--color-ink-lightest);
+    }
+  }
+
+  .row .avatar {
+    --avatar-size: 2.5rem;
+  }
+
+  /* The time over the state, both at the row's edge, neither heavier than the lines beside them. */
+  .row__end--stacked {
+    align-items: flex-end;
+    flex-direction: column;
+    gap: 0;
+    line-height: 1.2;
+
+    .status {
+      font-weight: inherit;
+    }
+  }
+}

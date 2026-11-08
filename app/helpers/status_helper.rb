@@ -6,8 +6,8 @@ module StatusHelper
     "sending" => "progress",
     "sent" => "success",
 
-    "active" => "success",
-    "unconfirmed" => "waiting",
+    "active" => "muted",
+    "unconfirmed" => "warning",
     "unsubscribed" => "muted",
     "deactivated" => "muted",
     "bounced" => "error",

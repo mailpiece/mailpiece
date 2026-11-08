@@ -12,7 +12,8 @@ class Subscribers::UnconfirmedsControllerTest < ActionDispatch::IntegrationTest
 
     assert_select ".breadcrumbs a[href=?]", subscribers_path, text: "Subscribers"
     assert_select ".breadcrumbs strong", text: "Unconfirmed"
-    assert_select "li##{dom_id(subscribers(:unconfirmed))} .row__meta", text: /\AWaiting to confirm/
+    assert_select "li##{dom_id(subscribers(:unconfirmed))} .row__meta", text: /\ASubscribed/
+    assert_select "li##{dom_id(subscribers(:unconfirmed))} .row__end time[datetime=?] + .status--warning", subscribers(:unconfirmed).created_at.to_i.to_s, text: "Unconfirmed"
     assert_select "li##{dom_id(subscribers(:active))}", count: 0
   end
 

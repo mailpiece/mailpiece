@@ -1,16 +1,23 @@
 module SubscribersHelper
   def subscriber_meta(subscriber)
-    case subscriber.status
-    when :bounced
-      t "subscribers_row_bounced_html", date: local_datetime_tag(subscriber.bounced_at, style: :date)
-    when :deactivated
-      t "subscribers_row_deactivated_html", date: local_datetime_tag(subscriber.deactivated_at, style: :date)
-    when :unsubscribed
-      t "subscribers_row_unsubscribed_html", date: local_datetime_tag(subscriber.unsubscribed_at, style: :date)
-    when :active
-      t "subscribers_row_subscribed_html", date: local_datetime_tag(subscriber.created_at, style: :date)
+    date = local_datetime_tag(subscriber.created_at, style: :date)
+
+    if post = subscriber.source_post
+      t "subscribers_row_subscribed_from_post_html", date: date, title: post_title(post)
+    elsif host = subscriber.referrer_host
+      t "subscribers_row_subscribed_from_host_html", date: date, host: host
     else
-      t "subscribers_row_unconfirmed_html", date: local_datetime_tag(subscriber.created_at, style: :date)
+      t "subscribers_row_subscribed_html", date: date
+    end
+  end
+
+  def subscriber_status_time(subscriber)
+    case subscriber.status
+    when :bounced then subscriber.bounced_at
+    when :deactivated then subscriber.deactivated_at
+    when :unsubscribed then subscriber.unsubscribed_at
+    when :active then subscriber.confirmed_at
+    else subscriber.created_at
     end
   end
 

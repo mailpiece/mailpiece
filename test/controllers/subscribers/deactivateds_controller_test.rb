@@ -12,7 +12,8 @@ class Subscribers::DeactivatedsControllerTest < ActionDispatch::IntegrationTest
 
     assert_select ".breadcrumbs a[href=?]", subscribers_path, text: "Subscribers"
     assert_select ".breadcrumbs strong", text: "Stopped"
-    assert_select "li##{dom_id(subscribers(:stopped))} .row__meta", text: /\AStopped/
+    assert_select "li##{dom_id(subscribers(:stopped))} .row__meta", text: /\ASubscribed/
+    assert_select "li##{dom_id(subscribers(:stopped))} .row__end time[datetime=?] + .status--muted", subscribers(:stopped).deactivated_at.to_i.to_s, text: "Stopped"
     assert_select "li##{dom_id(subscribers(:active))}", count: 0
   end
 

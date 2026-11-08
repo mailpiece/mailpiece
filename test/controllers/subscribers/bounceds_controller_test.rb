@@ -14,9 +14,8 @@ class Subscribers::BouncedsControllerTest < ActionDispatch::IntegrationTest
 
     assert_select ".breadcrumbs strong", text: "Bounced"
     assert_equal [ dom_id(subscribers(:bounced)), dom_id(earlier) ], css_select("li.row[id^=subscriber_]").map { it["id"] }
-    assert_select "li##{dom_id(subscribers(:bounced))} .row__meta", text: /\ABounced/ do
-      assert_select "time[datetime='#{subscribers(:bounced).bounced_at.to_i}']"
-    end
+    assert_select "li##{dom_id(subscribers(:bounced))} .row__meta", text: /\ASubscribed/
+    assert_select "li##{dom_id(subscribers(:bounced))} .row__end time[datetime=?][data-reader-time-target=timeordate] + .status--error", subscribers(:bounced).bounced_at.to_i.to_s, text: "Bounced"
   end
 
   test "show names its state on the status menu's button and marks its line current" do

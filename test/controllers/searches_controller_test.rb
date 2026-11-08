@@ -107,7 +107,8 @@ class SearchesControllerTest < ActionDispatch::IntegrationTest
     get search_path(q: subscribers(:bounced).email.first(3).upcase)
 
     assert_select ".rows__heading", text: "Subscribers"
-    assert_select "li##{dom_id(subscribers(:bounced))} .row__meta", text: /\ABounced/
+    assert_select "li##{dom_id(subscribers(:bounced))} .row__meta", text: /\ASubscribed/
+    assert_select "li##{dom_id(subscribers(:bounced))} .row__end time[datetime=?][data-reader-time-target=timeordate] + .status--error", subscribers(:bounced).bounced_at.to_i.to_s, text: "Bounced"
     assert_select "li##{dom_id(subscribers(:active))}", count: 0
   end
 

@@ -17,6 +17,30 @@ class SubscribersControllerTest < ActionDispatch::IntegrationTest
     assert_select "h2.rows__heading", count: 0
   end
 
+  test "index rows are one link each, with the address over where it came from, and the time it confirmed over its state" do
+    subscribers(:active).update!(referrer: "https://example.com/blog")
+
+    get subscribers_path
+
+    assert_select "li##{dom_id(subscribers(:active))}.row:not(.row--inactive)" do
+      assert_select "a[href=?].display-contents", subscriber_path(subscribers(:active)), count: 1
+      assert_select "a > .avatar", text: "AD"
+      assert_select "a > .row__body > .row__title:not(strong)", text: "ada@example.com"
+      assert_select "a > .row__body > .row__meta", text: /\ASubscribed .*from example\.com\z/m
+      assert_select "a > .row__end time[datetime=?][data-reader-time-target=timeordate]", subscribers(:active).confirmed_at.to_i.to_s
+      assert_select "a > .row__end time + .status.status--muted", text: "Confirmed"
+      assert_select "strong", count: 0
+    end
+  end
+
+  test "index rows name the post an address subscribed from" do
+    subscribers(:active).update!(source_post: posts(:sent))
+
+    get subscribers_path
+
+    assert_select "li##{dom_id(subscribers(:active))} .row__meta", text: /\ASubscribed .*from “Three deadlines in March”\z/m
+  end
+
   test "index offers each state in a status menu, the confirmed first, each with its count and none current" do
     get subscribers_path
 
