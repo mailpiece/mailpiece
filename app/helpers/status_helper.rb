@@ -1,6 +1,6 @@
 module StatusHelper
   STATUS_SEMANTICS = {
-    "draft" => "neutral",
+    "draft" => "muted",
     "scheduled" => "waiting",
     "published" => "info",
     "sending" => "progress",
