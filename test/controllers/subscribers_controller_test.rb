@@ -111,6 +111,7 @@ class SubscribersControllerTest < ActionDispatch::IntegrationTest
     get subscriber_path(subscribers(:active))
 
     assert_response :success
+    assert_select ".record__byline .status.status--success.status--badge", text: "Confirmed"
     assert_select "button", text: "Stop sending"
   end
 

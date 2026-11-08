@@ -7,7 +7,7 @@
     </span>
     <span class="row__end row__end--stacked">
       <%= local_datetime_tag subscriber_status_time(subscriber), style: :timeordate %>
-      <%= status_tag subscriber.status %>
+      <%= row_status_tag subscriber.status %>
     </span>
   <% end %>
 </li>
