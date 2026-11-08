@@ -100,11 +100,13 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".status-filter", count: 0
   end
 
-  test "index as JSON lists what the screen lists, every post newest first" do
+  test "index as JSON lists what is ahead, the drafts newest first and then the scheduled posts, nothing published or sent" do
+    newer_draft = accounts(:davids_account).posts.create!(title: "Still being written")
+
     get posts_path, as: :json
 
     assert_response :success
-    assert_equal accounts(:davids_account).posts.reverse_chronologically.ids, response.parsed_body.pluck("id")
+    assert_equal [ newer_draft.id, posts(:draft).id, posts(:scheduled).id ], response.parsed_body.pluck("id")
   end
 
   test "index as JSON gives no counts" do

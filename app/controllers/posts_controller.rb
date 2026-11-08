@@ -6,8 +6,13 @@ class PostsController < ApplicationController
   before_action :set_release, only: %i[ edit update ]
 
   def index
-    set_page_and_extract_portion_from Current.account.posts.reverse_chronologically.preloaded
-    Current.account.posts.load_delivery_progress @page.records
+    if request.format.json?
+      @drafts = Current.account.posts.drafts.unscheduled.reverse_chronologically.preloaded
+      @scheduled = Current.account.posts.scheduled.latest_first.preloaded
+    else
+      set_page_and_extract_portion_from Current.account.posts.reverse_chronologically.preloaded
+      Current.account.posts.load_delivery_progress @page.records
+    end
   end
 
   def show
