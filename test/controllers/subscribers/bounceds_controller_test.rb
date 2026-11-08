@@ -19,6 +19,14 @@ class Subscribers::BouncedsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "show names its state on the status menu's button and marks its line current" do
+    get subscribers_bounced_path
+
+    assert_select ".filter-bar .status-filter button", text: "Bounced"
+    assert_select ".status-filter a[aria-current=page][href=?]", subscribers_bounced_path, text: /\ABounced/
+    assert_select ".status-filter a[aria-current]", count: 1
+  end
+
   test "show as JSON lists the same addresses" do
     get subscribers_bounced_path, as: :json
 

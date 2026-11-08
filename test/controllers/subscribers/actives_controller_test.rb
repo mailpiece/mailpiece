@@ -17,6 +17,14 @@ class Subscribers::ActivesControllerTest < ActionDispatch::IntegrationTest
     assert_select "li .separator--horizontal, li .status", count: 0
   end
 
+  test "show names its state on the status menu's button and marks its line current" do
+    get subscribers_active_path
+
+    assert_select ".filter-bar .status-filter button", text: "Confirmed"
+    assert_select ".status-filter a[aria-current=page][href=?]", subscribers_active_path, text: /\AConfirmed/
+    assert_select ".status-filter a[aria-current]", count: 1
+  end
+
   test "show as JSON lists the same addresses" do
     get subscribers_active_path, as: :json
 

@@ -16,6 +16,14 @@ class Subscribers::UnsubscribedsControllerTest < ActionDispatch::IntegrationTest
     assert_select "li##{dom_id(subscribers(:active))}", count: 0
   end
 
+  test "show names its state on the status menu's button and marks its line current" do
+    get subscribers_unsubscribed_path
+
+    assert_select ".filter-bar .status-filter button", text: "Unsubscribed"
+    assert_select ".status-filter a[aria-current=page][href=?]", subscribers_unsubscribed_path, text: /\AUnsubscribed/
+    assert_select ".status-filter a[aria-current]", count: 1
+  end
+
   test "show as JSON lists the same addresses" do
     get subscribers_unsubscribed_path, as: :json
 

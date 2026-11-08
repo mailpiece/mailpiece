@@ -16,6 +16,14 @@ class Subscribers::DeactivatedsControllerTest < ActionDispatch::IntegrationTest
     assert_select "li##{dom_id(subscribers(:active))}", count: 0
   end
 
+  test "show names its state on the status menu's button and marks its line current" do
+    get subscribers_deactivated_path
+
+    assert_select ".filter-bar .status-filter button", text: "Stopped"
+    assert_select ".status-filter a[aria-current=page][href=?]", subscribers_deactivated_path, text: /\AStopped/
+    assert_select ".status-filter a[aria-current]", count: 1
+  end
+
   test "show as JSON lists the same addresses" do
     get subscribers_deactivated_path, as: :json
 

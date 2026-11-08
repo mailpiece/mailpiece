@@ -7,21 +7,45 @@ class SubscribersControllerTest < ActionDispatch::IntegrationTest
     sign_in_as :mia
   end
 
-  test "index" do
+  test "index lists the confirmed addresses" do
     get subscribers_path
 
     assert_response :success
-    assert_select "li.row:has(a[href=?]) .row__end", subscribers_active_path, text: accounts(:davids_account).subscribers.active.count.to_s
+    assert_select "li##{dom_id(subscribers(:active))}"
+    assert_select "li##{dom_id(subscribers(:unconfirmed))}", count: 0
+    assert_select "li##{dom_id(subscribers(:bounced))}", count: 0
+    assert_select "h2.rows__heading", count: 0
   end
 
-  test "index counts each state, the confirmed first, each on a screen of its own" do
+  test "index offers each state in a status menu, the confirmed first, each with its count and none current" do
     get subscribers_path
 
-    assert_select "ul.rows--links li.row:first-child a[href=?]", subscribers_active_path, text: "Confirmed"
-    assert_select "li##{dom_id(subscribers(:active))}", count: 0
-    assert_select "li.row:has(a[href=?]) .row__end", subscribers_deactivated_path, text: "1"
-    assert_select "li.row:has(a[href=?]) .row__end", subscribers_bounced_path, text: "1"
-    assert_select "h2.rows__heading", count: 0
+    assert_select ".filter-bar .status-filter button", text: "Status…"
+    assert_select ".status-filter dialog a", count: 5
+    assert_select ".status-filter dialog li:first-child a[href=?]", subscribers_active_path, text: /\AConfirmed\s*1\z/
+    assert_select ".status-filter a[href=?] .status-filter__count", subscribers_unconfirmed_path, text: "1"
+    assert_select ".status-filter a[href=?] .status-filter__count", subscribers_unsubscribed_path, text: "1"
+    assert_select ".status-filter a[href=?] .status-filter__count", subscribers_bounced_path, text: "1"
+    assert_select ".status-filter a[href=?] .status-filter__count", subscribers_deactivated_path, text: "1"
+    assert_select ".status-filter a[aria-current]", count: 0
+  end
+
+  test "index with no confirmed address still offers the status menu" do
+    subscribers(:active).destroy!
+
+    get subscribers_path
+
+    assert_select ".blank-slate", text: "No subscribers here."
+    assert_select ".status-filter a[href=?]", subscribers_unconfirmed_path
+  end
+
+  test "index with no subscriber at all offers to add some" do
+    accounts(:davids_account).subscribers.destroy_all
+
+    get subscribers_path
+
+    assert_select ".blank-slate a[href=?]", new_subscribers_batch_path, text: "Add some"
+    assert_select ".status-filter", count: 0
   end
 
   test "index offers to search everyone for what the filter did not find on the screen" do

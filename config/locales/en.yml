@@ -102,6 +102,8 @@ en:
   filter_no_matches: "Nothing matches."
   filter_placeholder: "Filter…"
   filter_search_everything_html: "Search everything for “%{term}”"
+  filter_status: "Status…"
+  filter_status_label: "Filter by status"
   filter_what: "Filter %{what}"
   filter_what_placeholder: "Filter %{what}…"
   home: "Home"

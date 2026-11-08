@@ -102,6 +102,8 @@ es:
   filter_no_matches: "No hay coincidencias."
   filter_placeholder: "Filtrar…"
   filter_search_everything_html: "Buscar «%{term}» en todo"
+  filter_status: "Estado…"
+  filter_status_label: "Filtrar por estado"
   filter_what: "Filtrar %{what}"
   filter_what_placeholder: "Filtrar %{what}…"
   home: "Inicio"
