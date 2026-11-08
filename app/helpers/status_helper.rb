@@ -6,7 +6,7 @@ module StatusHelper
     "sending" => "progress",
     "sent" => "muted",
 
-    "active" => "muted",
+    "active" => "success",
     "unconfirmed" => "warning",
     "unsubscribed" => "muted",
     "deactivated" => "muted",
@@ -24,9 +24,19 @@ module StatusHelper
     badge: "status--badge"
   }.freeze
 
-  def status_tag(status, form: :word, **options)
+  QUIET_STATUSES = %w[ active sent published ].freeze
+
+  def status_tag(status, form: :word, semantic: status_semantic(status), **options)
     tag.span status_word(status),
-      class: class_names("status", "status--#{status_semantic(status)}", STATUS_FORMS.fetch(form), options.delete(:class)), **options
+      class: class_names("status", "status--#{semantic}", STATUS_FORMS.fetch(form), options.delete(:class)), **options
+  end
+
+  def row_status_tag(status)
+    if QUIET_STATUSES.include?(status.to_s)
+      status_tag status, semantic: "muted"
+    else
+      status_tag status
+    end
   end
 
   private
