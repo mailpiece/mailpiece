@@ -7,7 +7,7 @@ module StatusHelper
     "sent" => "success",
 
     "active" => "success",
-    "unconfirmed" => "warning",
+    "unconfirmed" => "waiting",
     "unsubscribed" => "muted",
     "deactivated" => "muted",
     "bounced" => "error",
