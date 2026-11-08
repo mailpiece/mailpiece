@@ -1,29 +1,7 @@
-<% status = local_assigns[:status] %>
-<% links = [
-     [ :active, subscribers_active_path, Current.account.subscribers.active.count ],
-     [ :unconfirmed, subscribers_unconfirmed_path, Current.account.subscribers.unconfirmed.count ],
-     [ :unsubscribed, subscribers_unsubscribed_path, Current.account.subscribers.unsubscribed.count ],
-     [ :bounced, subscribers_bounced_path, Current.account.subscribers.bounced.count ],
-     [ :deactivated, subscribers_deactivated_path, Current.account.subscribers.deactivated.count ]
-   ] %>
-
-<div class="status-filter" data-controller="dialog" data-dialog-orient-value="false"
-     data-action="keydown.esc->dialog#close:stop click@document->dialog#closeOnClickOutside">
-  <button type="button" class="btn" aria-haspopup="dialog" data-action="dialog#toggle">
-    <span><%= status ? t("status_#{status}") : t("filter_status") %></span>
-    <%= icon_tag "caret-down" %>
-  </button>
-
-  <dialog class="dialog panel shadow status-filter__menu" aria-label="<%= t("filter_status_label") %>" data-dialog-target="dialog">
-    <ul class="status-filter__list">
-      <% links.each do |state, path, count| %>
-        <li>
-          <%= link_to path, class: "status-filter__link", aria: { current: ("page" if state == status) } do %>
-            <span><%= t("status_#{state}") %></span>
-            <span class="status-filter__count"><%= number_with_delimiter count %></span>
-          <% end %>
-        </li>
-      <% end %>
-    </ul>
-  </dialog>
-</div>
+<%= render "shared/status_filter", status: local_assigns[:status], links: [
+      [ :active, t("status_active"), subscribers_active_path, Current.account.subscribers.active.count ],
+      [ :unconfirmed, t("status_unconfirmed"), subscribers_unconfirmed_path, Current.account.subscribers.unconfirmed.count ],
+      [ :unsubscribed, t("status_unsubscribed"), subscribers_unsubscribed_path, Current.account.subscribers.unsubscribed.count ],
+      [ :bounced, t("status_bounced"), subscribers_bounced_path, Current.account.subscribers.bounced.count ],
+      [ :deactivated, t("status_deactivated"), subscribers_deactivated_path, Current.account.subscribers.deactivated.count ]
+    ] %>

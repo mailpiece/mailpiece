@@ -1,1 +1,1 @@
-json.array! @drafts + @scheduled, partial: "posts/post", as: :post
+json.array! @page.records, partial: "posts/post", as: :post

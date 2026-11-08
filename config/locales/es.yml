@@ -336,6 +336,7 @@ es:
   posts_schedule_with_sending_html: "%{time}, con envío a los suscriptores"
   posts_schedule_without_sending_html: "%{time}, sin envío"
   posts_send_test: "Enviar test"
+  posts_state_all: "Todas"
   posts_state_draft: "Borradores"
   posts_state_published: "Publicadas"
   posts_state_scheduled: "Programadas"

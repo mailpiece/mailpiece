@@ -23,24 +23,28 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".header__actions a[href=?] + a[href=?]", journeys_path, new_post_path
   end
 
-  test "index lists the drafts and then what is scheduled, each under its heading, with no status beside a row" do
+  test "index lists every post in one list, the newest first, under no heading" do
     get posts_path
 
-    assert_select "h2.rows__heading + ul.rows", count: 2
-    assert_equal %w[ Drafts Scheduled ], css_select("h2.rows__heading").map(&:text)
-    assert_select "section.rows__section:nth-of-type(1) li##{ActionView::RecordIdentifier.dom_id(posts(:draft))}"
-    assert_select "section.rows__section:nth-of-type(2) li##{ActionView::RecordIdentifier.dom_id(posts(:scheduled))}"
-    assert_select "li .row__end .chip, li .separator--horizontal", count: 0
+    assert_select "h2.rows__heading", count: 0
+    assert_equal accounts(:davids_account).posts.reverse_chronologically.map { |post| ActionView::RecordIdentifier.dom_id(post) }, css_select("ul.rows li.row").pluck("id")
+    assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:sent))}"
+    assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:unlisted))}"
+    assert_select "li .separator--horizontal", count: 0
     assert_select "input[data-quick-find-target=input]"
   end
 
-  test "index keeps what is published and sent to screens of their own, and counts each" do
+  test "index offers each state in a status menu, all of them first and current, each with its count" do
     get posts_path
 
-    assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:unlisted))}", count: 0
-    assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:sent))}", count: 0
-    assert_select "li.row:has(a[href=?]) .row__end", posts_published_path, text: "2"
-    assert_select "li.row:has(a[href=?]) .row__end", posts_sent_path, text: "2"
+    assert_select ".filter-bar .status-filter button", text: "Status…"
+    assert_select ".status-filter dialog a", count: 5
+    assert_select ".status-filter dialog li:first-child a[href=?][aria-current=page]", posts_path, text: /\AAll\s*5\z/
+    assert_select ".status-filter a[href=?] .status-filter__count", posts_draft_path, text: "1"
+    assert_select ".status-filter a[href=?] .status-filter__count", posts_scheduled_path, text: "1"
+    assert_select ".status-filter a[href=?] .status-filter__count", posts_published_path, text: "2"
+    assert_select ".status-filter a[href=?] .status-filter__count", posts_sent_path, text: "2"
+    assert_select ".status-filter a[aria-current]", count: 1
   end
 
   test "index offers to search every post for what the filter did not find on the screen" do
@@ -49,29 +53,20 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".filter__empty a[href=?][data-quick-find-target=searchLink]", search_path
   end
 
-  test "index leaves out the group that has nothing in it" do
-    posts(:scheduled).update_columns(scheduled_posting_at: nil, scheduled_delivery: false, dated_at: nil)
-
-    get posts_path
-
-    assert_equal %w[ Drafts ], css_select("h2.rows__heading").map(&:text)
-    assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:scheduled))}"
-  end
-
-  test "index with nothing being written still offers a new post and what was released" do
-    accounts(:davids_account).posts.drafts.destroy_all
+  test "index with no post at all offers to add one" do
+    accounts(:davids_account).posts.destroy_all
 
     get posts_path
 
     assert_select ".blank-slate a[href=?]", new_post_path
-    assert_select "li.row a[href=?]", posts_sent_path
+    assert_select ".status-filter", count: 0
   end
 
-  test "index as JSON lists what the screen lists, the drafts and then what is scheduled" do
+  test "index as JSON lists what the screen lists, every post newest first" do
     get posts_path, as: :json
 
     assert_response :success
-    assert_equal [ posts(:draft).id, posts(:scheduled).id ], response.parsed_body.pluck("id")
+    assert_equal accounts(:davids_account).posts.reverse_chronologically.ids, response.parsed_body.pluck("id")
   end
 
   test "index as JSON gives no counts" do
@@ -79,16 +74,6 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert response.parsed_body.none? { it.key?("brought_subscribers_count") }
-  end
-
-  test "index lists what is scheduled from the latest to the soonest, on the screen and as JSON" do
-    posts(:draft).schedule(at: 2.days.from_now)
-
-    get posts_path
-    assert_equal [ posts(:draft), posts(:scheduled) ].map { |post| ActionView::RecordIdentifier.dom_id(post) }, css_select("section.rows__section li").pluck("id")
-
-    get posts_path, as: :json
-    assert_equal [ posts(:draft).id, posts(:scheduled).id ], response.parsed_body.pluck("id")
   end
 
   test "show as JSON" do

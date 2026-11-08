@@ -17,6 +17,14 @@ class Posts::SentsControllerTest < ActionDispatch::IntegrationTest
     assert_select "li##{dom_id(posts(:draft))}", count: 0
   end
 
+  test "show names its state on the status menu's button and marks its line current" do
+    get posts_sent_path
+
+    assert_select ".filter-bar .status-filter button", text: "Sent"
+    assert_select ".status-filter a[aria-current=page][href=?]", posts_sent_path, text: /\ASent/
+    assert_select ".status-filter a[aria-current]", count: 1
+  end
+
   test "show as JSON lists the same posts" do
     get posts_sent_path, as: :json
 

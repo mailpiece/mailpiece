@@ -336,6 +336,7 @@ en:
   posts_schedule_with_sending_html: "%{time}, with sending to subscribers"
   posts_schedule_without_sending_html: "%{time}, without sending"
   posts_send_test: "Send a test"
+  posts_state_all: "All"
   posts_state_draft: "Drafts"
   posts_state_published: "Published"
   posts_state_scheduled: "Scheduled"

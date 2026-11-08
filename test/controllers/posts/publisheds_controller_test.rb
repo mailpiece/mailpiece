@@ -18,6 +18,14 @@ class Posts::PublishedsControllerTest < ActionDispatch::IntegrationTest
     assert_select "li##{dom_id(posts(:email_only))}", count: 0
   end
 
+  test "show names its state on the status menu's button and marks its line current" do
+    get posts_published_path
+
+    assert_select ".filter-bar .status-filter button", text: "Published"
+    assert_select ".status-filter a[aria-current=page][href=?]", posts_published_path, text: /\APublished/
+    assert_select ".status-filter a[aria-current]", count: 1
+  end
+
   test "show as JSON lists the same posts" do
     get posts_published_path, as: :json
 
