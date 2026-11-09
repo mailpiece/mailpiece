@@ -16,11 +16,13 @@ class JourneysControllerTest < ActionDispatch::IntegrationTest
     assert_select ".breadcrumbs strong", text: "Journeys"
 
     assert_select ".page ul.rows", count: 1
-    assert_select "ul.rows li.row a.row__body .row__title" do |titles|
+    assert_select "input[data-quick-find-target=input]"
+    assert_select "ul.rows li.row[data-quick-find-target=item] a .row__title" do |titles|
       assert_equal [ "When someone subscribes", "When someone unsubscribes" ], titles.map { it.text.strip }
     end
-    assert_select "li.row a.row__body[href=?]", journey_path(@journey)
-    assert_select "li.row a.row__body[href=?]", journey_path("subscriber_unsubscribed")
+    assert_select "li.row a[href=?] .row__title", journey_path(@journey)
+    assert_select "li.row a[href=?] .row__title", journey_path("subscriber_unsubscribed")
+    assert_select "li.row strong", count: 0
     assert_select ".status", count: 0
     assert_select "a[href=?]", edit_journey_email_path(@journey, @email), count: 0
     assert_select "a[href=?]", new_journey_email_path(@journey), count: 0

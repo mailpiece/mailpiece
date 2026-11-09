@@ -119,6 +119,7 @@ es:
   journeys_delete_confirm: "¿Seguro que querés eliminar este email para siempre?"
   journeys_deleted: "Se eliminó el email"
   journeys_edited_html: "Última edición: %{time}"
+  journeys_filter_what: "recorridos"
   journeys_menu_label: "Envío y prueba"
   journeys_more: "Más opciones"
   journeys_new: "Nuevo email"
