@@ -1,13 +1,11 @@
 module SubscribersHelper
   def subscribers_status_links
-    subscribers = Current.account.subscribers
-
     [
-      { status: :active, title: t("status_active"), path: subscribers_active_path, count: subscribers.active.count },
-      { status: :unconfirmed, title: t("status_unconfirmed"), path: subscribers_unconfirmed_path, count: subscribers.unconfirmed.count },
-      { status: :unsubscribed, title: t("status_unsubscribed"), path: subscribers_unsubscribed_path, count: subscribers.unsubscribed.count },
-      { status: :bounced, title: t("status_bounced"), path: subscribers_bounced_path, count: subscribers.bounced.count },
-      { status: :deactivated, title: t("status_deactivated"), path: subscribers_deactivated_path, count: subscribers.deactivated.count }
+      { status: :active, title: t("status_active"), path: subscribers_active_path },
+      { status: :unconfirmed, title: t("status_unconfirmed"), path: subscribers_unconfirmed_path },
+      { status: :unsubscribed, title: t("status_unsubscribed"), path: subscribers_unsubscribed_path },
+      { status: :bounced, title: t("status_bounced"), path: subscribers_bounced_path },
+      { status: :deactivated, title: t("status_deactivated"), path: subscribers_deactivated_path }
     ]
   end
 
