@@ -1,7 +1,1 @@
-<%= render "shared/status_filter", status: status, links: [
-      { status: nil, title: t("posts_state_all"), path: posts_path, count: Current.account.posts.count },
-      { status: :draft, title: t("posts_state_draft"), path: posts_draft_path, count: Current.account.posts.drafts.unscheduled.count },
-      { status: :scheduled, title: t("posts_state_scheduled"), path: posts_scheduled_path, count: Current.account.posts.scheduled.count },
-      { status: :published, title: t("posts_state_published"), path: posts_published_path, count: Current.account.posts.published.on_the_web.count },
-      { status: :sent, title: t("posts_state_sent"), path: posts_sent_path, count: Current.account.posts.sent.count }
-    ] %>
+<%= render "shared/status_filter", status: status, links: posts_status_links %>
