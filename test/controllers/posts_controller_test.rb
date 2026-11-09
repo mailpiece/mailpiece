@@ -38,10 +38,10 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     get posts_path
 
     assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:sent))}" do
-      assert_select "a[href=?].display-contents", edit_post_path(posts(:sent)), count: 1
-      assert_select "a > .row__body > .row__title:not(strong)", text: "Three deadlines in March"
-      assert_select "a > .row__body > .row__meta", text: "2 subscribers"
-      assert_select "a > .row__end time[datetime=?][data-reader-time-target=timeordate]", posts(:sent).sent_at.to_i.to_s
+      assert_select "a.row__link[href=?]", edit_post_path(posts(:sent)), count: 1
+      assert_select "a.row__link > .row__body > .row__title:not(strong)", text: "Three deadlines in March"
+      assert_select "a.row__link > .row__body > .row__meta", text: "2 subscribers"
+      assert_select "a.row__link > .row__end time[datetime=?][data-reader-time-target=timeordate]", posts(:sent).sent_at.to_i.to_s
       assert_select "a > .row__end time + .status.status--muted", text: "Sent"
       assert_select "strong", count: 0
     end

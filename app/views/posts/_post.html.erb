@@ -3,7 +3,7 @@
       style: "view-transition-name: #{dom_id post}",
       tabindex: -1,
       data: { quick_find_target: "item", navigable_list_target: "item" } do %>
-  <%= link_to edit_post_path(post), class: "display-contents" do %>
+  <%= link_to edit_post_path(post), class: "row__link" do %>
     <span class="row__body">
       <span class="row__title"><%= post_title(post) %></span>
       <span class="row__meta"><%= post_meta(post) %></span>
