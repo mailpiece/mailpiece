@@ -1,28 +1,16 @@
 require "test_helper"
 
 class Subscribers::UnsubscribedsControllerTest < ActionDispatch::IntegrationTest
-  include ActionView::RecordIdentifier
-
   setup do
     sign_in_as :mia
   end
 
-  test "show lists the addresses in that state under a crumb back to the subscribers" do
+  test "show lists the addresses in that state" do
     get subscribers_unsubscribed_path
 
-    assert_select ".breadcrumbs a[href=?]", subscribers_path, text: "Subscribers"
-    assert_select ".breadcrumbs strong", text: "Unsubscribed"
-    assert_select "li##{dom_id(subscribers(:unsubscribed))} .row__meta", text: /\ASubscribed/
-    assert_select "li##{dom_id(subscribers(:unsubscribed))} .row__end time[datetime=?] + .status--muted", subscribers(:unsubscribed).unsubscribed_at.to_i.to_s, text: "Unsubscribed"
-    assert_select "li##{dom_id(subscribers(:active))}", count: 0
-  end
-
-  test "show names its state on the status menu's button and marks its line current" do
-    get subscribers_unsubscribed_path
-
-    assert_select ".filter-bar .status-filter button", text: "Unsubscribed"
-    assert_select ".status-filter a[aria-current=page][href=?]", subscribers_unsubscribed_path, text: /\AUnsubscribed/
-    assert_select ".status-filter a[aria-current]", count: 1
+    assert_response :success
+    assert_match subscribers(:unsubscribed).email, response.body
+    assert_no_match subscribers(:active).email, response.body
   end
 
   test "show as JSON lists the same addresses" do

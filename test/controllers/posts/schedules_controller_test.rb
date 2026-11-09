@@ -183,8 +183,7 @@ class Posts::SchedulesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :unprocessable_entity
     assert_equal "text/vnd.turbo-stream.html", response.media_type
-    assert_select "turbo-stream", count: 1
-    assert_select "turbo-stream[action=replace][target=flash]"
+    assert_turbo_stream action: :replace, target: "flash", status: :unprocessable_entity
     assert_includes response.body, "Pick a date and time in the future to schedule"
     assert_not_includes response.body, "post[title]"
     assert_not posts(:draft).reload.scheduled?

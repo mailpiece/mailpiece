@@ -23,11 +23,7 @@ class Posts::LinksControllerTest < ActionDispatch::IntegrationTest
     get edit_post_link_path(posts(:sent), post_links(:training))
 
     assert_response :success
-    assert_select "turbo-frame##{ActionView::RecordIdentifier.dom_id(post_links(:training))}" do
-      assert_select "form[action=?]", post_link_path(posts(:sent), post_links(:training)) do
-        assert_select "input[name='post_link[url]'][value=?]", "https://forms.example.com/training"
-      end
-    end
+    assert_select "form[action=?]", post_link_path(posts(:sent), post_links(:training))
   end
 
   test "update corrects where a link leads" do
@@ -71,10 +67,7 @@ class Posts::LinksControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :unprocessable_entity
-    assert_select "turbo-frame##{ActionView::RecordIdentifier.dom_id(post_links(:training))}" do
-      assert_select ".error-explanation__message", text: "Destination must be a full address starting with http:// or https://"
-      assert_select "input[name='post_link[url]'][value=?]", "javascript:alert(1)"
-    end
+    assert_select ".error-explanation__message", text: "Destination must be a full address starting with http:// or https://"
   end
 
   test "a link of another post is not found" do

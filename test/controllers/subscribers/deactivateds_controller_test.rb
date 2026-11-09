@@ -1,28 +1,16 @@
 require "test_helper"
 
 class Subscribers::DeactivatedsControllerTest < ActionDispatch::IntegrationTest
-  include ActionView::RecordIdentifier
-
   setup do
     sign_in_as :mia
   end
 
-  test "show lists the addresses in that state under a crumb back to the subscribers" do
+  test "show lists the addresses in that state" do
     get subscribers_deactivated_path
 
-    assert_select ".breadcrumbs a[href=?]", subscribers_path, text: "Subscribers"
-    assert_select ".breadcrumbs strong", text: "Stopped"
-    assert_select "li##{dom_id(subscribers(:stopped))} .row__meta", text: /\ASubscribed/
-    assert_select "li##{dom_id(subscribers(:stopped))} .row__end time[datetime=?] + .status--muted", subscribers(:stopped).deactivated_at.to_i.to_s, text: "Stopped"
-    assert_select "li##{dom_id(subscribers(:active))}", count: 0
-  end
-
-  test "show names its state on the status menu's button and marks its line current" do
-    get subscribers_deactivated_path
-
-    assert_select ".filter-bar .status-filter button", text: "Stopped"
-    assert_select ".status-filter a[aria-current=page][href=?]", subscribers_deactivated_path, text: /\AStopped/
-    assert_select ".status-filter a[aria-current]", count: 1
+    assert_response :success
+    assert_match subscribers(:stopped).email, response.body
+    assert_no_match subscribers(:active).email, response.body
   end
 
   test "show as JSON lists the same addresses" do

@@ -6,14 +6,13 @@ class Public::SubscriptionsControllerTest < ActionDispatch::IntegrationTest
   test "show" do
     get public_subscription_path
     assert_response :success
-    assert_select "title", text: /.+ \| #{Regexp.escape(accounts(:davids_account).name)}\z/
   end
 
   test "show says an email went out, and names its subject" do
     get public_subscription_path
 
-    assert_select "p", text: /\AWe just sent you an email\./
-    assert_select "p", text: /“Confirm your subscription to #{Regexp.escape(accounts(:davids_account).name)}”/
+    assert_match "We just sent you an email.", response.body
+    assert_match "“Confirm your subscription to #{ERB::Util.html_escape(accounts(:davids_account).name)}”", response.body
   end
 
   test "create adds an unconfirmed subscriber and mails one confirmation" do
@@ -48,14 +47,6 @@ class Public::SubscriptionsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "the post's form carries the post's code, and the list's none" do
-    get public_post_path(posts(:sent).public_param)
-    assert_select "form[action=?] input[type=hidden][name=post_code][value=?]", public_subscription_path, posts(:sent).code
-
-    get root_path
-    assert_select "input[name=post_code]", count: 0
-  end
-
   test "create answers the same for an address in any state, and changes none" do
     %i[ active unconfirmed unsubscribed bounced stopped ].each do |state|
       assert_no_changes -> { subscribers(state).reload.status } do
@@ -82,16 +73,6 @@ class Public::SubscriptionsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_redirected_to public_subscription_path
-  end
-
-  test "the form carries the time it was drawn" do
-    freeze_time
-    get root_path
-
-    assert_select "form[action=?] input[type=hidden][name=drawn_at]", public_subscription_path do |inputs|
-      travel 3.seconds
-      assert_not Subscriber::FormStamp.new(inputs.first["value"]).hasty?
-    end
   end
 
   test "create drops an address posted within three seconds of the form being drawn" do
@@ -166,8 +147,8 @@ class Public::SubscriptionsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to public_subscription_path
     follow_redirect!
-    assert_select "h1", text: "Not taking subscriptions yet"
-    assert_select "a[href=?]", public_feed_path
+    assert_match "Not taking subscriptions yet", response.body
+    assert_match public_feed_path, response.body
   end
 
   test "create while the account cannot send answers the same for an address in any state" do

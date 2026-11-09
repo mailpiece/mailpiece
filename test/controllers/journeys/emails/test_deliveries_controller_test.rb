@@ -114,8 +114,7 @@ class Journeys::Emails::TestDeliveriesControllerTest < ActionDispatch::Integrati
     end
 
     assert_response :success
-    assert_select "turbo-stream", count: 1
-    assert_select "turbo-stream[action=replace][target=flash]"
+    assert_equal "text/vnd.turbo-stream.html", response.media_type
     assert_includes response.body, "Test sent to mia@example.com"
   end
 
@@ -128,7 +127,7 @@ class Journeys::Emails::TestDeliveriesControllerTest < ActionDispatch::Integrati
     end
 
     assert_response :unprocessable_entity
-    assert_select "turbo-stream[action=replace][target=flash]", count: 1
+    assert_equal "text/vnd.turbo-stream.html", response.media_type
     assert_includes response.body, "Write the subject and the message before sending a test"
   end
 

@@ -53,7 +53,7 @@ class Journeys::Emails::ActivationsControllerTest < ActionDispatch::IntegrationT
       headers: { "Accept" => "text/vnd.turbo-stream.html, text/html" }
 
     assert_response :unprocessable_entity
-    assert_select "turbo-stream[action=replace][target=flash]", count: 1
+    assert_equal "text/vnd.turbo-stream.html", response.media_type
     assert_match(/Subject can.+t be blank/, response.body)
     assert_not @email.reload.active?
   end

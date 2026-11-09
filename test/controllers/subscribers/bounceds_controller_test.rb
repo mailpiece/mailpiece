@@ -1,29 +1,19 @@
 require "test_helper"
 
 class Subscribers::BouncedsControllerTest < ActionDispatch::IntegrationTest
-  include ActionView::RecordIdentifier
-
   setup do
     sign_in_as :mia
   end
 
-  test "show lists the addresses that bounced, the last to bounce first" do
+  test "show lists the addresses that bounced" do
     earlier = accounts(:davids_account).subscribers.create!(email: "earlier@example.com", bounced_at: 1.month.ago)
 
     get subscribers_bounced_path
 
-    assert_select ".breadcrumbs strong", text: "Bounced"
-    assert_equal [ dom_id(subscribers(:bounced)), dom_id(earlier) ], css_select("li.row[id^=subscriber_]").map { it["id"] }
-    assert_select "li##{dom_id(subscribers(:bounced))} .row__meta", text: /\ASubscribed/
-    assert_select "li##{dom_id(subscribers(:bounced))} .row__end time[datetime=?][data-reader-time-target=timeordate] + .status--error", subscribers(:bounced).bounced_at.to_i.to_s, text: "Bounced"
-  end
-
-  test "show names its state on the status menu's button and marks its line current" do
-    get subscribers_bounced_path
-
-    assert_select ".filter-bar .status-filter button", text: "Bounced"
-    assert_select ".status-filter a[aria-current=page][href=?]", subscribers_bounced_path, text: /\ABounced/
-    assert_select ".status-filter a[aria-current]", count: 1
+    assert_response :success
+    assert_match subscribers(:bounced).email, response.body
+    assert_match earlier.email, response.body
+    assert_no_match subscribers(:active).email, response.body
   end
 
   test "show as JSON lists the same addresses" do

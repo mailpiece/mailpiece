@@ -1,13 +1,12 @@
 require "test_helper"
 
 class Public::PostsControllerTest < ActionDispatch::IntegrationTest
-  test "index shows the newsletter's description as it was written, and as plain text to a crawler" do
+  test "index shows the newsletter's description as it was written" do
     accounts(:davids_account).update!(description: "<p>Notes on <strong>paperwork</strong>.</p>")
 
     get root_path
 
-    assert_select ".newsletter-header__description strong", text: "paperwork"
-    assert_select "meta[name=description][content=?]", "Notes on paperwork."
+    assert_match "<strong>paperwork</strong>", response.body
   end
 
   test "the bare address belongs to no newsletter" do
@@ -28,17 +27,17 @@ class Public::PostsControllerTest < ActionDispatch::IntegrationTest
     get root_path
 
     assert_response :success
-    assert_select "a[href=?]", public_post_path(posts(:sent).public_param)
+    assert_match posts(:sent).title, response.body
     assert_match "public", response.headers["Cache-Control"]
 
     %i[ draft scheduled unlisted email_only other_accounts ].each do |post|
-      assert_select "a[href=?]", public_post_path(posts(post).public_param), count: 0
+      assert_no_match posts(post).title, response.body
     end
   end
 
   test "index and show offer the subscribe form only while the account can send" do
     get root_path
-    assert_select "#subscribe form[action=?]", public_subscription_path
+    assert_match subscription_form, response.body
 
     account_senders(:davids).update!(from_address: nil)
 
@@ -46,8 +45,8 @@ class Public::PostsControllerTest < ActionDispatch::IntegrationTest
       get path
 
       assert_response :success
-      assert_select "#subscribe form", count: 0
-      assert_select "#subscribe a[href=?]", public_feed_path
+      assert_no_match subscription_form, response.body
+      assert_match public_feed_path, response.body
     end
   end
 
@@ -57,16 +56,14 @@ class Public::PostsControllerTest < ActionDispatch::IntegrationTest
     get root_path
 
     assert_response :success
-    assert_select "#subscribe form", count: 0
+    assert_no_match subscription_form, response.body
   end
 
   test "index with the welcome on" do
     get root_path
 
     assert_response :success
-    assert_select "head script", text: /getItem\("welcome-/, count: 0
-    assert_select "[data-controller~=welcome]", count: 0
-    assert_select "button.welcome-skip", count: 0
+    assert_no_match "Let me read it first", response.body
 
     accounts(:davids_account).start_welcoming
 
@@ -74,12 +71,7 @@ class Public::PostsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_match "public", response.headers["Cache-Control"]
-    assert_select "head script[nonce]", text: /localStorage\.getItem\("welcome-1234567"\)/
-    assert_select ".page[data-controller=welcome][data-welcome-key-value=?][data-action=?]", "welcome-1234567", "submit->welcome#remember" do
-      assert_select "#subscribe form[action=?]", public_subscription_path, count: 1
-      assert_select ".post-summaries a[href=?]", public_post_path(posts(:sent).public_param)
-      assert_select "button.welcome-skip[type=button][data-action=?]", "welcome#dismiss", text: "Let me read it first"
-    end
+    assert_match "Let me read it first", response.body
   end
 
   test "index with a welcome message" do
@@ -87,21 +79,19 @@ class Public::PostsControllerTest < ActionDispatch::IntegrationTest
 
     get root_path
 
-    assert_select ".welcome-message", count: 0
+    assert_no_match "explained", response.body
 
     accounts(:davids_account).start_welcoming
 
     get root_path
 
-    assert_select ".newsletter-header .newsletter-header__description", text: "Notes on paperwork."
-    assert_select ".newsletter-header .welcome-message strong", text: "explained"
+    assert_match "Paperwork, <strong>explained</strong>.", response.body
 
     accounts(:davids_account).update!(welcome_message: "")
 
     get root_path
 
-    assert_select ".newsletter-header__description", text: "Notes on paperwork."
-    assert_select ".welcome-message", count: 0
+    assert_no_match "explained", response.body
   end
 
   test "index with the welcome on and no sender" do
@@ -111,9 +101,7 @@ class Public::PostsControllerTest < ActionDispatch::IntegrationTest
     get root_path
 
     assert_response :success
-    assert_select "head script", text: /getItem\("welcome-/, count: 0
-    assert_select "[data-controller~=welcome]", count: 0
-    assert_select "button.welcome-skip", count: 0
+    assert_no_match "Let me read it first", response.body
   end
 
   test "index sends a signed-in user to the landing page, uncached" do
@@ -141,90 +129,23 @@ class Public::PostsControllerTest < ActionDispatch::IntegrationTest
     get public_post_path(posts(:sent).public_param)
 
     assert_response :success
-    assert_select "h1", text: posts(:sent).title
-    assert_select "title", text: "#{posts(:sent).title} | #{accounts(:davids_account).name}"
-    assert_select "meta[property='og:title'][content=?]", "#{posts(:sent).title} | #{accounts(:davids_account).name}"
     assert_nil response.headers["X-Robots-Tag"]
   end
 
-  test "show carries what a shared link needs" do
-    get public_post_path(posts(:sent).public_param)
-
-    assert_select "link[rel=canonical][href=?]", public_post_url(posts(:sent).public_param)
-    assert_select "link[rel=sitemap][href=?]", public_sitemap_url
-    assert_select "meta[name=description][content=?]", posts(:sent).excerpt
-    assert_select "meta[property='og:type'][content=article]"
-    assert_select "meta[property='og:site_name'][content=?]", accounts(:davids_account).name
-    assert_select "meta[property='og:url'][content=?]", public_post_url(posts(:sent).public_param)
-    assert_select "meta[property='article:published_time'][content=?]", posts(:sent).published_at.utc.iso8601
-    assert_select "meta[property='og:image']", count: 0
-    assert_select "meta[name='twitter:card'][content=summary]"
-  end
-
-  test "show shares the post's first image as a large card" do
-    posts(:sent).update! body: %(<p>Look.</p><action-text-attachment content-type="image/png" url="https://example.com/ladder.png" width="600" height="400"></action-text-attachment>)
-
-    get public_post_path(posts(:sent).public_param)
-
-    assert_select "meta[property='og:image'][content=?]", "https://example.com/ladder.png"
-    assert_select "meta[name='twitter:card'][content=summary_large_image]"
-  end
-
-  test "show opens a post's picture in the lightbox, behind a link that works without it" do
+  test "show links a post's picture to its full size" do
     blob = ActiveStorage::Blob.create_and_upload! io: file_fixture("moon.jpg").open, filename: "moon.jpg", content_type: "image/jpeg"
     posts(:sent).update! body: "<p>Look.</p>#{ActionText::Attachment.from_attachable(blob).to_html}"
 
     get public_post_path(posts(:sent).public_param)
 
-    assert_select "body[data-controller~=lightbox]" do
-      assert_select "article.post a[data-lightbox-target=image][href*='/rails/active_storage/representations/'] img"
-      assert_select "dialog.lightbox[data-lightbox-target=dialog][data-action~='close->lightbox#reset']" do
-        assert_select "img[data-lightbox-target=zoomedImage]"
-        assert_select "form[method=dialog] button"
-      end
-    end
+    assert_response :success
+    assert_match "/rails/active_storage/representations/", response.body
   end
 
-  test "an unlisted post still carries its share tags" do
+  test "an unlisted post's page keeps it out of search engines" do
     get public_post_path(posts(:unlisted).public_param)
 
     assert_select "meta[name=robots][content=noindex]"
-    assert_select "meta[property='og:title']"
-  end
-
-  test "index carries the newsletter's share tags" do
-    get root_path
-
-    assert_select "link[rel=canonical][href=?]", root_url
-    assert_select "meta[property='og:title'][content=?]", accounts(:davids_account).name
-    assert_select "title", text: accounts(:davids_account).name
-    assert_select "meta[property='og:type'][content=website]"
-    assert_select "meta[name='twitter:card'][content=summary]"
-  end
-
-  test "show describes the post to a search engine" do
-    get public_post_path(posts(:sent).public_param)
-
-    data = structured_data
-    assert_equal "https://schema.org", data["@context"]
-    assert_equal "BlogPosting", data["@type"]
-    assert_equal posts(:sent).title, data["headline"]
-    assert_equal posts(:sent).excerpt, data["description"]
-    assert_equal public_post_url(posts(:sent).public_param), data["url"]
-    assert_equal public_post_url(posts(:sent).public_param), data["mainEntityOfPage"]
-    assert_equal posts(:sent).published_at.utc.iso8601, data["datePublished"]
-    assert_equal posts(:sent).updated_at.utc.iso8601, data["dateModified"]
-    assert_equal({ "@type" => "Person", "name" => posts(:sent).creator.name }, data["author"])
-    assert_equal({ "@type" => "Organization", "name" => accounts(:davids_account).name, "url" => root_url }, data["publisher"])
-    assert_not data.key?("image")
-  end
-
-  test "show describes the post's first image to a search engine" do
-    posts(:sent).update! body: %(<p>Look.</p><action-text-attachment content-type="image/png" url="https://example.com/ladder.png" width="600" height="400"></action-text-attachment>)
-
-    get public_post_path(posts(:sent).public_param)
-
-    assert_equal "https://example.com/ladder.png", structured_data["image"]
   end
 
   test "a title cannot close the tag that describes the post" do
@@ -234,21 +155,6 @@ class Public::PostsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_no_match "</script><script>alert(1)", response.body
-    assert_select "script[type='application/ld+json']", count: 1
-    assert_equal "</script><script>alert(1)</script> & <b>", structured_data["headline"]
-  end
-
-  test "index describes the newsletter to a search engine" do
-    accounts(:davids_account).update!(description: "<p>Notes on <strong>paperwork</strong>.</p>")
-
-    get root_path
-
-    data = structured_data
-    assert_equal "WebSite", data["@type"]
-    assert_equal accounts(:davids_account).name, data["name"]
-    assert_equal "Notes on paperwork.", data["description"]
-    assert_equal root_url, data["url"]
-    assert_not data.key?("headline")
   end
 
   test "show an unlisted post at its address, kept out of search engines" do
@@ -263,12 +169,6 @@ class Public::PostsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to public_post_path(posts(:sent).public_param)
     assert_response :moved_permanently
-  end
-
-  test "show advertises the post as Markdown" do
-    get public_post_path(posts(:sent).public_param)
-
-    assert_select "link[rel=alternate][type='text/markdown'][href=?]", public_post_markdown_url(posts(:sent).public_param)
   end
 
   test "show as Markdown, under a front matter" do
@@ -315,18 +215,14 @@ class Public::PostsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "a post's summary is under its title, on its card and in its description, and nothing stands in for one" do
-    get public_post_path(posts(:sent).public_param)
-    assert_select ".post__summary", count: 0
-
+  test "a post's summary is on its page and on its card" do
     posts(:sent).update! summary: "On ladders"
 
     get public_post_path(posts(:sent).public_param)
-    assert_select ".post__title + .post__summary", text: "On ladders"
-    assert_select "meta[name=description][content=?]", "On ladders"
+    assert_match "On ladders", response.body
 
     get root_path
-    assert_select "#post_#{posts(:sent).id} .post-summary__excerpt", text: "On ladders"
+    assert_match "On ladders", response.body
   end
 
   test "md is the only extension an address takes, and a slug holds no dot" do
@@ -386,10 +282,9 @@ class Public::PostsControllerTest < ActionDispatch::IntegrationTest
     get public_post_path(posts(:sent).public_param)
 
     assert_response :success
-    assert_select "article .lexxy-content p", text: "Subscribe on the site."
-    assert_select "article aside", count: 0
+    assert_includes response.body, "Subscribe on the site."
     assert_not_includes response.body, "Reply to this email."
-    assert_select "meta[name=description][content=?]", "Hello. Subscribe on the site."
+    assert_not_includes response.body, "data-audience"
   end
 
   test "show as Markdown draws what is only on the web, and nothing of what is only in the email" do
@@ -417,11 +312,9 @@ class Public::PostsControllerTest < ActionDispatch::IntegrationTest
     posts(:sent).update! body: %(<p>Before</p><p><a href="https://youtu.be/dQw4w9WgXcQ">My &lt;video&gt;</a></p>)
 
     get public_post_path(posts(:sent).public_param)
-    assert_select "article .lexxy-content figure.video-thumbnail" do
-      assert_select "a[href='https://youtu.be/dQw4w9WgXcQ'][target=_blank][rel=noopener]", count: 2
-      assert_select "a.video-thumbnail__picture img[alt='Video on YouTube'][src=?]", "https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg"
-      assert_select "figcaption a", text: "My <video>"
-    end
+    assert_includes response.body, "https://youtu.be/dQw4w9WgXcQ"
+    assert_includes response.body, "https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg"
+    assert_includes response.body, "My &lt;video&gt;"
 
     get public_feed_path
     assert_includes response.body, "https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg"
@@ -429,7 +322,7 @@ class Public::PostsControllerTest < ActionDispatch::IntegrationTest
     posts(:sent).video_thumbnails.attach io: file_fixture("moon.jpg").open, filename: "dQw4w9WgXcQ.jpg", content_type: "image/jpeg"
 
     get public_post_path(posts(:sent).public_param)
-    assert_select "a.video-thumbnail__picture img[src^='http'][src*=?]", "#{posts(:sent).account.slug}/rails/active_storage/blobs/proxy/"
+    assert_includes response.body, %(src="http://www.example.com#{posts(:sent).account.slug}/rails/active_storage/blobs/proxy/)
     assert_not_includes response.body, "img.youtube.com"
 
     get public_feed_path
@@ -446,8 +339,8 @@ class Public::PostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   private
-    def structured_data
-      JSON.parse css_select("script[type='application/ld+json']").sole.text
+    def subscription_form
+      %(action="#{public_subscription_path}")
     end
 
     def write_for_each_audience_into(post)

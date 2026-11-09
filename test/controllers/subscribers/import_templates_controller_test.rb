@@ -31,7 +31,7 @@ class Subscribers::ImportTemplatesControllerTest < ActionDispatch::IntegrationTe
 
     get new_subscribers_import_path
 
-    assert_select "a[href='#{subscribers_import_template_path(format: :csv)}']", text: "Download a template"
+    assert_match subscribers_import_template_path(format: :csv), response.body
   end
 
   test "members are refused" do

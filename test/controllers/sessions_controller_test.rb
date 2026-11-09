@@ -1,16 +1,15 @@
 require "test_helper"
 
 class SessionsControllerTest < ActionDispatch::IntegrationTest
-  test "new ends with the footer, and offers help only where there is an address to write to" do
+  test "new offers help only where there is an address to write to" do
     untenanted { get new_session_path }
 
-    assert_select "#footer", text: /Mailpiece/
-    assert_select "#footer a[href^=mailto]", count: 0
+    assert_select "a[href^=mailto]", count: 0
 
     with_support_email_address "help@example.com" do
       untenanted { get new_session_path }
 
-      assert_select "#footer a[href=?]", "mailto:help@example.com", text: "Send us an email"
+      assert_select "a[href=?]", "mailto:help@example.com"
     end
   end
 

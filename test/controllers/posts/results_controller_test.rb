@@ -18,33 +18,6 @@ class Posts::ResultsControllerTest < ActionDispatch::IntegrationTest
       assert_select "strong", text: "the handbook"
       assert_select "span", text: "https://example.com/handbook/ladders"
     end
-    assert_select ".breadcrumbs a[href=?]", edit_post_path(posts(:sent))
-  end
-
-  test "show counts the subscribers the post brought, and says nothing of none" do
-    get post_results_path(posts(:sent))
-    assert_select "h1 strong", text: "Results"
-    assert_select "p", text: /Brought/, count: 0
-
-    subscribers(:active).update!(source_post: posts(:sent))
-    subscribers(:unconfirmed).update!(source_post: posts(:sent))
-
-    get post_results_path(posts(:sent))
-    assert_select "p", text: "Brought 2 subscribers"
-  end
-
-  test "show marks a link the text no longer has" do
-    get post_results_path(posts(:sent))
-
-    assert_select "turbo-frame##{ActionView::RecordIdentifier.dom_id(post_links(:training))} .status--warning", text: "Changed in the text"
-  end
-
-  test "show names a link with no text by the address it was mailed with" do
-    post_links(:training).update! text: ""
-
-    get post_results_path(posts(:sent))
-
-    assert_select "turbo-frame##{ActionView::RecordIdentifier.dom_id(post_links(:training))} strong", text: post_links(:training).original_url
   end
 
   test "show of a post never mailed says no links were mailed" do

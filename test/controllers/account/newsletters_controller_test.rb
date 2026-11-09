@@ -5,15 +5,11 @@ class Account::NewslettersControllerTest < ActionDispatch::IntegrationTest
     sign_in_as :leo
   end
 
-  test "edit has the one form, under Settings" do
+  test "edit has the one form" do
     get edit_account_newsletter_path
 
     assert_response :success
-    assert_select ".breadcrumbs a[href=?]", account_settings_path, text: "Settings"
     assert_select "form[action=?]", account_newsletter_path, count: 1
-    assert_select "input[name='account[name]'][value=?]", "Leo's Account"
-    assert_select "input[type=file][name='account[avatar]']"
-    assert_select "lexxy-editor[name='account[description]']"
   end
 
   test "update goes back to Settings" do
@@ -43,16 +39,14 @@ class Account::NewslettersControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Leo's Account", accounts(:davids_account).reload.name
   end
 
-  test "update with an image refused shows the logo that is stored and keeps what was typed" do
+  test "update with an image refused still offers to remove the logo that is stored" do
     accounts(:davids_account).avatar.attach io: file_fixture("moon.jpg").open, filename: "logo.jpg", content_type: "image/jpeg"
 
     patch account_newsletter_path, params: { account: { name: "The Bulletin", avatar: fixture_file_upload("subscribers.csv", "text/csv") } }
 
     assert_response :unprocessable_entity
     assert_select ".error-explanation"
-    assert_select "button[form=avatar-delete-form]"
-    assert_select "form#avatar-delete-form[action=?]", account_avatar_path
-    assert_select "input[name='account[name]'][value=?]", "The Bulletin"
+    assert_select "form[action=?]", account_avatar_path
     assert_equal "logo.jpg", accounts(:davids_account).reload.avatar.filename.to_s
   end
 

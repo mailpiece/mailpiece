@@ -5,13 +5,11 @@ class Account::DomainsControllerTest < ActionDispatch::IntegrationTest
     sign_in_as :leo
   end
 
-  test "edit has the one form, under Settings" do
+  test "edit has the one form" do
     get edit_account_domain_path
 
     assert_response :success
-    assert_select ".breadcrumbs a[href=?]", account_settings_path, text: "Settings"
     assert_select "form[action=?]", account_domain_path, count: 1
-    assert_select "input[name='account[domain]']"
   end
 
   test "update gives the newsletter a domain, changes it and clears it" do

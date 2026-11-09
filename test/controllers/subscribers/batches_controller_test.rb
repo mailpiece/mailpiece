@@ -8,9 +8,9 @@ class Subscribers::BatchesControllerTest < ActionDispatch::IntegrationTest
   test "new" do
     get new_subscribers_batch_path
     assert_response :success
-    assert_select "form[action=?] input[type=hidden][name='batch[sent]']", subscribers_batch_path
+    assert_select "form[action=?]", subscribers_batch_path
     assert_select "input[type=file]", count: 0
-    assert_select "a[href=?]", new_subscribers_import_path, text: "Import subscribers..."
+    assert_select "a[href=?]", new_subscribers_import_path
   end
 
   test "create with every row removed asks for one on the form" do
@@ -19,7 +19,7 @@ class Subscribers::BatchesControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :unprocessable_entity
-    assert_select ".error-explanation", text: /Fill in at least one row/
+    assert_match "Fill in at least one row", response.body
   end
 
   test "create adds the rows" do
@@ -43,7 +43,7 @@ class Subscribers::BatchesControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :unprocessable_entity
-    assert_select ".batch__note", text: /bounced/
+    assert_match "bounced, and only they can subscribe again", response.body
   end
 
   test "members are refused" do

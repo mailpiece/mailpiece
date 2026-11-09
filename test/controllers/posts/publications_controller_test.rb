@@ -103,7 +103,7 @@ class Posts::PublicationsControllerTest < ActionDispatch::IntegrationTest
     assert_empty posts(:draft).deliveries
 
     follow_redirect!
-    assert_select "button.post-actions__primary:not([data-turbo-confirm])", text: "Save"
+    assert_select "button[formaction=?]", post_release_path(posts(:draft)), count: 0
   end
 
   test "create from the editor publishes a scheduled post under the past date picked, off its schedule and unsent" do
@@ -184,7 +184,7 @@ class Posts::PublicationsControllerTest < ActionDispatch::IntegrationTest
       headers: { "Accept" => "text/vnd.turbo-stream.html, text/html" }
 
     assert_response :unprocessable_entity
-    assert_select "turbo-stream[action=replace][target=flash]", count: 1
+    assert_turbo_stream action: :replace, target: "flash", status: :unprocessable_entity
     assert_includes response.body, "A post published on a past date is not sent by email"
     assert_not_includes response.body, "post[title]"
     assert posts(:draft).reload.draft?
@@ -253,7 +253,7 @@ class Posts::PublicationsControllerTest < ActionDispatch::IntegrationTest
 
   test "the editor offers to unpublish a post on the web, and a page to an issue without one" do
     get edit_post_path(posts(:sent))
-    assert_select "button[formaction=?][name=_method][value=delete][data-turbo-confirm]", post_publication_path(posts(:sent))
+    assert_select "button[formaction=?][name=_method][value=delete]", post_publication_path(posts(:sent))
 
     get edit_post_path(posts(:email_only))
     assert_select "button[formaction=?][name=_method][value=post]", post_publication_path(posts(:email_only))

@@ -66,8 +66,7 @@ class Posts::TestDeliveriesControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :success
-    assert_select "turbo-stream", count: 1
-    assert_select "turbo-stream[action=replace][target=flash]"
+    assert_turbo_stream action: :replace, target: "flash"
     assert_includes response.body, "Test sent to mia@example.com"
     assert_equal "The file", posts(:draft).reload.title
   end
@@ -79,8 +78,7 @@ class Posts::TestDeliveriesControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :unprocessable_entity
-    assert_select "turbo-stream", count: 1
-    assert_select "turbo-stream[action=replace][target=flash]"
+    assert_turbo_stream action: :replace, target: "flash", status: :unprocessable_entity
     assert_includes response.body, "Enter a valid email address for the test"
     assert_not_includes response.body, "post[title]"
   end
@@ -92,7 +90,7 @@ class Posts::TestDeliveriesControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :unprocessable_entity
-    assert_select "turbo-stream[action=replace][target=flash]", count: 1
+    assert_turbo_stream action: :replace, target: "flash", status: :unprocessable_entity
     assert_includes response.body, "The test was not sent. Visibility"
   end
 
