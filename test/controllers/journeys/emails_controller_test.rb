@@ -17,7 +17,7 @@ class Journeys::EmailsControllerTest < ActionDispatch::IntegrationTest
       assert_select "textarea.post-form__title[name='journey_email[subject]'][data-action~='keydown.enter->advance-to-editor#advance']"
       assert_select "lexxy-editor[name='journey_email[body]'][data-advance-to-editor-target=editor]"
       assert_select ".writing-bar.post-actions button.post-actions__main[type=submit]", text: "Save"
-      assert_select ".writing-bar a[href=?]", journey_path(@journey), text: "Cancel and go back"
+      assert_select ".writing-bar a[hidden][data-form-target=cancel][href=?]", journey_path(@journey)
     end
     assert_select "[name='journey_email[active]']", count: 0
     assert_select "lexxy-editor[style*='--audience-web-label'] lexxy-prompt[trigger='/'][src=?]", prompts_snippets_path, count: 1
