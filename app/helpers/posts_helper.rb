@@ -168,16 +168,7 @@ module PostsHelper
     end
 
     def post_row_recipients(post)
-      count, unsent = post.deliveries_count, post_unsent(post.delivery_progress)
-      sent, total = number_with_delimiter(post.delivery_progress[:sent]), number_with_delimiter(count)
-
-      if post.sending?
-        [ t("posts_progress_sending", count: count, sent: sent, total: total), *unsent ].join(", ")
-      elsif unsent.empty?
-        t("posts_row_recipients", count: post.delivery_progress[:sent], number: sent)
-      else
-        [ t("posts_row_recipients_some", count: count, sent: sent, number: total), *unsent ].join(", ")
-      end
+      post_recipients post, all: "posts_row_recipients", some: "posts_row_recipients_some"
     end
 
     def post_progress(post)
@@ -193,15 +184,20 @@ module PostsHelper
     end
 
     def post_sent_to(post)
+      post_recipients post, all: "posts_progress_sent_to_html", some: "posts_progress_sent_some_html"
+    end
+
+    # Which of the two sentences, and whether it names the date, is the key's; the figures are the same.
+    def post_recipients(post, all:, some:)
       count, unsent = post.deliveries_count, post_unsent(post.delivery_progress)
       sent, total = number_with_delimiter(post.delivery_progress[:sent]), number_with_delimiter(count)
 
       if post.sending?
-        [ t("posts_progress_sending", count: count, sent: sent, total: total), *unsent ].join(", ")
+        safe_join [ t("posts_progress_sending", count: count, sent: sent, total: total), *unsent ], ", "
       elsif unsent.empty?
-        t("posts_progress_sent_to_html", count: post.delivery_progress[:sent], number: sent, date: post_sent_date(post))
+        t(all, count: post.delivery_progress[:sent], number: sent, date: post_sent_date(post))
       else
-        safe_join [ t("posts_progress_sent_some_html", count: count, sent: sent, number: total, date: post_sent_date(post)), *unsent ], ", "
+        safe_join [ t(some, count: count, sent: sent, number: total, date: post_sent_date(post)), *unsent ], ", "
       end
     end
 
