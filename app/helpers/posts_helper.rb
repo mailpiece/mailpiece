@@ -1,10 +1,33 @@
 module PostsHelper
+  def posts_status_links
+    [
+      { status: nil, title: t("posts_state_all"), path: posts_path },
+      { status: :draft, title: t("posts_state_draft"), path: posts_draft_path },
+      { status: :scheduled, title: t("posts_state_scheduled"), path: posts_scheduled_path },
+      { status: :published, title: t("posts_state_published"), path: posts_published_path },
+      { status: :sent, title: t("posts_state_sent"), path: posts_sent_path }
+    ]
+  end
+
   def post_title(post)
     post.title.presence || t("untitled")
   end
 
+  # The row's end says the state and when, so the line under the title says only the rest.
   def post_meta(post)
-    safe_join [ post_progress(post), post_visibility(post) ].compact, " · "
+    safe_join [ post_row_progress(post), post_visibility(post) ].compact, " · "
+  end
+
+  def post_status_time(post)
+    if post.sent?
+      post.sent_at
+    elsif post.published?
+      post.published_at
+    elsif post.scheduled?
+      post.scheduled_posting_at
+    else
+      post.updated_at
+    end
   end
 
   # The editor writes the state of a save over the progress, so a schedule stands beside it and not in it.
@@ -132,6 +155,22 @@ module PostsHelper
   end
 
   private
+    def post_row_progress(post)
+      if post.sent?
+        post_row_recipients(post)
+      elsif post.published?
+        t("posts_row_not_sent")
+      elsif post.scheduled?
+        t(post.scheduled_delivery? ? "posts_row_scheduled_with_sending" : "posts_row_scheduled_without_sending")
+      else
+        t("posts_progress_edited_html", time: local_datetime_tag(post.updated_at, style: :ago))
+      end
+    end
+
+    def post_row_recipients(post)
+      post_recipients post, all: "posts_row_recipients", some: "posts_row_recipients_some"
+    end
+
     def post_progress(post)
       if post.sent?
         post_sent_to(post)
@@ -145,15 +184,20 @@ module PostsHelper
     end
 
     def post_sent_to(post)
+      post_recipients post, all: "posts_progress_sent_to_html", some: "posts_progress_sent_some_html"
+    end
+
+    # Which of the two sentences, and whether it names the date, is the key's; the figures are the same.
+    def post_recipients(post, all:, some:)
       count, unsent = post.deliveries_count, post_unsent(post.delivery_progress)
       sent, total = number_with_delimiter(post.delivery_progress[:sent]), number_with_delimiter(count)
 
       if post.sending?
-        [ t("posts_progress_sending", count: count, sent: sent, total: total), *unsent ].join(", ")
+        safe_join [ t("posts_progress_sending", count: count, sent: sent, total: total), *unsent ], ", "
       elsif unsent.empty?
-        t("posts_progress_sent_to_html", count: post.delivery_progress[:sent], number: sent, date: post_sent_date(post))
+        t(all, count: post.delivery_progress[:sent], number: sent, date: post_sent_date(post))
       else
-        safe_join [ t("posts_progress_sent_some_html", count: count, sent: sent, number: total, date: post_sent_date(post)), *unsent ], ", "
+        safe_join [ t(some, count: count, sent: sent, number: total, date: post_sent_date(post)), *unsent ], ", "
       end
     end
 

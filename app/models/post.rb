@@ -22,6 +22,8 @@ class Post < ApplicationRecord
 
   scope :preloaded, -> { with_rich_text_body.preload(:creator) }
   scope :reverse_chronologically, -> { order(created_at: :desc, id: :desc) }
+  # What is still ahead first, then each by the date its row shows, newest first; a draft's is its last edit.
+  scope :ahead_first, -> { order(dated_at: :desc, updated_at: :desc, id: :desc).prepend_order("posts.published_at IS NOT NULL") }
   scope :matching, ->(terms, account:) do
     query = Search::Query.wrap(terms)
 

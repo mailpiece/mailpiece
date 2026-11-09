@@ -320,6 +320,15 @@ en:
     one: "Brought 1 subscriber"
     other: "Brought %{count} subscribers"
   posts_results_title: "Results"
+  posts_row_not_sent: "Not sent"
+  posts_row_recipients:
+    one: "%{number} subscriber"
+    other: "%{number} subscribers"
+  posts_row_recipients_some:
+    one: "%{sent} of %{number} subscriber"
+    other: "%{sent} of %{number} subscribers"
+  posts_row_scheduled_with_sending: "With sending to subscribers"
+  posts_row_scheduled_without_sending: "Without sending"
   posts_save_dirty: "Unsaved changes"
   posts_save_draft: "Save draft"
   posts_save_failed: "Not saved"
@@ -336,6 +345,7 @@ en:
   posts_schedule_with_sending_html: "%{time}, with sending to subscribers"
   posts_schedule_without_sending_html: "%{time}, without sending"
   posts_send_test: "Send a test"
+  posts_state_all: "All"
   posts_state_draft: "Drafts"
   posts_state_published: "Published"
   posts_state_scheduled: "Scheduled"

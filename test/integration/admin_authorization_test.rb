@@ -10,6 +10,8 @@ class AdminAuthorizationTest < ActionDispatch::IntegrationTest
     "posts#edit"                           => [ :get,    -> { edit_post_path(posts(:draft)) } ],
     "posts#update"                         => [ :patch,  -> { post_path(posts(:draft)) } ],
     "posts#destroy"                        => [ :delete, -> { post_path(posts(:draft)) } ],
+    "posts/drafts#show"                    => [ :get,    -> { posts_draft_path } ],
+    "posts/scheduleds#show"                => [ :get,    -> { posts_scheduled_path } ],
     "posts/publisheds#show"                => [ :get,    -> { posts_published_path } ],
     "posts/sents#show"                     => [ :get,    -> { posts_sent_path } ],
     "posts/nearbies#show"                  => [ :get,    -> { post_nearby_path(posts(:draft), day: "2026-10-04") } ],

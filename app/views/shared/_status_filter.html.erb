@@ -4,7 +4,7 @@
 <div class="status-filter" data-controller="dialog"
      data-action="keydown.esc->dialog#close:stop click@document->dialog#closeOnClickOutside">
   <button type="button" class="btn" aria-haspopup="dialog" data-action="dialog#toggle">
-    <span><%= current ? current[:title] : t("filter_status") %></span>
+    <span><%= status ? current[:title] : t("filter_status") %></span>
     <%= icon_tag "caret-down" %>
   </button>
 

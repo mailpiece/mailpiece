@@ -27,6 +27,8 @@ namespace :prompts do
 end
 
 namespace :posts do
+  resource :draft, only: :show
+  resource :scheduled, only: :show
   resource :published, only: :show
   resource :sent, only: :show
 end
