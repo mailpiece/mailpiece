@@ -461,6 +461,7 @@ en:
   snippets_title: "Snippets"
   status_active: "Confirmed"
   status_bounced: "Bounced"
+  status_confirmed: "Confirmed"
   status_deactivated: "Stopped"
   status_draft: "Draft"
   status_pending: "Pending"

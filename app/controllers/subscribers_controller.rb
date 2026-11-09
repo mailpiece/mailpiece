@@ -5,8 +5,11 @@ class SubscribersController < ApplicationController
   before_action :set_subscriber, only: %i[ show destroy ]
 
   def index
-    set_page_and_extract_portion_from Current.account.subscribers.active.reverse_chronologically.preloaded
-    fresh_when etag: [ @page.records, Current.account.subscribers, Current.account ]
+    @status = params[:status].presence_in(Subscriber::INDEXES) || "confirmed"
+
+    set_page_and_extract_portion_from Current.account.subscribers.indexed_by(@status).preloaded
+    # The confirmed list counts who is waiting to confirm, so any address can change it.
+    fresh_when etag: [ @page.records, (Current.account.subscribers if @status == "confirmed"), Current.account ]
   end
 
   def show

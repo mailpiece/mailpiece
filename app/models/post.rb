@@ -3,6 +3,7 @@ class Post < ApplicationRecord
 
   EXCERPT_LENGTH = 400
   SUMMARY_LENGTH = 300
+  STATUSES = %w[ all draft scheduled published sent ].freeze
 
   belongs_to :account, default: -> { Current.account }
   belongs_to :creator, class_name: "User", default: -> { Current.user }
@@ -33,6 +34,15 @@ class Post < ApplicationRecord
         .merge(search.except(:select, :order))
     else
       none
+    end
+  end
+  scope :indexed_by, ->(status) do
+    case status
+    when "draft" then drafts.unscheduled.reverse_chronologically
+    when "scheduled" then scheduled.latest_first
+    when "published" then published.on_the_web.recently_published_first
+    when "sent" then sent.recently_published_first
+    else ahead_first
     end
   end
   scope :dated_within, ->(range) { where(dated_at: range) }

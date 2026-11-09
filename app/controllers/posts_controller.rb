@@ -6,15 +6,18 @@ class PostsController < ApplicationController
   before_action :set_release, only: %i[ edit update ]
 
   def index
+    @status = params[:status].presence_in(Post::STATUSES) || "all"
+
     respond_to do |format|
-      format.html do
-        set_page_and_extract_portion_from Current.account.posts.ahead_first.preloaded
-        Current.account.posts.load_delivery_progress @page.records
-      end
+      format.html { set_page_of_posts }
 
       format.json do
-        @drafts = Current.account.posts.drafts.unscheduled.reverse_chronologically.preloaded
-        @scheduled = Current.account.posts.scheduled.latest_first.preloaded
+        if @status == "all"
+          @drafts = Current.account.posts.drafts.unscheduled.reverse_chronologically.preloaded
+          @scheduled = Current.account.posts.scheduled.latest_first.preloaded
+        else
+          set_page_of_posts
+        end
       end
     end
   end
@@ -76,6 +79,11 @@ class PostsController < ApplicationController
     # The editor's bar offers the release, so it is drawn with the count and the destination proposed.
     def set_release
       @release = Post::Release.new(@post)
+    end
+
+    def set_page_of_posts
+      set_page_and_extract_portion_from Current.account.posts.indexed_by(@status).preloaded
+      Current.account.posts.load_delivery_progress @page.records
     end
 
     # The date is taken only for a post already on the web, so a save never publishes a draft.

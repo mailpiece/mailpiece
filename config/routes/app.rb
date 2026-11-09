@@ -26,13 +26,6 @@ namespace :prompts do
   resources :snippets, only: :index
 end
 
-namespace :posts do
-  resource :draft, only: :show
-  resource :scheduled, only: :show
-  resource :published, only: :show
-  resource :sent, only: :show
-end
-
 resources :posts, except: :show do
   scope module: :posts do
     resource :release, only: :create
@@ -80,11 +73,6 @@ namespace :subscribers do
     resource :batch, only: %i[ new create ], module: :imports
   end
   resource :import_template, only: :show
-  resource :active, only: :show
-  resource :unconfirmed, only: :show
-  resource :unsubscribed, only: :show
-  resource :bounced, only: :show
-  resource :deactivated, only: :show
   resources :bounces, only: :create, controller: :address_bounces, format: true, constraints: { format: "json" }
 end
 resources :subscribers, only: %i[ index show create destroy ] do

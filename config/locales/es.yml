@@ -461,6 +461,7 @@ es:
   snippets_title: "Fragmentos"
   status_active: "Confirmó"
   status_bounced: "Rebotó"
+  status_confirmed: "Confirmó"
   status_deactivated: "Envío detenido"
   status_draft: "Borrador"
   status_pending: "Pendiente"

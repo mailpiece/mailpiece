@@ -2,6 +2,7 @@ module Subscriber::Statuses
   extend ActiveSupport::Concern
 
   STATES = %w[ active unconfirmed unsubscribed bounced deactivated ].freeze
+  INDEXES = %w[ confirmed unconfirmed unsubscribed bounced deactivated ].freeze
 
   included do
     scope :active, -> { where(bounced_at: nil, deactivated_at: nil, unsubscribed_at: nil).where.not(confirmed_at: nil) }
@@ -13,6 +14,16 @@ module Subscriber::Statuses
     scope :recently_unsubscribed_first, -> { order(unsubscribed_at: :desc, id: :desc) }
     scope :recently_bounced_first, -> { order(bounced_at: :desc, id: :desc) }
     scope :recently_deactivated_first, -> { order(deactivated_at: :desc, id: :desc) }
+
+    scope :indexed_by, ->(status) do
+      case status
+      when "unconfirmed" then unconfirmed.reverse_chronologically
+      when "unsubscribed" then unsubscribed.recently_unsubscribed_first
+      when "bounced" then bounced.recently_bounced_first
+      when "deactivated" then deactivated.recently_deactivated_first
+      else active.reverse_chronologically
+      end
+    end
   end
 
   def status

@@ -1,23 +1,37 @@
-<%# A link per state, as { status:, title:, path: }; the one whose state is the page's is current and names the button. %>
-<% current = links.find { |link| link[:status] == status } %>
+<%# The states as { status => title }, the list's default first; the button reads the chosen one's title, or the prompt on the default. %>
+<% default = statuses.keys.first %>
 
-<div class="status-filter" data-controller="dialog"
-     data-action="keydown.esc->dialog#close:stop click@document->dialog#closeOnClickOutside">
-  <button type="button" class="btn" aria-haspopup="dialog" data-action="dialog#toggle">
-    <span><%= status ? current[:title] : t("filter_status") %></span>
-    <%= icon_tag "caret-down" %>
-  </button>
+<%= form_with url: url, method: :get, class: "display-contents", data: { controller: "form", turbo_frame: frame, turbo_action: "advance" } do %>
+  <%= tag.div class: class_names("quick-filter", "quick-filter--with-default": status == default),
+        data: {
+          controller: "dialog combobox",
+          action: "keydown.esc->dialog#close:stop click@document->dialog#closeOnClickOutside",
+          combobox_default_value_value: default,
+          combobox_default_label_value: local_assigns[:prompt],
+          combobox_with_default_class: "quick-filter--with-default" } do %>
+    <button type="button" class="btn input input--select flex-inline txt-x-small" data-action="click->dialog#toggle:stop">
+      <span class="overflow-ellipsis" data-combobox-target="label"><%= (local_assigns[:prompt] if status == default) || statuses[status] %></span>
+    </button>
 
-  <dialog class="popup panel shadow txt-small" aria-label="<%= t("filter_status_label") %>" data-dialog-target="dialog">
-    <ul class="popup__list">
-      <% links.each do |link| %>
-        <%= tag.li class: "popup__item", aria: { checked: link == current } do %>
-          <%= link_to link[:path], class: "btn popup__btn", aria: { current: ("page" if link == current) } do %>
-            <span class="overflow-ellipsis flex-item-grow"><%= link[:title] %></span>
-            <%= icon_tag "check", class: "checked" %>
+    <template data-combobox-target="hiddenFieldTemplate">
+      <%= hidden_field_tag :status, nil %>
+    </template>
+
+    <%= filter_dialog t("filter_status_label") do %>
+      <%= filter_title t("filter_status_label") %>
+
+      <ul class="popup__list" role="listbox">
+        <% statuses.each do |value, title| %>
+          <%= tag.li class: "popup__item", data: {
+                navigable_list_target: "item", combobox_target: "item", combobox_value: value, combobox_label: title },
+                role: "checkbox", aria: { checked: status == value } do %>
+            <button type="button" class="btn popup__btn" data-action="dialog#close combobox#change form#submit">
+              <span class="overflow-ellipsis flex-item-grow"><%= title %></span>
+              <%= icon_tag "check", class: "checked flex-item-justify-end" %>
+            </button>
           <% end %>
         <% end %>
-      <% end %>
-    </ul>
-  </dialog>
-</div>
+      </ul>
+    <% end %>
+  <% end %>
+<% end %>

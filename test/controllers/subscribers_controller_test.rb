@@ -63,6 +63,68 @@ class SubscribersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "index offers to choose a status" do
+    get subscribers_path
+
+    assert_select "form[method=get][action=?] input[name=status]", subscribers_path
+  end
+
+  { "unconfirmed" => :unconfirmed, "unsubscribed" => :unsubscribed, "bounced" => :bounced, "deactivated" => :stopped }.each do |status, fixture|
+    test "index by #{status} lists the addresses in that state" do
+      get subscribers_path(status: status)
+
+      assert_response :success
+      assert_match subscribers(fixture).email, response.body
+      assert_no_match subscribers(:active).email, response.body
+    end
+
+    test "index as JSON by #{status} lists the same addresses" do
+      get subscribers_path(status: status), as: :json
+
+      assert_response :success
+      assert_equal [ subscribers(fixture).id ], response.parsed_body.pluck("id")
+    end
+  end
+
+  test "index by bounced lists every address that bounced" do
+    earlier = accounts(:davids_account).subscribers.create!(email: "earlier@example.com", bounced_at: 1.month.ago)
+
+    get subscribers_path(status: "bounced")
+
+    assert_match subscribers(:bounced).email, response.body
+    assert_match earlier.email, response.body
+  end
+
+  %w[ confirmed active nonsense ].each do |status|
+    test "index by #{status} lists the confirmed addresses" do
+      get subscribers_path(status: status)
+
+      assert_response :success
+      assert_match subscribers(:active).email, response.body
+      assert_no_match subscribers(:unconfirmed).email, response.body
+    end
+  end
+
+  test "index by a state other than confirmed keeps its cache when an address it does not list changes" do
+    get subscribers_path(status: "bounced")
+    etag = response.headers["ETag"]
+
+    subscribers(:active).touch
+
+    get subscribers_path(status: "bounced"), headers: { "If-None-Match" => etag }
+    assert_response :not_modified
+  end
+
+  test "index by a state other than confirmed invalidates its cache when an address it lists changes" do
+    get subscribers_path(status: "deactivated")
+    etag = response.headers["ETag"]
+
+    subscribers(:stopped).update!(deactivated_at: 1.day.ago)
+
+    get subscribers_path(status: "deactivated"), headers: { "If-None-Match" => etag }
+    assert_response :success
+  end
+
   test "show" do
     get subscriber_path(subscribers(:active))
 
