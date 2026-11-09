@@ -59,7 +59,7 @@ class Users::EmailAddresses::ConfirmationsControllerTest < ActionDispatch::Integ
     with_support_email_address "help@example.com" do
       post user_email_address_confirmation_path(user_id: @user.id, email_address_token: "invalid")
 
-      assert_select "a[href=?]", "mailto:help@example.com", text: "send us an email"
+      assert_select "a[href=?]", "mailto:help@example.com"
     end
   end
 

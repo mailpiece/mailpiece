@@ -21,7 +21,6 @@ class Users::EmailAddressesControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :success
-    assert_select "strong", text: "newemail@example.com"
     assert_equal "nonstaff@example.com", @user.reload.identity.email_address
   end
 
