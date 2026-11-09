@@ -19,4 +19,24 @@ class Subscribers::DeactivatedsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal [ subscribers(:stopped).id ], response.parsed_body.pluck("id")
   end
+
+  test "show keeps its cache when an address it does not list changes" do
+    get subscribers_deactivated_path
+    etag = response.headers["ETag"]
+
+    subscribers(:active).touch
+
+    get subscribers_deactivated_path, headers: { "If-None-Match" => etag }
+    assert_response :not_modified
+  end
+
+  test "show invalidates its cache when an address it lists changes" do
+    get subscribers_deactivated_path
+    etag = response.headers["ETag"]
+
+    subscribers(:stopped).update!(deactivated_at: 1.day.ago)
+
+    get subscribers_deactivated_path, headers: { "If-None-Match" => etag }
+    assert_response :success
+  end
 end
