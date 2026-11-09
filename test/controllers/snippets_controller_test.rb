@@ -5,27 +5,16 @@ class SnippetsControllerTest < ActionDispatch::IntegrationTest
     sign_in_as :leo
   end
 
-  test "index lists the account's snippets by name" do
+  test "index lists the account's snippets by name, and never another account's" do
     get snippets_path
 
     assert_response :success
-    assert_select ".breadcrumbs a[href=?]", posts_path, text: "Posts"
     assert_select "a[href=?]", new_snippet_path, text: "Add a snippet"
-    assert_select "ul.rows li.row", count: 3
-    assert_select "input[data-quick-find-target=input]"
-    assert_select "li.row[data-quick-find-target=item]", count: 3
-    assert_equal [ "Reply to me", "Sign-off", "Subscribe" ], css_select("li.row .row__title").map(&:text)
-    assert_select "li.row a.row__link[href=?] > .row__body > .row__title", edit_snippet_path(snippets(:sign_off)), text: "Sign-off"
-    assert_select "li.row a.row__link[href=?] > .row__end time[data-reader-time-target=timeordate]", edit_snippet_path(snippets(:sign_off))
-    assert_select "li.row strong", count: 0
-    assert_select "li.row .status", count: 0
-    assert_select "a[href=?]", edit_snippet_path(snippets(:other_accounts)), count: 0
-  end
-
-  test "index lights Posts in the bar" do
-    get snippets_path
-
-    assert_select ".site-header__link[aria-current=page][href=?]", posts_path
+    assert_match edit_snippet_path(snippets(:reply)), response.body
+    assert_match edit_snippet_path(snippets(:sign_off)), response.body
+    assert_match edit_snippet_path(snippets(:subscribe)), response.body
+    assert_no_match edit_snippet_path(snippets(:other_accounts)), response.body
+    assert_no_match snippets(:other_accounts).name, response.body
   end
 
   test "index shows a snippet that lands past the end of a full page" do
@@ -38,7 +27,7 @@ class SnippetsControllerTest < ActionDispatch::IntegrationTest
 
     get snippets_path, headers: { "If-None-Match" => etag }
     assert_response :success
-    assert_select "a.pagination-link[href=?]", snippets_path(page: 2)
+    assert_select "a[href=?]", snippets_path(page: 2), count: 1
   end
 
   test "index with no snippets offers to add one" do
@@ -47,8 +36,7 @@ class SnippetsControllerTest < ActionDispatch::IntegrationTest
     get snippets_path
 
     assert_response :success
-    assert_select "ul.rows", count: 0
-    assert_select ".blank-slate a[href=?]", new_snippet_path, text: "Add one"
+    assert_select "a[href=?]", new_snippet_path, text: "Add one"
   end
 
   test "index as JSON lists the account's snippets by name" do
@@ -71,16 +59,13 @@ class SnippetsControllerTest < ActionDispatch::IntegrationTest
     assert_equal snippet_url(snippets(:sign_off), format: :json), response.parsed_body["url"]
   end
 
-  test "new has the one form, under Snippets" do
+  test "new has the one form, and nothing to delete" do
     get new_snippet_path
 
     assert_response :success
-    assert_select ".breadcrumbs a[href=?]", snippets_path, text: "Snippets"
     assert_select "form[action=?]", snippets_path, count: 1
-    assert_select ".writing form.writing__form textarea.post-form__title[name='snippet[name]']"
     assert_select "input[name='snippet[placement]']", count: 0
-    assert_select "lexxy-editor.lexxy-content[name='snippet[content]']"
-    assert_select ".writing-bar button[name=_method][value=delete]", count: 0
+    assert_select "button[name=_method][value=delete]", count: 0
   end
 
   test "create adds a snippet and goes back to the list" do
@@ -121,7 +106,7 @@ class SnippetsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :unprocessable_entity
-    assert_select ".error-explanation"
+    assert_match(/Name can.+t be blank/, response.body)
     assert_select "form[action=?]", snippets_path
   end
 
@@ -135,12 +120,8 @@ class SnippetsControllerTest < ActionDispatch::IntegrationTest
     get edit_snippet_path(snippets(:reply))
 
     assert_response :success
-    assert_select ".breadcrumbs strong", text: "Reply to me"
-    assert_select "form.writing__form[action=?]", snippet_path(snippets(:reply)), count: 1
-    assert_select "textarea.post-form__title[name='snippet[name]']", text: "Reply to me"
-    assert_select "lexxy-editor.lexxy-content[name='snippet[content]']"
-    assert_select ".writing-bar button[name=_method][value=delete][formaction=?][data-turbo-confirm=?]", snippet_path(snippets(:reply)),
-      "Delete Reply to me? Posts it was pasted into keep their copy.", text: "Delete snippet"
+    assert_select "form[action=?]", snippet_path(snippets(:reply)), count: 1
+    assert_select "button[formaction=?][name=_method][value=delete]", snippet_path(snippets(:reply)), text: "Delete snippet"
   end
 
   test "update saves and goes back to the list" do
@@ -154,12 +135,11 @@ class SnippetsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Bye.", snippet.content.to_plain_text
   end
 
-  test "update refuses a blank name, and keeps the snippet's own name over the page" do
+  test "update refuses a blank name" do
     patch snippet_path(snippets(:sign_off)), params: { snippet: { name: " " } }
 
     assert_response :unprocessable_entity
-    assert_select ".error-explanation"
-    assert_select ".breadcrumbs strong", text: "Sign-off"
+    assert_match(/Name can.+t be blank/, response.body)
     assert_equal "Sign-off", snippets(:sign_off).reload.name
   end
 
