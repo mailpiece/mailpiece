@@ -23,11 +23,11 @@ class SubscribersControllerTest < ActionDispatch::IntegrationTest
     get subscribers_path
 
     assert_select "li##{dom_id(subscribers(:active))}.row" do
-      assert_select "a[href=?].display-contents", subscriber_path(subscribers(:active)), count: 1
+      assert_select "a.row__link[href=?]", subscriber_path(subscribers(:active)), count: 1
       assert_select "a > .avatar", text: "AD"
-      assert_select "a > .row__body > .row__title:not(strong)", text: "ada@example.com"
+      assert_select "a.row__link > .row__body > .row__title:not(strong)", text: "ada@example.com"
       assert_select "a > .row__body > .row__meta", text: /\ASubscribed .*from example\.com\z/m
-      assert_select "a > .row__end time[datetime=?][data-reader-time-target=timeordate]", subscribers(:active).confirmed_at.to_i.to_s
+      assert_select "a.row__link > .row__end time[datetime=?][data-reader-time-target=timeordate]", subscribers(:active).confirmed_at.to_i.to_s
       assert_select "a > .row__end time + .status.status--muted", text: "Confirmed"
       assert_select "strong", count: 0
     end
@@ -41,17 +41,17 @@ class SubscribersControllerTest < ActionDispatch::IntegrationTest
     assert_select "li##{dom_id(subscribers(:active))} .row__meta", text: /\ASubscribed .*from “Three deadlines in March”\z/m
   end
 
-  test "index offers each state in a status menu, the confirmed first, each with its count and none current" do
+  test "index offers each state in a status menu, the confirmed first and current, each with its count" do
     get subscribers_path
 
-    assert_select ".filter-bar .status-filter button", text: "Status…"
+    assert_select ".filter-bar .status-filter button", text: "Confirmed"
     assert_select ".status-filter dialog a", count: 5
-    assert_select ".status-filter dialog li:first-child a[href=?]", subscribers_active_path, text: /\AConfirmed\s*1\z/
+    assert_select ".status-filter dialog li:first-child a[href=?][aria-current=page]", subscribers_active_path, text: /\AConfirmed\s*1\z/
     assert_select ".status-filter a[href=?]", subscribers_unconfirmed_path, text: /\AUnconfirmed\s*1\z/
     assert_select ".status-filter a[href=?]", subscribers_unsubscribed_path, text: /\AUnsubscribed\s*1\z/
     assert_select ".status-filter a[href=?]", subscribers_bounced_path, text: /\ABounced\s*1\z/
     assert_select ".status-filter a[href=?]", subscribers_deactivated_path, text: /\AStopped\s*1\z/
-    assert_select ".status-filter a[aria-current]", count: 0
+    assert_select ".status-filter a[aria-current]", count: 1
   end
 
   test "index with no confirmed address still offers the status menu" do
@@ -59,7 +59,8 @@ class SubscribersControllerTest < ActionDispatch::IntegrationTest
 
     get subscribers_path
 
-    assert_select ".blank-slate", text: "No subscribers here."
+    assert_select ".blank-slate", text: "Nobody has confirmed yet · 1 waiting to confirm"
+    assert_select ".blank-slate a[href=?]", subscribers_unconfirmed_path, text: "1 waiting to confirm"
     assert_select ".status-filter a[href=?]", subscribers_unconfirmed_path
   end
 

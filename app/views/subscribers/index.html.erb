@@ -12,7 +12,7 @@
 <% end %>
 
 <% if Current.account.subscribers.exists? %>
-  <%= render "subscribers/list", page: @page %>
+  <%= render "subscribers/list", page: @page, status: :active %>
 <% else %>
   <div class="page flex flex-column gap">
     <div class="blank-slate fit-content center"><%= t "subscribers_empty_html", link: link_to(t("subscribers_empty_link"), new_subscribers_batch_path) %></div>
