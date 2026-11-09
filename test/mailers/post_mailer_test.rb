@@ -155,7 +155,7 @@ class PostMailerTest < ActionMailer::TestCase
     assert_includes html.at_css("figure > a > span")["style"], "border"
     assert_equal "Watch the video", html.at_css("figure figcaption a").text
     assert_empty html.css("video")
-    assert_match %r{\[clip\.mp4\]\(\S+#{Regexp.escape(post_address)}\)}, email.text_part.body.to_s
+    assert_match %r{clip\.mp4 \[\S+#{Regexp.escape(post_address)}\]}, email.text_part.body.to_s
   end
 
   test "issue of an email-only post links an attached video to its file" do
@@ -164,7 +164,7 @@ class PostMailerTest < ActionMailer::TestCase
     link = Nokogiri::HTML5.fragment(email.html_part.body.to_s).at_css("figure > a")
 
     assert_includes link["href"], "/rails/active_storage/blobs/proxy/"
-    assert_match %r{\[clip\.mp4\]\(\S+/rails/active_storage/blobs/proxy/}, email.text_part.body.to_s
+    assert_match %r{clip\.mp4 \[\S+/rails/active_storage/blobs/proxy/}, email.text_part.body.to_s
   end
 
   test "issue shows a paragraph that is only a YouTube link as its thumbnail" do
@@ -199,7 +199,7 @@ class PostMailerTest < ActionMailer::TestCase
     assert_equal "https://youtu.be/dQw4w9WgXcQ", image.parent["href"]
     assert_equal "My <video>", Nokogiri::HTML5.fragment(email.html_part.body.to_s).at_css("figure figcaption a").text
     assert_not_includes email.html_part.body.to_s, "Watch the video"
-    assert_includes email.text_part.body.to_s, "https://youtu.be/dQw4w9WgXcQ"
+    assert_includes email.text_part.body.to_s, "My <video> [https://youtu.be/dQw4w9WgXcQ]"
   end
 
   test "issue keeps a YouTube link inside a sentence as a link" do
@@ -294,15 +294,23 @@ class PostMailerTest < ActionMailer::TestCase
     assert_equal "mailto:leo@newsletter.example", links["Write"]
     assert_includes links["View on the web"], @post.public_param
 
-    assert_includes text, "[Sign up here](#{public_link_address("7k2m9qxa")})"
-    assert_includes text, "[the handbook](#{public_link_address("4d8w1zpc")})"
-    assert_includes text, "[this](https://example.org/other)"
+    assert_includes text, "Sign up here [#{public_link_address("7k2m9qxa")}], read the handbook [#{public_link_address("4d8w1zpc")}] " \
+      "or this [https://example.org/other]. Write [leo@newsletter.example]."
     assert_includes text, @unsubscribe_path
 
     [ html, text ].each do |part|
       assert_not_includes part, "https://forms.example.com/training"
       assert_not_includes part, "https://example.com/handbook/ladders"
     end
+  end
+
+  test "issue's text part reads as written, with each web or mail address after its link's text" do
+    @post.update! body: %(<p>Hello *world*, snake_case &amp; <a href="https://example.org/?x=1&amp;y=2">our site</a>, ) +
+      %(<a href="https://example.org/">https://example.org/</a>, <a href="mailto:leo@newsletter.example">leo@newsletter.example</a> ) +
+      %(and <a href="tel:+15550100">a call</a>.</p>)
+
+    assert_includes PostMailer.issue(@post, @subscriber).text_part.body.to_s,
+      "Hello *world*, snake_case & our site [https://example.org/?x=1&y=2], https://example.org/, leo@newsletter.example and a call."
   end
 
   test "issue builds a redirect in its own account with no account set" do
@@ -319,7 +327,7 @@ class PostMailerTest < ActionMailer::TestCase
     email = PostMailer.test_issue(posts(:draft), "editor@example.com")
 
     assert_includes email.html_part.body.to_s, %(href="https://forms.example.com/training")
-    assert_includes email.text_part.body.to_s, "[Sign up here](https://forms.example.com/training)"
+    assert_includes email.text_part.body.to_s, "Sign up here [https://forms.example.com/training]"
     assert_not_includes email.html_part.body.to_s, "/link/"
     assert_not_includes email.text_part.body.to_s, "/link/"
   end

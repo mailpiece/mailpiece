@@ -1,20 +1,3 @@
-# Never serve a blob inline with a media type a browser or Turbo will execute as
-# markup. Turbo's frame renderer treats a whole family of declared types as HTML
-# (FetchResponse#isHTML is /^(?:text\/([^\s;,]+\b)?html|application\/xhtml\+xml)\b/,
-# so "text/x-html" or "text/html;charset=utf-8" count), and Content-Disposition
-# does not stop Turbo's fetch. This mirrors that matcher case-insensitively and
-# adds the scriptable SVG/XML types, so every such blob is forced to
-# application/octet-stream.
-ActiveStorage::DANGEROUS_INLINE_MEDIA_TYPE = %r{
-  \A(?:
-      text/(?:[^\s;,]+\b)?html
-    | application/xhtml\+xml
-    | image/svg\+xml
-    | application/xml
-    | text/xml
-  )\b
-}xi
-
 ActiveSupport.on_load :active_storage_blob do
   def accessible_to?(user)
     attached = attachments.includes(:record).to_a
@@ -35,17 +18,6 @@ ActiveSupport.on_load :active_storage_blob do
     # between direct upload and attachment, by a user of the blob's own account.
     def unattached_accessible_to?(user)
       user.present? && account_id == user.account_id
-    end
-
-    def forcibly_serve_as_binary?
-      super || dangerous_inline_media_type?
-    end
-
-    def dangerous_inline_media_type?
-      declared = content_type.to_s.strip
-      # A legitimate media type is ASCII. Forcing every non-ASCII one to binary also
-      # keeps Ruby's Unicode \b congruent with Turbo's ASCII \b ("text/htmlé").
-      !declared.ascii_only? || ActiveStorage::DANGEROUS_INLINE_MEDIA_TYPE.match?(declared)
     end
 end
 
