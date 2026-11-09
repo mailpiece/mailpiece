@@ -1,13 +1,11 @@
 module PostsHelper
   def posts_status_links
-    posts = Current.account.posts
-
     [
-      { status: nil, title: t("posts_state_all"), path: posts_path, count: posts.count },
-      { status: :draft, title: t("posts_state_draft"), path: posts_draft_path, count: posts.drafts.unscheduled.count },
-      { status: :scheduled, title: t("posts_state_scheduled"), path: posts_scheduled_path, count: posts.scheduled.count },
-      { status: :published, title: t("posts_state_published"), path: posts_published_path, count: posts.published.on_the_web.count },
-      { status: :sent, title: t("posts_state_sent"), path: posts_sent_path, count: posts.sent.count }
+      { status: nil, title: t("posts_state_all"), path: posts_path },
+      { status: :draft, title: t("posts_state_draft"), path: posts_draft_path },
+      { status: :scheduled, title: t("posts_state_scheduled"), path: posts_scheduled_path },
+      { status: :published, title: t("posts_state_published"), path: posts_published_path },
+      { status: :sent, title: t("posts_state_sent"), path: posts_sent_path }
     ]
   end
 

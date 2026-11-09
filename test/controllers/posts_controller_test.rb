@@ -86,16 +86,16 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_select "ul.rows li.row", count: 1
   end
 
-  test "index offers each state in a status menu, all of them first and current, each with its count" do
+  test "index offers each state in a status menu, all of them first and current" do
     get posts_path
 
     assert_select ".filter-bar .status-filter button", text: "Status…"
     assert_select ".status-filter dialog a", count: 5
-    assert_select ".status-filter dialog li:first-child a[href=?][aria-current=page]", posts_path, text: /\AAll\s*5\z/
-    assert_select ".status-filter a[href=?]", posts_draft_path, text: /\ADrafts\s*1\z/
-    assert_select ".status-filter a[href=?]", posts_scheduled_path, text: /\AScheduled\s*1\z/
-    assert_select ".status-filter a[href=?]", posts_published_path, text: /\APublished\s*2\z/
-    assert_select ".status-filter a[href=?]", posts_sent_path, text: /\ASent\s*2\z/
+    assert_select ".status-filter dialog li:first-child a[href=?][aria-current=page]", posts_path, text: "All"
+    assert_select ".status-filter a[href=?]", posts_draft_path, text: "Drafts"
+    assert_select ".status-filter a[href=?]", posts_scheduled_path, text: "Scheduled"
+    assert_select ".status-filter a[href=?]", posts_published_path, text: "Published"
+    assert_select ".status-filter a[href=?]", posts_sent_path, text: "Sent"
     assert_select ".status-filter a[aria-current]", count: 1
   end
 
