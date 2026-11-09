@@ -1,1 +1,2 @@
-<%= render "shared/status_filter", status: status, links: posts_status_links %>
+<%= render "shared/status_filter", url: posts_path, frame: :posts_results, status: status, prompt: t("filter_status"),
+      statuses: Post::STATUSES.index_with { t("posts_state_#{it}") } %>

@@ -31,7 +31,72 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     get posts_path
 
     assert_select ".blank-slate a[href=?]", new_post_path
-    assert_select ".status-filter", count: 0
+    assert_select "form[method=get][action=?]", posts_path, count: 0
+  end
+
+  test "index offers to choose a status" do
+    get posts_path
+
+    assert_select "form[method=get][action=?] input[name=status]", posts_path
+  end
+
+  test "index by drafts lists the drafts that are not scheduled" do
+    get posts_path(status: "draft")
+
+    assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:draft))}"
+    assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:scheduled))}", count: 0
+    assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:unlisted))}", count: 0
+  end
+
+  test "index by scheduled lists what is scheduled, from the latest to the soonest as JSON" do
+    posts(:draft).schedule(at: 2.days.from_now)
+
+    get posts_path(status: "scheduled")
+    assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:draft))}"
+    assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:scheduled))}"
+    assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:sent))}", count: 0
+
+    get posts_path(status: "scheduled"), as: :json
+    assert_equal [ posts(:draft).id, posts(:scheduled).id ], response.parsed_body.pluck("id")
+  end
+
+  test "index by published lists what is published with a page, mailed or not" do
+    get posts_path(status: "published")
+
+    assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:unlisted))}"
+    assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:sent))}"
+    assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:draft))}", count: 0
+    assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:email_only))}", count: 0
+
+    get posts_path(status: "published"), as: :json
+    assert_equal [ posts(:unlisted).id, posts(:sent).id ], response.parsed_body.pluck("id")
+  end
+
+  test "index by sent lists what was mailed" do
+    get posts_path(status: "sent")
+
+    assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:sent))}"
+    assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:draft))}", count: 0
+
+    get posts_path(status: "sent"), as: :json
+    assert_equal accounts(:davids_account).posts.sent.recently_published_first.ids, response.parsed_body.pluck("id")
+  end
+
+  test "index by a status with nothing in it lists no post" do
+    accounts(:davids_account).posts.sent.destroy_all
+
+    get posts_path(status: "sent")
+
+    assert_response :success
+    assert_select "li[id^=post_]", count: 0
+  end
+
+  test "index by an unknown status lists every post" do
+    get posts_path(status: "nonsense")
+
+    assert_response :success
+    assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:draft))}"
+    assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:sent))}"
   end
 
   test "index as JSON lists what is ahead, the drafts newest first and then the scheduled posts, nothing published or sent" do
@@ -41,6 +106,13 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_equal [ newer_draft.id, posts(:draft).id, posts(:scheduled).id ], response.parsed_body.pluck("id")
+  end
+
+  test "index as JSON by an unknown status lists what is ahead" do
+    get posts_path(status: "nonsense"), as: :json
+
+    assert_response :success
+    assert_equal [ posts(:draft).id, posts(:scheduled).id ], response.parsed_body.pluck("id")
   end
 
   test "index as JSON gives no counts" do

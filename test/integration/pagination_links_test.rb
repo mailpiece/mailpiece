@@ -22,25 +22,28 @@ class PaginationLinksTest < ActionDispatch::IntegrationTest
     QUERIES_NAMING_URL_FOR_OPTIONS.each { |query| assert_next_page_stays_on root_path, **query }
   end
 
-  { "published" => :posts_published_path, "sent" => :posts_sent_path }.each do |name, page|
-    test "#{name} posts page's next-page link stays on its own route" do
+  %w[ published sent ].each do |status|
+    test "#{status} posts page's next-page link stays on its own route and keeps the status" do
       paginate :posts
       sign_in_as :leo
 
-      assert_next_page_stays_on public_send(page)
-      QUERIES_NAMING_URL_FOR_OPTIONS.each { |query| assert_next_page_stays_on public_send(page), **query }
+      [ {}, *QUERIES_NAMING_URL_FOR_OPTIONS ].each do |query|
+        assert_next_page_stays_on posts_path, status: status, **query
+        assert_equal status, next_page_query["status"]
+      end
     end
   end
 
-  { "active" => [ :active, :subscribers_active_path ],
-    "unconfirmed" => [ :unconfirmed, :subscribers_unconfirmed_path ], "unsubscribed" => [ :unsubscribed, :subscribers_unsubscribed_path ],
-    "bounced" => [ :bounced, :subscribers_bounced_path ], "deactivated" => [ :deactivated, :subscribers_deactivated_path ] }.each do |name, (status, page)|
-    test "#{name} page's next-page link stays on its own route" do
-      paginate status
+  { "confirmed" => :active, "unconfirmed" => :unconfirmed, "unsubscribed" => :unsubscribed,
+    "bounced" => :bounced, "deactivated" => :deactivated }.each do |status, kind|
+    test "#{status} subscribers page's next-page link stays on its own route and keeps the status" do
+      paginate kind
       sign_in_as :leo
 
-      assert_next_page_stays_on public_send(page)
-      QUERIES_NAMING_URL_FOR_OPTIONS.each { |query| assert_next_page_stays_on public_send(page), **query }
+      [ {}, *QUERIES_NAMING_URL_FOR_OPTIONS ].each do |query|
+        assert_next_page_stays_on subscribers_path, status: status, **query
+        assert_equal status, next_page_query["status"]
+      end
     end
   end
 

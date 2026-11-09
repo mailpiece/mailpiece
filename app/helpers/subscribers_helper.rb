@@ -1,22 +1,12 @@
 module SubscribersHelper
-  def subscribers_status_links
-    [
-      { status: :active, title: t("status_active"), path: subscribers_active_path },
-      { status: :unconfirmed, title: t("status_unconfirmed"), path: subscribers_unconfirmed_path },
-      { status: :unsubscribed, title: t("status_unsubscribed"), path: subscribers_unsubscribed_path },
-      { status: :bounced, title: t("status_bounced"), path: subscribers_bounced_path },
-      { status: :deactivated, title: t("status_deactivated"), path: subscribers_deactivated_path }
-    ]
-  end
-
   # The confirmed list is the one the screen opens on, so with nobody confirmed it says who is waiting and where.
   def subscribers_empty_message(status)
-    if status == :active
+    if status == "confirmed"
       waiting = Current.account.subscribers.unconfirmed.count
 
       safe_join [
         tag.strong(t("subscribers_empty_confirmed")),
-        (link_to(t("subscribers_empty_waiting", count: waiting, number: number_with_delimiter(waiting)), subscribers_unconfirmed_path) if waiting.positive?)
+        (link_to(t("subscribers_empty_waiting", count: waiting, number: number_with_delimiter(waiting)), subscribers_path(status: "unconfirmed")) if waiting.positive?)
       ].compact, " · "
     else
       tag.strong t("subscribers_empty_filtered")

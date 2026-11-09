@@ -1,14 +1,4 @@
 module PostsHelper
-  def posts_status_links
-    [
-      { status: nil, title: t("posts_state_all"), path: posts_path },
-      { status: :draft, title: t("posts_state_draft"), path: posts_draft_path },
-      { status: :scheduled, title: t("posts_state_scheduled"), path: posts_scheduled_path },
-      { status: :published, title: t("posts_state_published"), path: posts_published_path },
-      { status: :sent, title: t("posts_state_sent"), path: posts_sent_path }
-    ]
-  end
-
   def post_title(post)
     post.title.presence || t("untitled")
   end
