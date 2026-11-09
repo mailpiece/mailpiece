@@ -46,11 +46,6 @@
     }
   }
 
-  /* Rows that lead to another list are not what a filter searches, so they go while one is typed. */
-  [data-filtering] .rows--links {
-    display: none;
-  }
-
   /* :has cannot sit inside :has, so the heading goes with its section when a filter leaves no row in it. */
   .rows__section:not(:has(.row:not([hidden]))) {
     display: none;
