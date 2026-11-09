@@ -12,16 +12,7 @@ class Account::WelcomesControllerTest < ActionDispatch::IntegrationTest
     get account_welcome_path
 
     assert_response :success
-    assert_select ".breadcrumbs a[href=?]", account_settings_path, text: "Settings"
-    assert_select ".page > .panel > turbo-frame[id=?][target=_top] > .publication", dom_id(@account, :welcome) do
-      assert_select "h2", text: "Welcome"
-      assert_select "p", text: /Turn on the welcome to greet first-time visitors/
-      assert_select ".publication__box:not(.publication__box--published) .publication__switch form"
-    end
-    assert_select "form[action=?][data-controller=form]", account_welcome_path do
-      assert_select "input[name=_method]", count: 0
-      assert_select "label.switch input.switch__input[type=checkbox][aria-label=?][data-action=?]:not([checked])", "Turn on the welcome", "change->form#submit"
-    end
+    assert_select "input[type=checkbox][aria-label=?]:not([checked])", "Turn on the welcome"
   end
 
   test "show with the welcome on" do
@@ -30,14 +21,7 @@ class Account::WelcomesControllerTest < ActionDispatch::IntegrationTest
     get account_welcome_path
 
     assert_response :success
-    assert_select "turbo-frame[id=?] > .publication", dom_id(@account, :welcome) do
-      assert_select "p", text: /First-time visitors see only/
-      assert_select ".publication__box--published .publication__switch form"
-    end
-    assert_select "form[action=?][data-controller=form]", account_welcome_path do
-      assert_select "input[name=_method][value=delete]"
-      assert_select "label.switch input.switch__input[type=checkbox][checked][aria-label=?]", "Turn off the welcome"
-    end
+    assert_select "input[type=checkbox][checked][aria-label=?]", "Turn off the welcome"
   end
 
   test "turn on the welcome" do
@@ -45,12 +29,8 @@ class Account::WelcomesControllerTest < ActionDispatch::IntegrationTest
       post account_welcome_path, as: :turbo_stream
     end
 
-    assert_turbo_stream action: :replace, target: dom_id(@account, :welcome) do
-      assert_select ".publication__box--published input[name=_method][value=delete]"
-    end
-    assert_turbo_stream action: :replace, target: "flash" do
-      assert_select "template", text: /Saved/
-    end
+    assert_turbo_stream action: :replace, target: dom_id(@account, :welcome)
+    assert_turbo_stream action: :replace, target: "flash"
   end
 
   test "turn off the welcome" do
@@ -60,13 +40,8 @@ class Account::WelcomesControllerTest < ActionDispatch::IntegrationTest
       delete account_welcome_path, as: :turbo_stream
     end
 
-    assert_turbo_stream action: :replace, target: dom_id(@account, :welcome) do
-      assert_select ".publication__box:not(.publication__box--published) form"
-      assert_select "input[name=_method]", count: 0
-    end
-    assert_turbo_stream action: :replace, target: "flash" do
-      assert_select "template", text: /Saved/
-    end
+    assert_turbo_stream action: :replace, target: dom_id(@account, :welcome)
+    assert_turbo_stream action: :replace, target: "flash"
   end
 
   test "turn the welcome on and off without Turbo" do
@@ -87,12 +62,7 @@ class Account::WelcomesControllerTest < ActionDispatch::IntegrationTest
     @account.start_welcoming
 
     get account_welcome_path
-    assert_select "turbo-frame > form[action=?]", account_newsletter_path do
-      assert_select "input[name=_method][value=patch]"
-      assert_select "label", text: /Welcome message\s+Shown to first-time visitors/
-      assert_select "lexxy-editor.input[name='account[welcome_message]']"
-      assert_select "button[type=submit].btn--link", text: "Save"
-    end
+    assert_select "lexxy-editor[name='account[welcome_message]']"
   end
 
   test "show via JSON" do

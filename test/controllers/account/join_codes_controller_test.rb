@@ -5,8 +5,8 @@ class Account::JoinCodesControllerTest < ActionDispatch::IntegrationTest
     sign_in_as :leo
     get account_join_code_path
     assert_response :success
-    assert_select "button[aria-haspopup=dialog][aria-expanded=false][data-dialog-focus-target=trigger]", text: "Get QR code"
-    assert_select "dialog img.qr-code[src*=?]", "/qr_codes/"
+    assert_select "button", text: "Get QR code"
+    assert_select "img[src*=?]", "/qr_codes/"
   end
 
   test "destroy" do

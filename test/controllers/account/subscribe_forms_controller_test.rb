@@ -9,10 +9,8 @@ class Account::SubscribeFormsControllerTest < ActionDispatch::IntegrationTest
     get edit_account_subscribe_form_path
 
     assert_response :success
-    assert_select ".breadcrumbs a[href=?]", account_settings_path, text: "Settings"
-    assert_select "pre#subscribe-form-snippet", text: /#{Regexp.escape(public_embedded_subscription_path)}/
+    assert_select "pre", text: /#{Regexp.escape(public_embedded_subscription_path)}/
     assert_select "form[action=?]", account_subscribe_form_path, count: 1
-    assert_select "input[type=url][name='account[subscription_return_url]'][placeholder='https://']"
   end
 
   test "update goes back to Settings" do

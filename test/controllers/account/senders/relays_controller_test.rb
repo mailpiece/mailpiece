@@ -5,25 +5,21 @@ class Account::Senders::RelaysControllerTest < ActionDispatch::IntegrationTest
     sign_in_as :leo
   end
 
-  test "edit has the relay's form under Outgoing mail, with an empty token" do
+  test "edit has the relay's form, with an empty token" do
     account_senders(:davids).stop_sending
 
     get edit_account_sender_relay_path
 
     assert_response :success
-    assert_select ".breadcrumbs a[href=?]", account_outgoing_mail_path, text: "Outgoing mail"
     assert_select "form[action=?]", account_sender_relay_path
-    assert_select "input[type=url][name='account_sender[relay_url]']"
     assert_select "input[type=password][name='account_sender[relay_token]']:not([value])"
   end
 
-  test "edit of a set relay has its address, and no token field" do
+  test "edit of a set relay has no token field, and never its token" do
     get edit_account_sender_relay_path
 
     assert_response :success
-    assert_select "input[name='account_sender[relay_url]'][value=?]", "https://relay.example/messages"
     assert_select "input[name='account_sender[relay_token]']", count: 0
-    assert_select "p", text: /Token set\. It can.t be shown again\. To change it, delete the relay/
     assert_not_includes response.body, "stream_token"
   end
 

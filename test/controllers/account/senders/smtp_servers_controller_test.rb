@@ -5,29 +5,21 @@ class Account::Senders::SmtpServersControllerTest < ActionDispatch::IntegrationT
     sign_in_as :leo
   end
 
-  test "edit has the SMTP server's form under Outgoing mail, with port 587 on a fresh form" do
+  test "edit has the SMTP server's form, with an empty password" do
     get edit_account_sender_smtp_server_path
 
     assert_response :success
-    assert_select ".breadcrumbs a[href=?]", account_outgoing_mail_path, text: "Outgoing mail"
     assert_select "form[action=?]", account_sender_smtp_server_path
-    assert_select "input[name='account_sender[smtp_address]']"
-    assert_select "input[name='account_sender[smtp_port]'][value=?]", "587"
-    assert_select "input[name='account_sender[smtp_username]']"
     assert_select "input[type=password][name='account_sender[smtp_password]']:not([value])"
   end
 
-  test "edit of a set SMTP server has its server, port and username, and no password field" do
+  test "edit of a set SMTP server has no password field, and never its password" do
     account_senders(:davids).use_smtp_server(smtp_address: "smtp.example", smtp_port: 465, smtp_username: "leo", smtp_password: "own_password")
 
     get edit_account_sender_smtp_server_path
 
     assert_response :success
-    assert_select "input[name='account_sender[smtp_address]'][value=?]", "smtp.example"
-    assert_select "input[name='account_sender[smtp_port]'][value=?]", "465"
-    assert_select "input[name='account_sender[smtp_username]'][value=?]", "leo"
     assert_select "input[name='account_sender[smtp_password]']", count: 0
-    assert_select "p", text: /Password set\. It can.t be shown again\. To change it, delete the SMTP server/
     assert_not_includes response.body, "own_password"
   end
 

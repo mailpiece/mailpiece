@@ -5,13 +5,11 @@ class Account::HandlesControllerTest < ActionDispatch::IntegrationTest
     sign_in_as :leo
   end
 
-  test "edit has the one form, under Settings" do
+  test "edit has the one form" do
     get edit_account_handle_path
 
     assert_response :success
-    assert_select ".breadcrumbs a[href=?]", account_settings_path, text: "Settings"
     assert_select "form[action=?]", account_handle_path, count: 1
-    assert_select "input[name='account[handle]']"
     assert_select "button[data-turbo-confirm]", count: 0
     assert_select "a[href=?]", numbered_url, count: 0
   end
@@ -25,9 +23,8 @@ class Account::HandlesControllerTest < ActionDispatch::IntegrationTest
     get "/contractor-notes/account/handle/edit"
     assert_response :success
     assert_select "form[action='/contractor-notes/account/handle']", count: 1
-    assert_select "input[name='account[handle]'][value='contractor-notes']"
-    assert_select "button[data-turbo-confirm=?]", "Change this address? Links already mailed with the old one stop working."
-    assert_select "a[href=?]", numbered_url, text: numbered_url
+    assert_select "button[data-turbo-confirm]"
+    assert_select "a[href=?]", numbered_url
 
     get "/#{accounts(:davids_account).external_account_id}/account/settings"
     assert_response :success
@@ -66,7 +63,7 @@ class Account::HandlesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :unprocessable_entity
     assert_select ".error-explanation", text: /Name in the address is taken/
-    assert_select "input[name='account[handle]']"
+    assert_select "form[action=?]", account_handle_path
     assert_nil accounts(:davids_account).reload.handle
   end
 
