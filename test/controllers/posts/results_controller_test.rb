@@ -18,7 +18,7 @@ class Posts::ResultsControllerTest < ActionDispatch::IntegrationTest
       assert_select "strong", text: "the handbook"
       assert_select "span", text: "https://example.com/handbook/ladders"
     end
-    assert_select "a[href=?]", edit_post_path(posts(:sent)), text: "Cancel and go back"
+    assert_select ".breadcrumbs a[href=?]", edit_post_path(posts(:sent))
   end
 
   test "show counts the subscribers the post brought, and says nothing of none" do
