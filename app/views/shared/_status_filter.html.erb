@@ -1,22 +1,23 @@
-<%# A link per state, as [ state, label, path, count ]; the one whose state is the page's is current and names the button. %>
-<% current = links.find { |state, *| state == status } %>
+<%# A link per state, as { status:, title:, path:, count: }; the one whose state is the page's is current and names the button. %>
+<% current = links.find { |link| link[:status] == status } %>
 
-<div class="status-filter" data-controller="dialog" data-dialog-orient-value="false"
+<div class="status-filter" data-controller="dialog"
      data-action="keydown.esc->dialog#close:stop click@document->dialog#closeOnClickOutside">
   <button type="button" class="btn" aria-haspopup="dialog" data-action="dialog#toggle">
-    <span><%= status ? current.second : t("filter_status") %></span>
+    <span><%= status ? current[:title] : t("filter_status") %></span>
     <%= icon_tag "caret-down" %>
   </button>
 
-  <dialog class="dialog panel shadow status-filter__menu" aria-label="<%= t("filter_status_label") %>" data-dialog-target="dialog">
-    <ul class="status-filter__list">
-      <% links.each do |state, label, path, count| %>
-        <li>
-          <%= link_to path, class: "status-filter__link", aria: { current: ("page" if state == status) } do %>
-            <span><%= label %></span>
-            <span class="status-filter__count"><%= number_with_delimiter count %></span>
+  <dialog class="popup panel shadow txt-small" aria-label="<%= t("filter_status_label") %>" data-dialog-target="dialog">
+    <ul class="popup__list">
+      <% links.each do |link| %>
+        <%= tag.li class: "popup__item", aria: { checked: link == current } do %>
+          <%= link_to link[:path], class: "btn popup__btn", aria: { current: ("page" if link == current) } do %>
+            <span class="overflow-ellipsis flex-item-grow"><%= link[:title] %></span>
+            <span class="txt-subtle"><%= number_with_delimiter link[:count] %></span>
+            <%= icon_tag "check", class: "checked" %>
           <% end %>
-        </li>
+        <% end %>
       <% end %>
     </ul>
   </dialog>
