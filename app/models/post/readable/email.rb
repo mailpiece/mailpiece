@@ -51,9 +51,12 @@ class Post::Readable::Email
   end
 
   def text
-    fragment = @content.render_attachments(&@view).fragment.update { |source| redirect_links(source) }
+    fragment = @content.render_attachments(&@view).fragment.update do |source|
+      redirect_links(source)
+      write_addresses(source)
+    end
 
-    ActionText::Content.new(fragment, canonicalize: false).to_markdown
+    ActionText::Content.new(fragment, canonicalize: false).to_plain_text
   end
 
   private
@@ -69,6 +72,16 @@ class Post::Readable::Email
       source.css("a[href]").each do |node|
         if link = links[node["href"]]
           node["href"] = @view.call(link)
+        end
+      end
+    end
+
+    # Another scheme keeps only its text, as the HTML part's sanitizer drops it.
+    def write_addresses(source)
+      source.css("a[href]").each do |link|
+        if link["href"].match?(Post::Link::WEB_ADDRESS) || link["href"].start_with?("mailto:")
+          url = link["href"].delete_prefix("mailto:")
+          link.content = link.text == url ? url : "#{link.text} [#{url}]"
         end
       end
     end

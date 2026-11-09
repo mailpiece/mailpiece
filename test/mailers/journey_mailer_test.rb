@@ -70,7 +70,7 @@ class JourneyMailerTest < ActionMailer::TestCase
     assert_includes html, %(<h2 style="font-family: Georgia, 'Times New Roman', serif;)
     assert_not_includes html, "color: red"
     assert_not_includes html, "onclick"
-    assert_includes email.text_part.body.to_s, "[here](https://example.org/start)"
+    assert_includes email.text_part.body.to_s, "Start here [https://example.org/start]"
   end
 
   test "email loads an image from an address in its own account, and links an attached video to its file" do
