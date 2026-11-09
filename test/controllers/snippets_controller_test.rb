@@ -15,8 +15,9 @@ class SnippetsControllerTest < ActionDispatch::IntegrationTest
     assert_select "input[data-quick-find-target=input]"
     assert_select "li.row[data-quick-find-target=item]", count: 3
     assert_equal [ "Reply to me", "Sign-off", "Subscribe" ], css_select("li.row .row__title").map(&:text)
-    assert_select "li.row a[href=?]", edit_snippet_path(snippets(:sign_off)), text: "Sign-off"
-    assert_select "li.row .row__meta", count: 0
+    assert_select "li.row a.row__link[href=?] > .row__body > .row__title", edit_snippet_path(snippets(:sign_off)), text: "Sign-off"
+    assert_select "li.row a.row__link[href=?] > .row__end time[data-reader-time-target=timeordate]", edit_snippet_path(snippets(:sign_off))
+    assert_select "li.row strong", count: 0
     assert_select "li.row .status", count: 0
     assert_select "a[href=?]", edit_snippet_path(snippets(:other_accounts)), count: 0
   end

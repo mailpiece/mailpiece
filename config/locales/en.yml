@@ -119,6 +119,7 @@ en:
   journeys_delete_confirm: "Permanently delete this email?"
   journeys_deleted: "Email deleted"
   journeys_edited_html: "Edited %{time}"
+  journeys_filter_what: "journeys"
   journeys_menu_label: "Sending and testing"
   journeys_more: "More options"
   journeys_new: "New email"
