@@ -1,4 +1,4 @@
-<%= render "shared/status_filter", status: local_assigns[:status], links: [
+<%= render "shared/status_filter", status: status, links: [
       [ nil, t("posts_state_all"), posts_path, Current.account.posts.count ],
       [ :draft, t("posts_state_draft"), posts_draft_path, Current.account.posts.drafts.unscheduled.count ],
       [ :scheduled, t("posts_state_scheduled"), posts_scheduled_path, Current.account.posts.scheduled.count ],

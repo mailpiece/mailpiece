@@ -1,4 +1,4 @@
-<%= render "shared/status_filter", status: local_assigns[:status], links: [
+<%= render "shared/status_filter", status: status, links: [
       [ :active, t("status_active"), subscribers_active_path, Current.account.subscribers.active.count ],
       [ :unconfirmed, t("status_unconfirmed"), subscribers_unconfirmed_path, Current.account.subscribers.unconfirmed.count ],
       [ :unsubscribed, t("status_unsubscribed"), subscribers_unsubscribed_path, Current.account.subscribers.unsubscribed.count ],

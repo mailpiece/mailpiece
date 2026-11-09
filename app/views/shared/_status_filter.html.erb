@@ -1,5 +1,4 @@
 <%# A link per state, as [ state, label, path, count ]; the one whose state is the page's is current and names the button. %>
-<% status = local_assigns[:status] %>
 <% current = links.find { |state, *| state == status } %>
 
 <div class="status-filter" data-controller="dialog" data-dialog-orient-value="false"
