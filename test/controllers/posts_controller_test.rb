@@ -23,11 +23,12 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".header__actions a[href=?] + a[href=?]", journeys_path, new_post_path
   end
 
-  test "index lists every post in one list, the newest first, under no heading" do
+  test "index lists every post in one list, what is ahead first and then the newest, under no heading" do
     get posts_path
 
     assert_select "h2.rows__heading", count: 0
-    assert_equal accounts(:davids_account).posts.reverse_chronologically.map { |post| ActionView::RecordIdentifier.dom_id(post) }, css_select("ul.rows li.row").pluck("id")
+    assert_equal [ posts(:scheduled), posts(:draft), posts(:email_only), posts(:unlisted), posts(:sent) ].map { |post| ActionView::RecordIdentifier.dom_id(post) },
+      css_select("ul.rows li.row").pluck("id")
     assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:sent))}"
     assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:unlisted))}"
     assert_select "li .separator--horizontal", count: 0

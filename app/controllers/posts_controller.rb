@@ -8,7 +8,7 @@ class PostsController < ApplicationController
   def index
     respond_to do |format|
       format.html do
-        set_page_and_extract_portion_from Current.account.posts.reverse_chronologically.preloaded
+        set_page_and_extract_portion_from Current.account.posts.ahead_first.preloaded
         Current.account.posts.load_delivery_progress @page.records
       end
 
