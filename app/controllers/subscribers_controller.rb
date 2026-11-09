@@ -5,7 +5,7 @@ class SubscribersController < ApplicationController
   before_action :set_subscriber, only: %i[ show destroy ]
 
   def index
-    set_page_and_extract_portion_from Current.account.subscribers.active.reverse_chronologically
+    set_page_and_extract_portion_from Current.account.subscribers.active.reverse_chronologically.preloaded
     fresh_when etag: [ @page.records, Current.account.subscribers, Current.account ]
   end
 

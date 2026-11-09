@@ -13,6 +13,7 @@ class Subscriber < ApplicationRecord
 
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, length: { maximum: 255 }
 
+  scope :preloaded, -> { preload(:source_post) }
   scope :reverse_chronologically, -> { order(created_at: :desc, id: :desc) }
   scope :matching, ->(query) { where("email LIKE ?", "%#{query}%") }
 

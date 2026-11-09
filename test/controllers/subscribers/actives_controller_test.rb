@@ -13,8 +13,17 @@ class Subscribers::ActivesControllerTest < ActionDispatch::IntegrationTest
     assert_select ".breadcrumbs a[href=?]", subscribers_path, text: "Subscribers"
     assert_select ".breadcrumbs strong", text: "Confirmed"
     assert_select "li##{dom_id(subscribers(:active))} .row__meta", text: /\ASubscribed/
+    assert_select "li##{dom_id(subscribers(:active))} .row__end time[datetime=?] + .status--muted", subscribers(:active).confirmed_at.to_i.to_s, text: "Confirmed"
     assert_select "li##{dom_id(subscribers(:unsubscribed))}", count: 0
-    assert_select "li .separator--horizontal, li .status", count: 0
+    assert_select "li .separator--horizontal", count: 0
+  end
+
+  test "show names its state on the status menu's button and marks its line current" do
+    get subscribers_active_path
+
+    assert_select ".filter-bar .status-filter button", text: "Confirmed"
+    assert_select ".status-filter a[aria-current=page][href=?]", subscribers_active_path, text: /\AConfirmed/
+    assert_select ".status-filter a[aria-current]", count: 1
   end
 
   test "show as JSON lists the same addresses" do

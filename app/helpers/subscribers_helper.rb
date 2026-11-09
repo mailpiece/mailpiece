@@ -1,16 +1,47 @@
 module SubscribersHelper
-  def subscriber_meta(subscriber)
-    case subscriber.status
-    when :bounced
-      t "subscribers_row_bounced_html", date: local_datetime_tag(subscriber.bounced_at, style: :date)
-    when :deactivated
-      t "subscribers_row_deactivated_html", date: local_datetime_tag(subscriber.deactivated_at, style: :date)
-    when :unsubscribed
-      t "subscribers_row_unsubscribed_html", date: local_datetime_tag(subscriber.unsubscribed_at, style: :date)
-    when :active
-      t "subscribers_row_subscribed_html", date: local_datetime_tag(subscriber.created_at, style: :date)
+  def subscribers_status_links
+    [
+      { status: :active, title: t("status_active"), path: subscribers_active_path },
+      { status: :unconfirmed, title: t("status_unconfirmed"), path: subscribers_unconfirmed_path },
+      { status: :unsubscribed, title: t("status_unsubscribed"), path: subscribers_unsubscribed_path },
+      { status: :bounced, title: t("status_bounced"), path: subscribers_bounced_path },
+      { status: :deactivated, title: t("status_deactivated"), path: subscribers_deactivated_path }
+    ]
+  end
+
+  # The confirmed list is the one the screen opens on, so with nobody confirmed it says who is waiting and where.
+  def subscribers_empty_message(status)
+    if status == :active
+      waiting = Current.account.subscribers.unconfirmed.count
+
+      safe_join [
+        tag.strong(t("subscribers_empty_confirmed")),
+        (link_to(t("subscribers_empty_waiting", count: waiting, number: number_with_delimiter(waiting)), subscribers_unconfirmed_path) if waiting.positive?)
+      ].compact, " · "
     else
-      t "subscribers_row_unconfirmed_html", date: local_datetime_tag(subscriber.created_at, style: :date)
+      tag.strong t("subscribers_empty_filtered")
+    end
+  end
+
+  def subscriber_meta(subscriber)
+    date = local_datetime_tag(subscriber.created_at, style: :date)
+
+    if post = subscriber.source_post
+      t "subscribers_row_subscribed_from_post_html", date: date, title: post_title(post)
+    elsif host = subscriber.referrer_host
+      t "subscribers_row_subscribed_from_host_html", date: date, host: host
+    else
+      t "subscribers_row_subscribed_html", date: date
+    end
+  end
+
+  def subscriber_status_time(subscriber)
+    case subscriber.status
+    when :bounced then subscriber.bounced_at
+    when :deactivated then subscriber.deactivated_at
+    when :unsubscribed then subscriber.unsubscribed_at
+    when :active then subscriber.confirmed_at
+    else subscriber.created_at
     end
   end
 

@@ -8,7 +8,7 @@ class SearchesController < ApplicationController
   def show
     @query = params[:q].presence
     @posts = matching(Current.account.posts, account: Current.account).reverse_chronologically.preloaded.with_delivery_progress
-    set_page_and_extract_portion_from matching(Current.account.subscribers).reverse_chronologically
+    set_page_and_extract_portion_from matching(Current.account.subscribers).reverse_chronologically.preloaded
   end
 
   private
