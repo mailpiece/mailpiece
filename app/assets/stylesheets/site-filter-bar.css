@@ -11,5 +11,12 @@
   /* The status menu hangs from its button. */
   .status-filter {
     position: relative;
+
+    /* Its button reads at the filter box's size. */
+    > .btn {
+      --btn-icon-size: 1em;
+
+      font-size: var(--text-x-small);
+    }
   }
 }
