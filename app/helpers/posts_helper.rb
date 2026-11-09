@@ -82,11 +82,11 @@ module PostsHelper
     end
   end
 
-  def post_schedule_description(post, time: post_schedule_time(post))
+  def post_schedule_description(post)
     if post.scheduled_delivery?
-      t("posts_schedule_with_sending_html", time: time)
+      t("posts_schedule_with_sending_html", time: post_schedule_time(post))
     else
-      t("posts_schedule_without_sending_html", time: time)
+      t("posts_schedule_without_sending_html", time: post_schedule_time(post))
     end
   end
 
@@ -163,7 +163,7 @@ module PostsHelper
       elsif post.published?
         t("posts_row_not_sent")
       elsif post.scheduled?
-        post_schedule_description(post, time: local_datetime_tag(post.scheduled_posting_at, style: :time))
+        t(post.scheduled_delivery? ? "posts_row_scheduled_with_sending" : "posts_row_scheduled_without_sending")
       else
         t("posts_progress_edited_html", time: local_datetime_tag(post.updated_at, style: :ago))
       end

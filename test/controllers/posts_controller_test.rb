@@ -53,9 +53,8 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:scheduled))}" do
-      assert_select ".row__meta", text: /, with sending to subscribers\z/ do
-        assert_select "time[datetime=?][data-reader-time-target=time]", posts(:scheduled).scheduled_posting_at.to_i.to_s
-      end
+      assert_select ".row__meta", text: "With sending to subscribers"
+      assert_select ".row__meta time", count: 0
       assert_select ".row__end time[datetime=?] + .status--waiting", posts(:scheduled).scheduled_posting_at.to_i.to_s, text: "Scheduled"
     end
 
