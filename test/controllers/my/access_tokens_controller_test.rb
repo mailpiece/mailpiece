@@ -34,7 +34,7 @@ class My::AccessTokensControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_equal "no-store", response.headers["Cache-Control"]
-    assert_select "turbo-stream[action=replace][target=?]", "new_access_token"
+    assert_turbo_stream action: :replace, target: "new_access_token"
     assert_revealed identities(:leo).access_tokens.order(:created_at).last
   end
 
