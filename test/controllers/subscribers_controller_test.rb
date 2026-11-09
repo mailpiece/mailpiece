@@ -22,7 +22,7 @@ class SubscribersControllerTest < ActionDispatch::IntegrationTest
 
     get subscribers_path
 
-    assert_select "li##{dom_id(subscribers(:active))}.row:not(.row--inactive)" do
+    assert_select "li##{dom_id(subscribers(:active))}.row" do
       assert_select "a[href=?].display-contents", subscriber_path(subscribers(:active)), count: 1
       assert_select "a > .avatar", text: "AD"
       assert_select "a > .row__body > .row__title:not(strong)", text: "ada@example.com"
