@@ -23,11 +23,11 @@ class SubscribersControllerTest < ActionDispatch::IntegrationTest
     get subscribers_path
 
     assert_select "li##{dom_id(subscribers(:active))}.row" do
-      assert_select "a[href=?].display-contents", subscriber_path(subscribers(:active)), count: 1
+      assert_select "a.row__link[href=?]", subscriber_path(subscribers(:active)), count: 1
       assert_select "a > .avatar", text: "AD"
-      assert_select "a > .row__body > .row__title:not(strong)", text: "ada@example.com"
+      assert_select "a.row__link > .row__body > .row__title:not(strong)", text: "ada@example.com"
       assert_select "a > .row__body > .row__meta", text: /\ASubscribed .*from example\.com\z/m
-      assert_select "a > .row__end time[datetime=?][data-reader-time-target=timeordate]", subscribers(:active).confirmed_at.to_i.to_s
+      assert_select "a.row__link > .row__end time[datetime=?][data-reader-time-target=timeordate]", subscribers(:active).confirmed_at.to_i.to_s
       assert_select "a > .row__end time + .status.status--muted", text: "Confirmed"
       assert_select "strong", count: 0
     end
