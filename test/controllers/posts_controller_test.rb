@@ -74,6 +74,18 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:sent))} .row__meta", text: "1 of 2 subscribers, 1 refused"
   end
 
+  test "index turns the page" do
+    11.times { |index| accounts(:davids_account).posts.create!(title: "Issue #{index}") }
+
+    get posts_path
+    assert_select "ul.rows li.row", count: 15
+    assert_select "a.pagination-link[href=?]", posts_path(page: 2)
+
+    get posts_path(page: 2)
+    assert_response :success
+    assert_select "ul.rows li.row", count: 1
+  end
+
   test "index offers each state in a status menu, all of them first and current, each with its count" do
     get posts_path
 
