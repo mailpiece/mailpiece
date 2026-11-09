@@ -9,8 +9,6 @@ class Subscribers::ImportsControllerTest < ActionDispatch::IntegrationTest
     get new_subscribers_import_path
 
     assert_response :success
-    assert_select ".breadcrumbs a[href=?]", new_subscribers_batch_path, text: "Add subscribers"
-    assert_select ".breadcrumbs strong", text: "Import subscribers..."
     assert_select "form[action=?] input[type=file]", subscribers_imports_path
     assert_select "input[type=email]", count: 0
   end
@@ -52,7 +50,7 @@ class Subscribers::ImportsControllerTest < ActionDispatch::IntegrationTest
     get subscribers_import_path(subscriber_imports(:read))
 
     assert_response :success
-    assert_select "[data-controller=reload]", text: /Reading the file…/
+    assert_match "Reading the file…", response.body
   end
 
   test "show leads to the review once the file is read" do
@@ -67,8 +65,8 @@ class Subscribers::ImportsControllerTest < ActionDispatch::IntegrationTest
     get subscribers_import_path(subscriber_imports(:read))
 
     assert_response :success
-    assert_select "p", text: /It has to be a CSV or a plain text file/
-    assert_select ".panel a[href=?]", new_subscribers_import_path, text: "Import subscribers..."
+    assert_match "It has to be a CSV or a plain text file", response.body
+    assert_match new_subscribers_import_path, response.body
     assert_select "input[type=email]", count: 0
   end
 

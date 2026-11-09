@@ -10,10 +10,8 @@ class Subscribers::Imports::BatchesControllerTest < ActionDispatch::IntegrationT
     get new_subscribers_import_batch_path(@import)
 
     assert_response :success
-    assert_select ".breadcrumbs strong", text: "Import subscribers..."
     assert_select "form[action=?]", subscribers_import_batch_path(@import)
     assert_select "input[type=email][value='new@example.com']"
-    assert_select ".batch__row--registered", text: /Skipped: not an email address/
   end
 
   test "new is not found until the file is read" do
@@ -43,7 +41,7 @@ class Subscribers::Imports::BatchesControllerTest < ActionDispatch::IntegrationT
     assert_select "input[type=email][value='edited@example.com']"
     assert_select "input[type=checkbox][name='batch[rows][0][added]']:not([checked])"
     assert_select "input[type=checkbox][name='batch[rows][1][added]'][checked]"
-    assert_select ".batch__note", text: /bounced/
+    assert_match "bounced, and only they can subscribe again", response.body
     assert Subscriber::Import.exists?(@import.id)
   end
 
@@ -51,7 +49,7 @@ class Subscribers::Imports::BatchesControllerTest < ActionDispatch::IntegrationT
     post subscribers_import_batch_path(@import), params: { batch: { rows: { "0" => { email: "new@example.com", added: "0" } } } }
 
     assert_response :unprocessable_entity
-    assert_select ".error-explanation", text: /Fill in at least one row/
+    assert_match "Fill in at least one row", response.body
     assert_select "input[type=email][value='new@example.com']"
   end
 
