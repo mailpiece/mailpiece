@@ -23,11 +23,12 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".header__actions a[href=?] + a[href=?]", journeys_path, new_post_path
   end
 
-  test "index lists every post in one list, the newest first, under no heading" do
+  test "index lists every post in one list, what is ahead first and then the newest, under no heading" do
     get posts_path
 
     assert_select "h2.rows__heading", count: 0
-    assert_equal accounts(:davids_account).posts.reverse_chronologically.map { |post| ActionView::RecordIdentifier.dom_id(post) }, css_select("ul.rows li.row").pluck("id")
+    assert_equal [ posts(:scheduled), posts(:draft), posts(:email_only), posts(:unlisted), posts(:sent) ].map { |post| ActionView::RecordIdentifier.dom_id(post) },
+      css_select("ul.rows li.row").pluck("id")
     assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:sent))}"
     assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:unlisted))}"
     assert_select "li .separator--horizontal", count: 0
@@ -38,10 +39,10 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     get posts_path
 
     assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:sent))}" do
-      assert_select "a[href=?].display-contents", edit_post_path(posts(:sent)), count: 1
-      assert_select "a > .row__body > .row__title:not(strong)", text: "Three deadlines in March"
-      assert_select "a > .row__body > .row__meta", text: "2 subscribers"
-      assert_select "a > .row__end time[datetime=?][data-reader-time-target=timeordate]", posts(:sent).sent_at.to_i.to_s
+      assert_select "a.row__link[href=?]", edit_post_path(posts(:sent)), count: 1
+      assert_select "a.row__link > .row__body > .row__title:not(strong)", text: "Three deadlines in March"
+      assert_select "a.row__link > .row__body > .row__meta", text: "2 subscribers"
+      assert_select "a.row__link > .row__end time[datetime=?][data-reader-time-target=timeordate]", posts(:sent).sent_at.to_i.to_s
       assert_select "a > .row__end time + .status.status--muted", text: "Sent"
       assert_select "strong", count: 0
     end
@@ -52,14 +53,15 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:scheduled))}" do
-      assert_select ".row__meta", text: /, with sending to subscribers\z/ do
-        assert_select "time[datetime=?][data-reader-time-target=time]", posts(:scheduled).scheduled_posting_at.to_i.to_s
-      end
+      assert_select ".row__meta", text: "With sending to subscribers"
+      assert_select ".row__meta time", count: 0
       assert_select ".row__end time[datetime=?] + .status--waiting", posts(:scheduled).scheduled_posting_at.to_i.to_s, text: "Scheduled"
     end
 
     assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:draft))}" do
-      assert_select ".row__meta:empty"
+      assert_select ".row__meta", text: /\AEdited / do
+        assert_select "time[datetime=?][data-reader-time-target=ago]", posts(:draft).updated_at.to_i.to_s
+      end
       assert_select ".row__end time[datetime=?] + .status--muted", posts(:draft).updated_at.to_i.to_s, text: "Draft"
     end
   end
@@ -70,6 +72,18 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     get posts_path
 
     assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:sent))} .row__meta", text: "1 of 2 subscribers, 1 refused"
+  end
+
+  test "index turns the page" do
+    11.times { |index| accounts(:davids_account).posts.create!(title: "Issue #{index}") }
+
+    get posts_path
+    assert_select "ul.rows li.row", count: 15
+    assert_select "a.pagination-link[href=?]", posts_path(page: 2)
+
+    get posts_path(page: 2)
+    assert_response :success
+    assert_select "ul.rows li.row", count: 1
   end
 
   test "index offers each state in a status menu, all of them first and current, each with its count" do

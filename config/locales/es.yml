@@ -328,6 +328,8 @@ es:
   posts_row_recipients_some:
     one: "%{sent} de %{number} suscriptor"
     other: "%{sent} de %{number} suscriptores"
+  posts_row_scheduled_with_sending: "Con envío a los suscriptores"
+  posts_row_scheduled_without_sending: "Sin envío"
   posts_save_dirty: "Cambios sin guardar"
   posts_save_draft: "Guardar borrador"
   posts_save_failed: "No se guardó"
@@ -513,9 +515,13 @@ es:
   subscribers_delete_button: "Eliminar este suscriptor"
   subscribers_delete_confirm: "¿Seguro que querés eliminar %{email} para siempre? Su historial se elimina también, y no va a quedar registro de si se dio de baja o rebotó."
   subscribers_deleted: "Se eliminó %{email}."
+  subscribers_empty_confirmed: "Nadie confirmó todavía"
   subscribers_empty_filtered: "No hay suscriptores acá."
   subscribers_empty_html: "<strong>Todavía no hay suscriptores.</strong> %{link} o poné el formulario de suscripción en tu sitio."
   subscribers_empty_link: "Agregá algunos"
+  subscribers_empty_waiting:
+    one: "%{number} espera confirmar"
+    other: "%{number} esperan confirmar"
   subscribers_event_bounced: "Rebotó: el servidor de correo dejó de entregar a esta dirección"
   subscribers_event_confirmation_sent: "Email de confirmación enviado"
   subscribers_event_deactivated: "Un admin detuvo el envío"
