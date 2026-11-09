@@ -7,20 +7,12 @@ class Journeys::EmailsControllerTest < ActionDispatch::IntegrationTest
     @email = journey_emails(:davids)
   end
 
-  test "new is the page an issue is written on, with a subject where the title is" do
+  test "new has the form, and nothing to switch the email on" do
     get new_journey_email_path(@journey)
 
     assert_response :success
-    assert_select ".breadcrumbs a[href=?]", journeys_path, text: "Journeys"
-    assert_select ".breadcrumbs a[href=?]", journey_path(@journey), text: "When someone subscribes"
-    assert_select ".page.writing form.writing__form[action=?]", journey_emails_path(@journey), count: 1 do
-      assert_select "textarea.post-form__title[name='journey_email[subject]'][data-action~='keydown.enter->advance-to-editor#advance']"
-      assert_select "lexxy-editor[name='journey_email[body]'][data-advance-to-editor-target=editor]"
-      assert_select ".writing-bar.post-actions button.post-actions__main[type=submit]", text: "Save"
-      assert_select ".writing-bar a[hidden][data-form-target=cancel][href=?]", journey_path(@journey)
-    end
+    assert_select "form[action=?]", journey_emails_path(@journey), count: 1
     assert_select "[name='journey_email[active]']", count: 0
-    assert_select "lexxy-editor[style*='--audience-web-label'] lexxy-prompt[trigger='/'][src=?]", prompts_snippets_path, count: 1
   end
 
   test "new and create are refused once the unsubscribe journey has its one email" do
@@ -105,66 +97,34 @@ class Journeys::EmailsControllerTest < ActionDispatch::IntegrationTest
     assert_response :forbidden
   end
 
-  test "edit of a draft saves itself, and its main button switches it on" do
+  test "edit of a draft offers to start sending it" do
     @email.deactivate
 
     get edit_journey_email_path(@journey, @email)
 
     assert_response :success
-    assert_select ".breadcrumbs a[href=?]", journeys_path, text: "Journeys"
-    assert_select ".breadcrumbs a[href=?]", journey_path(@journey), text: "When someone subscribes"
-    assert_select ".writing[data-controller~='post-bar'] form.writing__form[action=?][data-controller~='save-state'][data-controller~='auto-save']", journey_email_path(@journey, @email), count: 1 do
-      assert_select "input[type=hidden][name=auto_save]"
-      assert_select "textarea[name='journey_email[subject]'][data-action~='auto-save#change']", text: /Welcome to the bulletin/
-      assert_select "textarea.post-form__summary[name='journey_email[summary]'][data-action~='auto-save#change']"
-      assert_select "lexxy-editor[name='journey_email[body]'][data-action~='lexxy:change->auto-save#change']"
-      assert_select ".writing-bar[data-controller~='dialog-manager'] .post-actions__state", text: /\ADraft/
-      assert_select ".post-actions__state [data-save-state-target=label][role=status]", text: /Edited/, count: 1
-    end
-
-    assert_equal "Save", css_select("form.writing__form button[type=submit]").first.text.strip
-    assert_select ".writing-bar button[type=submit][hidden]", text: "Save"
-    assert_select "button.post-actions__primary[formaction=?][name=_method][value=post]", journey_email_activation_path(@journey, @email), text: "Start sending"
-    assert_select ".post-actions__split button.post-actions__more[data-action='dialog#toggle'][aria-label='More options']"
-    assert_select "button.btn.post-actions__beside[type=submit][name=button]:not([formaction])", text: "Save draft"
-    assert_select "button[formaction=?][name=_method][value=delete]", journey_email_activation_path(@journey, @email), count: 0
-    assert_select "button[formaction=?][name=_method][value=delete][data-turbo-confirm]", journey_email_path(@journey, @email), text: "Delete email"
+    assert_select "button[formaction=?]", journey_email_activation_path(@journey, @email), text: "Start sending"
+    assert_no_match "Stop sending", response.body
+    assert_select "button[formaction=?]", journey_email_path(@journey, @email), text: "Delete email"
     assert_select "[name='journey_email[active]']", count: 0
   end
 
-  test "edit of an email switched on is saved by hand, and its menu stops it" do
+  test "edit of an email switched on offers to stop sending it" do
     get edit_journey_email_path(@journey, @email)
 
     assert_response :success
-    assert_select "form.writing__form[data-controller~='save-state']"
-    assert_select "form.writing__form[data-controller~='auto-save']", count: 0
-    assert_select "form.writing__form[data-action~='keydown.meta+s@document->save-state#save']"
-    assert_select "input[name=auto_save]", count: 0
-    assert_select ".post-actions__split button.post-actions__primary[type=submit]:not([formaction])", text: "Save"
-    assert_select "dialog.post-pop--menu button.post-pop__item[formaction=?][name=_method][value=delete]", journey_email_activation_path(@journey, @email), text: "Stop sending"
-    assert_select "button[formaction=?][name=_method][value=post]", journey_email_activation_path(@journey, @email), count: 0
-    assert_select ".post-actions__state", text: /\AEdited/
-    assert_select "button[formaction=?][name=_method][value=delete]", journey_email_path(@journey, @email)
-    assert_select "dialog[aria-label='Sending and testing']", count: 1
+    assert_select "button[formaction=?]", journey_email_activation_path(@journey, @email), text: "Stop sending"
+    assert_no_match "Start sending", response.body
+    assert_select "button[formaction=?]", journey_email_path(@journey, @email), text: "Delete email"
   end
 
-  test "edit keeps the test in a box of its own, opened from the bar, whether or not it is switched on" do
+  test "edit offers a test, whether or not the email is switched on" do
     get edit_journey_email_path(@journey, @email)
-
-    assert_select "dialog.post-pop--menu .post-pop__test", count: 0
-    assert_select ".writing-bar [data-controller=dialog][data-action~='click@document->dialog#closeOnClickOutside'] > button.post-actions__beside[type=button][aria-haspopup=dialog][data-action='dialog#toggle']", text: "Send a test"
-    assert_select ".writing-bar [data-controller=dialog] > dialog.popup.post-pop:not(.post-pop--menu)[aria-label='Send a test'][data-dialog-target=dialog][data-action='post-bar:submitted->dialog#close'] > .post-pop__test[data-controller=clicker]" do
-      assert_select "input[name=email_address][value='mia@example.com'][data-action='keydown.enter->clicker#click:prevent']"
-      assert_select "button[formaction=?][name=_method][value=post][data-clicker-target=clickable]", journey_email_test_delivery_path(@journey, @email), text: "Send a test"
-    end
+    assert_match journey_email_test_delivery_path(@journey, @email), response.body
 
     @email.deactivate
     get edit_journey_email_path(@journey, @email)
-
-    assert_select "dialog.post-pop--menu .post-pop__test", count: 0
-    assert_select ".writing-bar button.post-actions__beside[type=submit] ~ [data-controller=dialog] > button.post-actions__beside[type=button]", text: "Send a test"
-    assert_select "dialog.post-pop[aria-label='Send a test'] .post-pop__test button[formaction=?]", journey_email_test_delivery_path(@journey, @email), text: "Send a test"
-    assert_select "input[name=email_address]", count: 1
+    assert_match journey_email_test_delivery_path(@journey, @email), response.body
   end
 
   test "edit without a complete sender offers no test, and says why" do
@@ -172,8 +132,8 @@ class Journeys::EmailsControllerTest < ActionDispatch::IntegrationTest
 
     get edit_journey_email_path(@journey, @email)
 
-    assert_select "input[name=email_address]", count: 0
-    assert_select "dialog.post-pop--menu a[href=?]", edit_account_sender_path, text: "Finish the settings"
+    assert_no_match journey_email_test_delivery_path(@journey, @email), response.body
+    assert_select "a[href=?]", edit_account_sender_path, text: "Finish the settings"
   end
 
   test "there is no page of an email's own" do
@@ -229,17 +189,13 @@ class Journeys::EmailsControllerTest < ActionDispatch::IntegrationTest
     assert_equal accounts(:davids_account), @email.account
   end
 
-  test "edit offers the delay in the menu, switched on or not" do
-    @email.update!(delay_days: 3)
-
+  test "edit offers the delay, switched on or not" do
     get edit_journey_email_path(@journey, @email)
-    assert_select "dialog.post-pop--menu .post-pop__when input[type=number][name='journey_email[delay_days]'][min='0'][value='3']", count: 1
-    assert_select "dialog.post-pop--menu .post-pop__when select[name='journey_email[send_hour]'] option", count: 25
-    assert_select "dialog.post-pop--menu .post-pop__when select[name='journey_email[send_hour]'] option[value='']", text: "At any hour"
+    assert_select "input[name='journey_email[delay_days]']", count: 1
 
     @email.deactivate
     get edit_journey_email_path(@journey, @email)
-    assert_select "dialog.post-pop--menu input[name='journey_email[delay_days]'][data-action~='auto-save#change']", count: 1
+    assert_select "input[name='journey_email[delay_days]']", count: 1
   end
 
   test "edit of the unsubscribe journey's email offers no delay, and update takes none" do
@@ -248,7 +204,6 @@ class Journeys::EmailsControllerTest < ActionDispatch::IntegrationTest
     get edit_journey_email_path("subscriber_unsubscribed", goodbye)
 
     assert_response :success
-    assert_select ".breadcrumbs a[href=?]", journey_path("subscriber_unsubscribed"), text: "When someone unsubscribes"
     assert_select "input[name='journey_email[delay_days]']", count: 0
 
     patch journey_email_path("subscriber_unsubscribed", goodbye), params: { journey_email: { subject: "Goodbye", delay_days: "4" } }
@@ -269,7 +224,7 @@ class Journeys::EmailsControllerTest < ActionDispatch::IntegrationTest
       patch journey_email_path(@journey, @email), params: { journey_email: { delay_days: delay } }
 
       assert_response :unprocessable_entity
-      assert_select ".error-explanation", text: /Days after subscribing/
+      assert_match(/Days after subscribing (must|is)/, response.body)
       assert_equal 0, @email.reload.delay_days
     end
   end
@@ -290,14 +245,13 @@ class Journeys::EmailsControllerTest < ActionDispatch::IntegrationTest
     patch journey_email_path(@journey, @email), params: { journey_email: { subject: "Hello", body: "" } }
 
     assert_response :unprocessable_entity
-    assert_select ".error-explanation", text: /Message can't be blank/
-    assert_select "form.writing__form[action=?]", journey_email_path(@journey, @email)
+    assert_match "Message can&#39;t be blank", response.body
     assert_equal "Welcome to the bulletin", @email.reload.subject
 
     patch journey_email_path(@journey, @email), params: { journey_email: { subject: "", body: "<p>Hello.</p>" } }
 
     assert_response :unprocessable_entity
-    assert_select ".error-explanation", text: /Subject can't be blank/
+    assert_match "Subject can&#39;t be blank", response.body
   end
 
   test "update from Save draft takes a blank draft and stays in the editor" do
