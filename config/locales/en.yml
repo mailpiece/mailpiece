@@ -504,9 +504,13 @@ en:
   subscribers_delete_button: "Delete this subscriber"
   subscribers_delete_confirm: "Permanently delete %{email}? Its history goes with it, and nothing will remember whether it unsubscribed or bounced."
   subscribers_deleted: "%{email} was deleted."
+  subscribers_empty_confirmed: "Nobody has confirmed yet"
   subscribers_empty_filtered: "No subscribers here."
   subscribers_empty_html: "<strong>No subscribers yet.</strong> %{link} or put the subscribe form on your website."
   subscribers_empty_link: "Add some"
+  subscribers_empty_waiting:
+    one: "%{number} waiting to confirm"
+    other: "%{number} waiting to confirm"
   subscribers_event_bounced: "Bounced: the mail server stopped delivering to this address"
   subscribers_event_confirmation_sent: "Confirmation email sent"
   subscribers_event_deactivated: "Stopped by an admin"

@@ -11,6 +11,20 @@ module SubscribersHelper
     ]
   end
 
+  # The confirmed list is the one the screen opens on, so with nobody confirmed it says who is waiting and where.
+  def subscribers_empty_message(status)
+    if status == :active
+      waiting = Current.account.subscribers.unconfirmed.count
+
+      safe_join [
+        tag.strong(t("subscribers_empty_confirmed")),
+        (link_to(t("subscribers_empty_waiting", count: waiting, number: number_with_delimiter(waiting)), subscribers_unconfirmed_path) if waiting.positive?)
+      ].compact, " · "
+    else
+      tag.strong t("subscribers_empty_filtered")
+    end
+  end
+
   def subscriber_meta(subscriber)
     date = local_datetime_tag(subscriber.created_at, style: :date)
 

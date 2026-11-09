@@ -59,7 +59,8 @@ class SubscribersControllerTest < ActionDispatch::IntegrationTest
 
     get subscribers_path
 
-    assert_select ".blank-slate", text: "No subscribers here."
+    assert_select ".blank-slate", text: "Nobody has confirmed yet · 1 waiting to confirm"
+    assert_select ".blank-slate a[href=?]", subscribers_unconfirmed_path, text: "1 waiting to confirm"
     assert_select ".status-filter a[href=?]", subscribers_unconfirmed_path
   end
 
