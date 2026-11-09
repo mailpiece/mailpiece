@@ -47,10 +47,10 @@ class SubscribersControllerTest < ActionDispatch::IntegrationTest
     assert_select ".filter-bar .status-filter button", text: "Status…"
     assert_select ".status-filter dialog a", count: 5
     assert_select ".status-filter dialog li:first-child a[href=?]", subscribers_active_path, text: /\AConfirmed\s*1\z/
-    assert_select ".status-filter a[href=?] .status-filter__count", subscribers_unconfirmed_path, text: "1"
-    assert_select ".status-filter a[href=?] .status-filter__count", subscribers_unsubscribed_path, text: "1"
-    assert_select ".status-filter a[href=?] .status-filter__count", subscribers_bounced_path, text: "1"
-    assert_select ".status-filter a[href=?] .status-filter__count", subscribers_deactivated_path, text: "1"
+    assert_select ".status-filter a[href=?]", subscribers_unconfirmed_path, text: /\AUnconfirmed\s*1\z/
+    assert_select ".status-filter a[href=?]", subscribers_unsubscribed_path, text: /\AUnsubscribed\s*1\z/
+    assert_select ".status-filter a[href=?]", subscribers_bounced_path, text: /\ABounced\s*1\z/
+    assert_select ".status-filter a[href=?]", subscribers_deactivated_path, text: /\AStopped\s*1\z/
     assert_select ".status-filter a[aria-current]", count: 0
   end
 
