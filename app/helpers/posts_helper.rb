@@ -164,6 +164,8 @@ module PostsHelper
         t("posts_row_not_sent")
       elsif post.scheduled?
         post_schedule_description(post, time: local_datetime_tag(post.scheduled_posting_at, style: :time))
+      else
+        t("posts_progress_edited_html", time: local_datetime_tag(post.updated_at, style: :ago))
       end
     end
 

@@ -60,7 +60,9 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_select "li##{ActionView::RecordIdentifier.dom_id(posts(:draft))}" do
-      assert_select ".row__meta:empty"
+      assert_select ".row__meta", text: /\AEdited / do
+        assert_select "time[datetime=?][data-reader-time-target=ago]", posts(:draft).updated_at.to_i.to_s
+      end
       assert_select ".row__end time[datetime=?] + .status--muted", posts(:draft).updated_at.to_i.to_s, text: "Draft"
     end
   end
