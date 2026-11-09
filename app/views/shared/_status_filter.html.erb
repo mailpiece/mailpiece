@@ -1,4 +1,4 @@
-<%# A link per state, as { status:, title:, path:, count: }; the one whose state is the page's is current and names the button. %>
+<%# A link per state, as { status:, title:, path: }; the one whose state is the page's is current and names the button. %>
 <% current = links.find { |link| link[:status] == status } %>
 
 <div class="status-filter" data-controller="dialog"
@@ -14,7 +14,6 @@
         <%= tag.li class: "popup__item", aria: { checked: link == current } do %>
           <%= link_to link[:path], class: "btn popup__btn", aria: { current: ("page" if link == current) } do %>
             <span class="overflow-ellipsis flex-item-grow"><%= link[:title] %></span>
-            <span class="txt-subtle"><%= number_with_delimiter link[:count] %></span>
             <%= icon_tag "check", class: "checked" %>
           <% end %>
         <% end %>
