@@ -189,7 +189,7 @@ class Posts::ReleasesControllerTest < ActionDispatch::IntegrationTest
       headers: { "Accept" => "text/vnd.turbo-stream.html, text/html" }
 
     assert_response :unprocessable_entity
-    assert_select "turbo-stream[action=replace][target=flash]", count: 1
+    assert_turbo_stream action: :replace, target: "flash", status: :unprocessable_entity
     assert_includes response.body, "The date was changed, so nothing was published. Try again."
     assert posts(:draft).reload.draft?
     assert_not posts(:draft).scheduled?
@@ -208,7 +208,7 @@ class Posts::ReleasesControllerTest < ActionDispatch::IntegrationTest
     post post_release_path(posts(:unlisted)), headers: { "Accept" => "text/vnd.turbo-stream.html, text/html" }
 
     assert_response :unprocessable_entity
-    assert_select "turbo-stream[action=replace][target=flash]", count: 1
+    assert_turbo_stream action: :replace, target: "flash", status: :unprocessable_entity
     assert_includes response.body, "Email sending is not set up"
     assert_not posts(:unlisted).reload.sent?
   end

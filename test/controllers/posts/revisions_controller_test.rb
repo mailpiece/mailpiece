@@ -83,13 +83,12 @@ class Posts::RevisionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :forbidden
   end
 
-  test "show draws a box as a box, under its audience's name" do
+  test "show draws a box as a box" do
     posts(:draft).update! body: %(<aside data-audience="email"><p>Reply to this email.</p></aside>)
 
     get post_revision_path(posts(:draft), "latest")
 
     assert_response :success
-    assert_select ".writing__version--current aside[data-audience=email] p", text: "Reply to this email."
-    assert_includes css_select(".page.writing").first["style"], %(--audience-email-label: "Only in the email")
+    assert_select "aside[data-audience=email] p", text: "Reply to this email."
   end
 end

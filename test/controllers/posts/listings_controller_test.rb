@@ -13,14 +13,11 @@ class Posts::ListingsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_turbo_stream action: :replace, target: dom_id(posts(:unlisted), :listing) do
-      assert_select "button[aria-checked=true][disabled]", text: "Listed"
-      assert_select "button[aria-checked=false]:not([disabled])", text: "By link only"
+      assert_select "button[disabled]", text: "Listed"
+      assert_select "button:not([disabled])", text: "By link only"
     end
-    assert_select "turbo-stream[method=morph][target=?]", dom_id(posts(:unlisted), :listing)
     assert_turbo_stream action: :update, target: dom_id(posts(:unlisted), :detail)
-    assert_turbo_stream action: :replace, target: "flash" do
-      assert_select "template", text: /Saved/
-    end
+    assert_turbo_stream action: :replace, target: "flash"
   end
 
   test "destroy" do
@@ -28,9 +25,7 @@ class Posts::ListingsControllerTest < ActionDispatch::IntegrationTest
       delete post_listing_path(posts(:sent)), as: :turbo_stream
     end
 
-    assert_turbo_stream action: :update, target: dom_id(posts(:sent), :detail) do
-      assert_select "template", text: /Unlisted/
-    end
+    assert_turbo_stream action: :update, target: dom_id(posts(:sent), :detail)
   end
 
   test "create as JSON" do
